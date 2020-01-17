@@ -1,0 +1,209 @@
+{% load static %}
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Applications of Spoken Tutorial</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="/static/spoken/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="/static/spoken/css/business-frontpage.css" rel="stylesheet">
+  <link href="/static/spoken/css/font-awesome.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">Applications of Spoken Tutorial</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          {% if nav_list %}
+          {% for nav in nav_list %}
+          <li class="nav-item">
+            <a class="nav-link" href="#{{nav.data_section}}">{{nav.nav_name}}</a>
+          </li>
+          {% endfor %}
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="new-color py-5 mb-5">
+    <div class="container ">
+      <div class="row align-items-center">
+        <div class="col-lg-12">
+          <p class="lead mb-4 text-white mb-2">
+            <img src="https://static.fossee.in/fossee/pictures/apj.png" style="display:box;padding-right:10px;margin:auto;float:left;">
+            "The most unfortunate thing is that India still seems to believe in proprietary solutions. Further spread of IT which is influencing the daily life of individuals would have a devastating effect on the lives of society due to any small shift in the business practice involving these proprietory solutions. It is precisely for these reasons open source software need to be built which would be cost effective for the entire society.
+          <br>In India, open source code software will have to come and stay in a big way for the benefit of our billion people."</p>
+          <span style="float:right;">- Dr. A. P. J. Abdul Kalam</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md-8 mb-5">
+        <h2>About Us</h2>
+        <hr>
+        <p>Spoken Tutorial is a multi-award winning educational content portal.  Here one can learn various Free and Open Source Software all by oneself.  Our self-paced, multi-lingual courses ensure that anybody with a computer and a desire for learning, can learn from any place, at any time and in a language of their choice.  All the content published on this website are shared under the CC BY SA license.  
+        Our courses are simple and easy to follow even for a beginner but they also meet the growing needs of the learner. </p>
+        <a class="btn btn-primary btn-lg new-color" href="https://spoken-tutorial.org/">Spoken Tutorial Website Link &raquo;</a>
+      </div>
+      <div class="col-md-4 mb-5">
+        <h2>Contact Us</h2>
+        <hr>
+        <address>
+          <strong>Spoken Tutorial Project,</strong>
+          <br>TCS Lab,Behind CAD Centre,
+          <br>IIT Bombay, Powai,
+          <br>Mumbai - 400076
+          
+          <br>
+        </address>
+        <address>
+          <span class="fa fa-2 fa-phone"></span> + 91 22 25764229<br>
+          <span class="fa fa-2 fa-envelope"></span> contact [at] spoken-tutorial [dot] org
+        </address>
+      </div>
+    </div>
+    <!-- /.row -->
+
+    <section id="application">
+    <h2>Our Applications</h2>    
+    <hr>
+
+    <div class="row">
+      {% if product_list %}
+      {% for product in product_list %}
+      <div class="col-md-4 mb-5">
+        <div class="card h-100">
+          <img class="card-img-top" src="{{ MEDIA_URL}}{{product.logo}}" alt="">
+          <div class="card-body">
+            <h4 class="card-title">{{product.product_name}}</h4>
+            <p class="card-text">{{product.product_description}}</p>
+          </div>
+          <div class="card-footer">
+            <a href="{{product.product_url}}" class="btn btn-primary new-color" target="_blank">Find Out More!</a>
+          </div>
+        </div>
+      </div>
+     {% endfor %}
+    {% endif %}  
+    </div>
+    <!-- /.row -->
+    </section>
+
+    <section id="activities">
+    <h2>Our Activities</h2>    
+    <hr>
+
+  <div class="accordion" id="accordionExample">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+        <button class="btn btn-primary btn-lg btn-block new-color collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+          Upcoming Blended Mode Workshops
+        </button>
+    </div>
+
+    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+      <div class="card-body">
+         <ul class="media-list">
+        {% if workshops %}
+        {% for workshop in workshops %}
+          <li class="media">
+            <a class="pull-left col-sm-1" href="#" style="background-color: red;">
+              <img class="media-object" src="{{ MEDIA_URL}}{{workshop.workshop_logo}}" width="64" height="64">
+            </a>
+            <div class="media-body col-sm-10">
+              <h4 class="media-heading">{{workshop.workshop_title}}</h4>
+              {{workshop.workshop_content}} <a href="{{workshop.know_more_link}}" target="_blank">Know More</a>
+            </div>
+          </li>
+
+        {% endfor %}
+        {% endif %}
+
+    </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h2 class="mb-0">
+        <button class="btn btn-primary btn-lg btn-block new-color collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Internship Information
+        </button>
+      </h2>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+      <div class="card-body">
+        <h4>FOSSEE Fellowship 2020</h4>
+        All college students (bachelor, masters, Ph.D., etc.) from all streams (engineering, science, arts, commerce, etc.) are welcome to participate in the FOSSEE Summer Fellowship 2020.
+        FOSSEE works only on promotion and development of Free/Libre and Open Source Software in education. For more updates on the FOSSEE Fellowship please keep checking <a href="https://fossee.in/fellowship/2020">this</a> website
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="card">
+    <div class="card-header" id="headingThree">
+      <h2 class="mb-0">
+        <button class="btn btn-primary btn-lg btn-block new-color collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Job Fair Information
+        </button>
+      </h2>
+    </div>
+    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+      <div class="card-body">
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+      </div>
+    </div>
+  </div>
+</div>
+    </section>
+   
+
+
+  </div>
+  <!-- /.container -->
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; Your Website 2019</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/static/spoken/jquery/jquery.min.js"></script>
+  <script src="/static/spoken/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
