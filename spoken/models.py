@@ -75,7 +75,3 @@ class Jobfair(models.Model):
 	companies = models.ManyToManyField(Company)
 	def __str__(self):
 		return self.jobfair_title
-
-class Testimonials(models.Model):
- 	name =  models.CharField(max_length=255)
- 	content = models.TextField()
