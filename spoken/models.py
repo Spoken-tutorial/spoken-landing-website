@@ -36,4 +36,46 @@ class Blended_workshops(models.Model):
 	def __str__(self):
 		return self.workshop_title
 
+class ContactMsg(models.Model):
+	name = models.CharField(max_length=200)
+	email = models.EmailField(max_length=200)
+	subject = models.CharField(max_length=200)
+	message = models.TextField()
+	date = models.DateTimeField(auto_now_add=True)
 
+	class Meta:
+		verbose_name_plural = "Mails"
+
+	def __str__(self):
+		return self.name+'-('+self.email+')'
+
+class Internship(models.Model):
+	internship_title = models.CharField(max_length=255)
+	internship_date = models.DateField()
+	internship_desc = models.TextField()
+	know_more_link = models.CharField(max_length=300)
+	updated = models.DateField(auto_now=True)
+
+	def __str__(self):
+		return self.internship_title
+
+class Company(models.Model):
+	name = models.CharField(max_length=200)
+
+	def __str__(self):
+		return self.name
+
+
+class Jobfair(models.Model):
+	jobfair_title = models.CharField(max_length=255)
+	jobfair_date = models.DateField()
+	jobfair_desc = models.TextField()
+	know_more_link = models.CharField(max_length=300)
+	updated = models.DateField(auto_now=True)
+	companies = models.ManyToManyField(Company)
+	def __str__(self):
+		return self.jobfair_title
+
+class Testimonials(models.Model):
+ 	name =  models.CharField(max_length=255)
+ 	content = models.TextField()
