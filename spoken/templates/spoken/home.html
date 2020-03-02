@@ -29,8 +29,178 @@
 </nav><!--/bootstrap navbar--->
 
 <!-- quote -->
-
+<section class="quote container-fluid" id="home">
+  <div class="image">
+  <img src="{% static '/spoken/images/apj_1.png' %}">
+</div>
+<div class="content">
+  <p>
+    "The most unfortunate thing is that India still seems to believe in proprietary solutions. Further spread of IT which is influencing the daily life of individuals would have a devastating effect on the lives of society due to any small shift in the business practice involving these proprietory solutions. It is precisely for these reasons open source software need to be built which would be cost effective for the entire society.
+    <br>In India, open source code software will have to come and stay in a big way for the benefit of our billion people."</p>
+    <br><p class="name">- Dr. A. P. J. Abdul Kalam</p>
+  </p>
+</div>
+</section>
 <!-- quote -->
+<!--about-->
+<section class="about" id="about">
+  <div class="image"><img src="{% static '/spoken/images/about_4.jpg' %}"></div>
+  <div class="content">
+    <h2>About Us</h2>
+        <h6>Spoken Tutorial is a multi-award winning educational content portal.</h6> 
+          <p>Here one can learn various Free and Open Source Software all by oneself. Our self-paced, multi-lingual courses ensure that anybody with a computer and a desire for learning, can learn from any place, at any time and in a language of their choice.</p>
+          <p>
+            All the content published on this website are shared under the CC BY SA license. Our courses are simple and easy to follow even for a beginner but they also meet the growing needs of the learner. 
+          </p> 
+        <p><a href="https://spoken-tutorial.org/about-us/" class="btn">Learn More</a></p> 
+  </div>
+</section>
+<!--about-->
+<!-- applications -->
+<section class="application " id="applications">
+  <h2 class="text-center header-m">Applications</h2>
+  <div class="applications-grid">
+    {% for product in products%}
+       <div class="box text-center">   
+        <div class="header">
+         
+          <img src="{{ product.logo.url }}">
+        
+          <h4>{{product.product_name}}</h4>
+        </div>
+        <div>
+          <p>{{product.product_description}}</p>
+          <div class="link-app"><a href="{{product.product_url}}" class="stretched-link">Learn More <span class="app-i"><i class="fas fa-angle-double-right stretched-link"></i></span></a></div>
+        </div>
+       
+      </div>
+      {% endfor%}
+  </div>    
+</section>
+
+<!-- applications -->
+
+<!-- activities -->
+<section class="events" id="activities"> <!-- container with heading, image and content -->
+   <h2 class="text-center header-m">Activities</h2>
+   <div class="activities"> <!--image and content-->
+    <div class="v-image"><img src="{% static '/spoken/images/activities1.jpg' %}"></div>
+    <div class="h-image"><img src="{% static '/spoken/images/activities2.jpg' %}"></div>
+    <div class="a-content">
+      <div class="btn-activities" id="activities-filter">
+       <div id="filter-jobfair" class="filter_div"><i class="fas fa-briefcase fa" ></i> <a href="" class="btn stretched-link "  data-filter=".filter-jobfair">Job Fairs</a></div>
+        <div id="filter-workshop" class="filter_div"><i class="fas fa-chalkboard-teacher fa" ></i><a href="" class="btn stretched-link"  data-filter=".filter-workshop">Workshops</a></div>
+        <div id="filter-internship" class="filter_div"><i class="fas fa-university fa" ></i><a href="" class="btn stretched-link"  data-filter=".filter-internship">Intenships</a></div>
+        </div>
+        <hr>
+        
+      <div class=" activities-container ">
+        <div class="filter-jobfair box-activities">
+          {% for jobfair in jobfairs%}
+          <div class="activities-event ">
+            <div class="date"><p><i class="fas fa-calendar-alt"></i>{{jobfair.jobfair_date}}</p></div>
+            <div class="content">
+            <h6>{{jobfair.jobfair_title}}</h6>
+            <p>Participating Companies :  </p>
+            <p>
+              {% for company in jobfair.companies.all%}
+              <span style="padding-right: 1rem;">{{company}}</span>
+              {% endfor%}
+            </p>
+            </div>
+            </div> 
+          {% endfor %}
+          <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore">Explore more Job Fairs </a></div>
+        </div>
+        <div class="filter-workshop box-activities">
+          {% for workshop in workshops%}
+          <div class="activities-event">
+            <div class="icon date"><p><i class="fas fa-calendar-alt"></i>{{workshop.workshop_date}}</p></div>
+            <div class="image"><img src="{% static '/spoken/images/logo.png' %}"></div>
+            <div class="content">
+             <h6>{{workshop.workshop_title}}</h6>
+             <p>{{workshop.workshop_content}}</p>
+            </div>
+            </div> 
+          {% endfor %}
+          <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore">Explore more Workshops </a></div>
+        </div>
+        <div class="filter-internship box-activities">
+           {% for internship in internships%}
+          <div class="activities-event">
+            <div class="icon date"><p><i class="fas fa-calendar-alt"></i>{{internship.internship_date}}</p></div>
+            <div class="content">
+             <h6>{{internship.internship_title}}</h6>
+             <p>{{internship.internship_desc}}</p>
+            </div>
+            </div> 
+          {% endfor %}
+          <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore">Explore more Internships </a></div>
+        </div>
+      </div>
+    </div>
+    
+   </div><!--image and content-->
+</section> <!-- container with heading, image and content -->
+
+<!-- collaborate -->
+<section class="collab container-fluid">
+  <div class="content">
+    <h1>Collaborate with us</h1>
+    <p>We invite you to become a part of this amazing journey of making India IT-literate. Join our growing network of Resources Centres, Organisers, Content creators, Domain Experts, Translators, Dubbers, Reviewers and help us to reach every nook and corner of India. </p> 
+
+  </div>
+  <a href="https://spoken-tutorial.org/accounts/login/?next=/creation/collaborate/" class="btn">Join us</a>
+</section>
+<!-- collaborate -->
+
+<!-- contact -->
+<section id="contact">
+  <h2>Contact</h2>
+  <div class="contact-wrapper blue-bg"> <!-- grid with 3 columns -->
+    <div class="social-links"> <!--column 1-->
+       <p><i class="fab fa-youtube"></i><a href="https://www.youtube.com/user/SpokenTutorialIITB/">ST youtube Channel</a></p>
+       <p><i class="fab fa-youtube"></i><a href="https://www.youtube.com/channel/UCmyV3lKT1Gs1AfgtV8pp__Q">Health youtube Channel</a></p>
+       <p><i class="fab fa-facebook-square"></i><a href="https://www.facebook.com/SpokenTutorial.org">Facebook page</a></p>
+       <p><i class="fab fa-skype"></i><a href="">st-iitb</a></p>
+    </div>
+    <div class="contact-details"> <!--column 2-->
+      <p><i class="fas fa-map-marker-alt map-mark"></i>Spoken Tutorial Project,
+        <br>TCS Lab,Behind CAD Centre,
+        <br>IIT Bombay, Powai,  Mumbai - 400076</p>
+        <p><i class="fas fa-phone-alt fa-2x"></i>+ 91 22 25764229</p>
+        <p><i class="fas fa-envelope fa-2x"></i>contact@spoken-tutorial.org</p>
+    </div>
+    <div class="form"> <!--column 3-->
+           {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div>
+        <form action="" method="post">
+            {% csrf_token %}          
+           <!--  {{ form.as_table }} -->
+            <div class="row">
+              <div class="col-6">
+              {{ form.name|as_crispy_field }}
+              </div>
+              <div class="col-6">
+              {{ form.email|as_crispy_field }}
+              </div>
+            </div>
+            {{ form.subject|as_crispy_field }}
+            {{ form.message|as_crispy_field }}                
+            <button type="submit" class="btn form-btn">Submit</button>       
+        </form> 
+        </div>
+</div>
+  </div>
+</section>
+
+<!-- contact -->
 {% endblock content%}
 
 
