@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
     'spoken',
 ]
 
@@ -56,7 +57,8 @@ ROOT_URLCONF = 'spoken_main_website.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')], # templates
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),
+                os.path.join(BASE_DIR, 'spoken', 'templates', 'spoken'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -1,0 +1,105 @@
+/*general*/
+:root{
+			--footer-color:#002649; 
+			--white:#fff;
+			--light :#F5F8FD ; 
+			--dark :#02073F ;
+			--main-font-color :#413e66 ;
+			--shadow : 0 1px 10px rgb(104,104,104,0.5);
+			--btn-color:#18B1DC;
+			--line-color:#C9D4F6;
+			--font:"Open Sans", sans-serif;
+			--pink:#ED125B;
+			--section-padding:0 10%;;
+
+}
+*{
+	/*box-sizing: border-box;*/
+}
+body{
+			font-size: 16px;
+			font-family: "Open Sans", sans-serif;
+}
+
+a{
+			text-decoration: none;
+			color: var(--white);
+}
+h2{
+	/*font-family: "Raleway", sans-serif;*/
+	font-weight: bold;
+	color: var(--dark);
+	margin: 0;
+	font-family: "Open Sans", sans-serif;
+	/*border:2px solid green;*/
+	text-align: center;
+}
+.btn{
+	background: var(--btn-color);
+	background: var(--pink);
+	color: #fff;
+	padding: 0.6rem 1.3rem;
+	text-decoration: none;
+	border:0;
+	border-radius: 5px;
+	/*margin-right: 2rem;
+	margin-left: 2rem;*/
+	width: 150px;
+}
+.btn:hover{
+	background:#fff;
+	border:2px solid #b71c1c;
+	font-weight: bold;
+	border-radius: 5px;
+}
+
+.box{
+	background:#ffffff;
+	/*text-align: left;*/
+	padding: 1.5rem 2rem;
+	box-shadow: var(--shadow);
+	border-radius: 1rem;
+	position: relative;
+}
+
+/*navbar*//***************************************************************************/
+.navbar-nav > li{
+	padding-left:5px;
+  	padding-right:5px;
+  	margin: 10px;
+  	/*background: var(--light);*/
+  	color: #fff;
+}
+
+.navbar-custom{
+	min-height: 5rem;
+	background: var(--light);
+	/*background:#012D47;*/
+	
+	font-weight: bold;
+		color: #fff;
+}
+.navbar-nav > li:last-child{  
+  margin-right:2%;
+}
+.navbar-nav a{
+	font-family: "Open Sans", sans-serif;
+	text-transform: uppercase;
+	font-size: 0.9rem;
+	/*color: var(--main-font-color);*/
+	color: #fff;
+}
+.brand-custom{
+	font-size: 1.4rem;
+	line-height: 1rem;
+	font-weight: 50;
+	letter-spacing: 0.05rem;
+	text-transform :uppercase;
+	color: var(--main-font-color);
+	margin-left:50px;
+}
+
+nav button{
+	color: #fff;
+}
+/*navbar*//***************************************************************************/

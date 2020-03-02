@@ -16,8 +16,8 @@ class Nav(models.Model):
 	nav_name = models.CharField(max_length=255)
 	nav_id = models.CharField(max_length=50)
 	data_section = models.CharField(max_length=50)
-	fa_icon = models.CharField(max_length=50)
-	back_image = models.FileField(upload_to='page_backgrounds/')
+	fa_icon = models.CharField(max_length=50, blank=True)
+	back_image = models.FileField(upload_to='page_backgrounds/',blank=True,null=True)
 	status = models.BooleanField(default=0)
 	updated = models.DateField(auto_now=True)
 
