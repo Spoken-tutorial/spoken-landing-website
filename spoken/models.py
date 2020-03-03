@@ -29,7 +29,7 @@ class Blended_workshops(models.Model):
 	workshop_title = models.CharField(max_length=255)
 	workshop_date = models.DateField()
 	workshop_content = models.TextField()
-	workshop_logo = models.FileField(upload_to='logos/workshop_logos/')
+	workshop_logo = models.FileField(upload_to='logos/workshop_logos/',blank=True,null=True)
 	know_more_link = models.CharField(max_length=300)
 	updated = models.DateField(auto_now=True)
 
@@ -75,3 +75,5 @@ class Jobfair(models.Model):
 	companies = models.ManyToManyField(Company)
 	def __str__(self):
 		return self.jobfair_title
+
+
