@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.http import HttpResponse
-from .models import Products, Nav, Blended_workshops, Jobfair, Internship
+from .models import Products, Nav, Blended_workshops, Jobfair, Internship, Testimonials
 from datetime import datetime
 from django.utils import timezone
 from .forms import ContactForm
@@ -27,6 +27,8 @@ def home(request):
     jobfairs = Jobfair.objects.filter(jobfair_date__gte=now).order_by('jobfair_date')[:3]
     internships = Internship.objects.filter(internship_date__gte=now).order_by('internship_date')[:2]
     workshops = Blended_workshops.objects.filter(workshop_date__gte=now).order_by('workshop_date')[:3]
-    context = {'jobfairs':jobfairs,'internships':internships,'workshops':workshops,'products':products, 'nav_list':navs, 'form':c}
+    testimonials = Testimonials.objects.all()[:9]
+    context = {'jobfairs':jobfairs,'internships':internships,'workshops':workshops,'products':products, 
+    'nav_list':navs, 'form':c, 'testimonials':testimonials}
 
     return render(request,'spoken/home.html',context)

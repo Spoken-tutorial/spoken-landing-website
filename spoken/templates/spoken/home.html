@@ -2,7 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block title%} Applications of Spoken Tutorials {% endblock title%}
-
+{% load helper %}
 
 {% block content%}
 <!--bootstrap navbar--->
@@ -56,16 +56,21 @@
   </div>
 </section>
 <!--about-->
+<!-- awards -->
+<section class="awards">
+  
+
+</section>
+
+<!-- awards -->
 <!-- applications -->
 <section class="application " id="applications">
   <h2 class="text-center header-m">Applications</h2>
   <div class="applications-grid">
     {% for product in products%}
        <div class="box text-center">   
-        <div class="header">
-         
+        <div class="header">         
           <img src="{{ product.logo.url }}">
-        
           <h4>{{product.product_name}}</h4>
         </div>
         <div>
@@ -143,10 +148,68 @@
 </section> <!-- container with heading, image and content -->
 <!-- activities -->
 
-<!-- Testimonial -->
 
 
 <!-- Testimonial -->
+<section id="testimonial">
+  <div id="testimonialCarousel" class="carousel " data-ride="carousel">
+  <!-- <div id="testimonialCarousel" class="carousel slide" data-ride="carousel"> -->
+   <h2 class="text-center header-m">Testimonials</h2>
+ 
+  <ol class="carousel-indicators">
+    <li data-target="#testimonialCarousel" data-slide-to="0" class="active"></li>
+    <li data-target="#testimonialCarousel" data-slide-to="1"></li>
+    <li data-target="#testimonialCarousel" data-slide-to="2"></li>
+  </ol>
+  
+<div class="carousel-inner">
+  {% for data in testimonials%}
+  {% ifequal forloop.counter|divisibleby:"2" False %}
+  {% if forloop.first%}
+  <div class="item carousel-item active">
+            <div class="row">
+   
+  {% else %}
+ <div class="item carousel-item ">
+            <div class="row">
+  {% endif %}
+  {% endifequal%}
+   <div class="col-sm-6">
+                <div class="testimonial-wrapper">
+                  <div class="testimonial">
+                  <p>{{ data.minified_content|len_cutter:250 }}</p>
+                  <a href=""  data-toggle="modal" data-target="#exampleModalCenter" >Read</a>
+                  </div>
+                  
+                  <div class="media">
+                   <!--  <div class="media-left d-flex mr-3">
+                      <img src="/examples/images/clients/1.jpg" alt="">                   
+                    </div> -->
+                    <div class="media-body">
+                      <div class="overview">
+                        <div class="name"><b>{{data.user_name}}</b></div>
+                        <div class="details">{{data.short_description}}</div>
+                      </div>                    
+                    </div>
+                  </div>
+                </div>                
+              </div>
+  {% ifequal forloop.counter|divisibleby:"2" True %}
+  </div>
+  </div>
+  {% endifequal%}
+  {% endfor %}
+
+  
+  </div>
+  </div> <!-- ?????????????????? -->
+  
+  </div> <!-- ?????????????????? -->
+  </div>
+</section>
+
+
+<!-- testimonial -->
 
 <!-- collaborate -->
 <section class="collab container-fluid">
@@ -158,7 +221,42 @@
   <a href="https://spoken-tutorial.org/accounts/login/?next=/creation/collaborate/" class="btn">Join us</a>
 </section>
 <!-- collaborate -->
+<!-- about PI & news & events  -->
+<section id="info">
+  
+  <div class="info-wrapper">
+    <div class="about_pi info-style">
+    <h2>About PI</h2>
+    <div class="bio">
+      <div>
+      <img src="{% static '/spoken/images/pi_photo.jpg' %}">  
+      </div>
+      
+      <div class="content">
+      <h5>Kannan Moudgalya</h5>
+      <h6>Professor of Chemical Engineering, IIT Bombay</h6>
+     <!--  <p><i class="fab fa-youtube"></i>TEDx Talk<i class="fab fa-twitter"></i>Follow</p> -->
+      <p><a href=""><i class="fab fa-youtube"></i>TEDx Talk</a>
+      <br><a href=""><i class="fab fa-twitter"></i>Follow</a></p> 
+        
+      </div>
+      
+    </div>
+    <p class="about-content">
+        Professor Kannan is devoting his time in spreading education on a massive scale, without quality dilution.  He has been focusing on Spoken Tutorials, Open Source Software, Affordable Tablets and Laptops.  He believes that it is possible to provide high quality education to all our children through a combination of Education, and Information & Communication Technologies, making India a developed country in the process.
+      </p>
 
+  </div>
+   
+  <div class="news info-style">
+    <h2>News / Events</h2>
+    <hr>
+    <p>Check out the amazing testimonials, media articles, events, collaboration, seminars, talks and campaigns about the Spoken Tutorial Project. Browse through our gallery and see what the Project has been doing across India.</p>
+  </div>
+  </div>
+  
+</section>
+<!-- about PI & news & events  -->
 <!-- contact -->
 <section id="contact">
   <h2>Contact</h2>

@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 class Products(models.Model):
 	product_name = models.CharField(max_length=200)
@@ -77,3 +77,16 @@ class Jobfair(models.Model):
 		return self.jobfair_title
 
 
+class Testimonials(models.Model):
+  user = models.ForeignKey(User, related_name = 'testimonial_created_by', on_delete=models.PROTECT )
+  approved_by = models.ForeignKey(User, related_name = 'testimonial_approved_by', null=True, on_delete=models.PROTECT )
+  user_name = models.CharField(max_length=200)
+  actual_content = models.TextField()
+  minified_content = models.TextField()
+  short_description = models.TextField(blank=True,null=True)
+  source_title = models.CharField(max_length=200, blank=True,null=True)
+  source_link = models.URLField(blank=True,null=True)
+  status = models.PositiveSmallIntegerField(default = 0)
+  created = models.DateTimeField(auto_now_add=True)
+  updated = models.DateTimeField(auto_now = True, null=True)
+  show = models.BooleanField(default=1)
