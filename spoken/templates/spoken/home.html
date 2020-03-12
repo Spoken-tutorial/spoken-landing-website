@@ -6,21 +6,20 @@
 
 {% block content%}
 <!--bootstrap navbar--->
-  <nav class="navbar navbar-expand-lg fixed-top navbar-light navbar-custom ">
+  <nav class="navbar navbar-expand-lg fixed-top navbar-light navbar-custom">
   <a class="navbar-brand brand-custom" href="#"><img src="{% static '/spoken/images/logo.png' %}" width="30" height="30" class="d-inline-block " alt=""> Applications of Spoken Tutorials</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav ml-auto">
       <li class="nav-item active">
-        <a class="nav-link scroll_link " href="#home">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link scroll_link " href="#home">Home<span class="sr-only">(current)</span></a>
       </li>
       {% if nav_list %}
           {% for nav in nav_list %}
           <li class="nav-item">
-            <a class="nav-link" href="#{{nav.data_section}}">{{nav.nav_name}}</a>
+            <a class="nav-link scroll_link" href="#{{nav.data_section}}">{{nav.nav_name}}</a>
           </li>
           {% endfor %}
           {% endif %}
@@ -52,17 +51,12 @@
           <p>
             All the content published on this website are shared under the CC BY SA license. Our courses are simple and easy to follow even for a beginner but they also meet the growing needs of the learner. 
           </p> 
-        <p><a href="https://spoken-tutorial.org/about-us/" class="btn">Learn More</a></p> 
+        <p>
+        <a href="https://spoken-tutorial.org/about-us/" class="btn">Learn More</a>
+        </p> 
   </div>
 </section>
 <!--about-->
-<!-- awards -->
-<section class="awards">
-  
-
-</section>
-
-<!-- awards -->
 <!-- applications -->
 <section class="application " id="applications">
   <h2 class="text-center header-m">Applications</h2>
@@ -76,13 +70,11 @@
         <div>
           <p>{{product.product_description}}</p>
           <div class="link-app"><a href="{{product.product_url}}" class="stretched-link">Learn More <span class="app-i"><i class="fas fa-angle-double-right stretched-link"></i></span></a></div>
-        </div>
-       
+        </div>       
       </div>
       {% endfor%}
   </div>    
 </section>
-
 <!-- applications -->
 
 <!-- activities -->
@@ -152,8 +144,7 @@
 
 <!-- Testimonial -->
 <section id="testimonial">
-  <div id="testimonialCarousel" class="carousel " data-ride="carousel">
-  <!-- <div id="testimonialCarousel" class="carousel slide" data-ride="carousel"> -->
+  <div id="testimonialCarousel" class="carousel slide" data-ride="carousel">
    <h2 class="text-center header-m">Testimonials</h2>
  
   <ol class="carousel-indicators">
@@ -167,8 +158,7 @@
   {% ifequal forloop.counter|divisibleby:"2" False %}
   {% if forloop.first%}
   <div class="item carousel-item active">
-            <div class="row">
-   
+            <div class="row">   
   {% else %}
  <div class="item carousel-item ">
             <div class="row">
@@ -179,12 +169,8 @@
                   <div class="testimonial">
                   <p>{{ data.minified_content|len_cutter:250 }}</p>
                   <a href=""  data-toggle="modal" data-target="#exampleModalCenter" >Read</a>
-                  </div>
-                  
+                  </div>         
                   <div class="media">
-                   <!--  <div class="media-left d-flex mr-3">
-                      <img src="/examples/images/clients/1.jpg" alt="">                   
-                    </div> -->
                     <div class="media-body">
                       <div class="overview">
                         <div class="name"><b>{{data.user_name}}</b></div>
@@ -198,16 +184,35 @@
   </div>
   </div>
   {% endifequal%}
-  {% endfor %}
+  {% endfor %} 
+  </div>
+  </div> 
+  </div>
+  </div>
 
-  
-  </div>
-  </div> <!-- ?????????????????? -->
-  
-  </div> <!-- ?????????????????? -->
-  </div>
+
 </section>
-
+<section class=" media-testimonials">
+    <div >
+    <div>
+      {% for data in media_testimonials%}
+    <div class=" media-testimonials-grid">  
+       <video class="st_video align-self-center" title='{{ data.foss }}' controls preload data-setup="{}">
+      <!-- <source src="/media/testimonials/Moodle_Learning_Management_System.mp4" type="video/mp4" /> -->
+      <source src="{{ media_url}}{{data.media}}" type="video/mp4"></source>
+      </video>
+    <!-- <source src="{{ media_url}}{{data.media}}" type="video/mp4"></source>   -->
+    <div class="content">
+    <h6 class="mt-0">{{data.user}}</h6>
+    <p>{{data.content}}</p>
+    </div>
+</div>
+      {% endfor %}
+      
+    </div>
+  </div>
+  
+</section>
 
 <!-- testimonial -->
 
@@ -218,6 +223,7 @@
     <p>We invite you to become a part of this amazing journey of making India IT-literate. Join our growing network of Resources Centres, Organisers, Content creators, Domain Experts, Translators, Dubbers, Reviewers and help us to reach every nook and corner of India. </p> 
 
   </div>
+  <a href="http://futureskills.nasscom.in/" class="collab-nasscom">Partnered with Nasscom</a>
   <a href="https://spoken-tutorial.org/accounts/login/?next=/creation/collaborate/" class="btn">Join us</a>
 </section>
 <!-- collaborate -->
@@ -235,9 +241,10 @@
       <div class="content">
       <h5>Kannan Moudgalya</h5>
       <h6>Professor of Chemical Engineering, IIT Bombay</h6>
-     <!--  <p><i class="fab fa-youtube"></i>TEDx Talk<i class="fab fa-twitter"></i>Follow</p> -->
-      <p><a href=""><i class="fab fa-youtube"></i>TEDx Talk</a>
-      <br><a href=""><i class="fab fa-twitter"></i>Follow</a></p> 
+      <p><a href="https://www.youtube.com/watch?v=JaX_uD8JFpI&feature=youtu.be"><i class="fab fa-youtube"></i>TEDx Talk</a>
+      <br><a href="https://twitter.com/kannanmoudgalya"><i class="fab fa-twitter"></i>Follow</a>
+      <br><a href="https://www.che.iitb.ac.in/online/faculty/kannan-m-moudgalya">Details</a>
+      </p> 
         
       </div>
       
@@ -251,7 +258,10 @@
   <div class="news info-style">
     <h2>News / Events</h2>
     <hr>
-    <p>Check out the amazing testimonials, media articles, events, collaboration, seminars, talks and campaigns about the Spoken Tutorial Project. Browse through our gallery and see what the Project has been doing across India.</p>
+    <div class="news-content">
+    <p>Check out the amazing testimonials, media articles, events, collaboration, seminars, talks and campaigns about the Spoken Tutorial Project. Browse through our gallery and see what the Project has been doing across India.</p>  
+    </div>
+    
   </div>
   </div>
   
@@ -352,8 +362,6 @@
 Based on a work at https://spoken-tutorial.org. Permissions beyond the scope of this license may be available at https://spoken-tutorial.org.</p>
 </section> <!-- footer -->
 
-
-<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
 {% endblock content%}
 
 

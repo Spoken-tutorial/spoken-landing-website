@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
-
+from django.conf import settings
 # Create your views here.
 from django.http import HttpResponse
-from .models import Products, Nav, Blended_workshops, Jobfair, Internship, Testimonials
+from .models import Products, Nav, Blended_workshops, Jobfair, Internship, Testimonials, MediaTestimonials
 from datetime import datetime
 from django.utils import timezone
 from .forms import ContactForm
@@ -28,7 +28,8 @@ def home(request):
     internships = Internship.objects.filter(internship_date__gte=now).order_by('internship_date')[:2]
     workshops = Blended_workshops.objects.filter(workshop_date__gte=now).order_by('workshop_date')[:3]
     testimonials = Testimonials.objects.all()[:9]
+    media_testimonials = MediaTestimonials.objects.all()[:3]
     context = {'jobfairs':jobfairs,'internships':internships,'workshops':workshops,'products':products, 
-    'nav_list':navs, 'form':c, 'testimonials':testimonials}
+    'nav_list':navs, 'form':c, 'testimonials':testimonials,'media_testimonials':media_testimonials,'media_url' : settings.MEDIA_URL,}
 
     return render(request,'spoken/home.html',context)

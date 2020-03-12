@@ -90,3 +90,26 @@ class Testimonials(models.Model):
   created = models.DateTimeField(auto_now_add=True)
   updated = models.DateTimeField(auto_now = True, null=True)
   show = models.BooleanField(default=1)
+
+
+class MediaTestimonials(models.Model):
+    '''
+    This model is required for storing audio / video testimonials
+    * path contains the location of the file,
+    * user is the person who has send the testimonial.
+    '''
+    # foss = models.ForeignKey(FossCategory, on_delete=models.PROTECT )
+    foss = models.CharField(max_length=200,default="series")
+    path = models.CharField(max_length=255)
+    user = models.CharField(max_length=255)
+    workshop_details = models.CharField(max_length=255, default='Workshop')
+    content = models.CharField(max_length=500)
+    created = models.DateTimeField(auto_now_add=True)
+    media = models.FileField(upload_to='testimonials/',blank=False,null=False,default='')
+
+    class Meta(object):
+        verbose_name = 'Media Testimonials'
+        verbose_name_plural = 'Media Testimonials'
+
+    def __str__(self):
+        return self.path

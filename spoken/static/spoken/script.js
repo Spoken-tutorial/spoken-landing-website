@@ -1,49 +1,36 @@
+// for smooth scroll effect on nav menu click
 function scrollTopAnimated(clicked_link) { 
-    // elem_class = clicked_link.attr('href').replace('#','.');
     elem_class = clicked_link.attr('href');
-    console.log(elem_class);
-    console.log($(elem_class).offset().top);
-    console.log($('nav').outerHeight());
     scroll_length = $(elem_class).offset().top - $('nav').outerHeight();
-    console.log(scroll_length);
             $("html, body").animate({ scrollTop: scroll_length },800); 
         } 
 
-
-
 $(document).ready(function(){
-  console.log('js working ....');
-  
-  // console.log(slider);
   var $container = $('.activities-container');
-
   window.sr = ScrollReveal();
-  console.log('start');
-  console.log(sr);
-// intial show only jobfairs
+  // default view - workshops
   $container.isotope({ filter: '.filter-workshop' });
-  $('#filter-workshop').css('background-color','#ed125b');
+  $('#filter-workshop').css('background-color','#EC6C06');
 
+  // for smooth scroll
   $('.scroll_link').on('click',function(e){
-    console.log($('nav').outerHeight());
-    scrollTopAnimated($(this));
+  scrollTopAnimated($(this));
   });
 
-  
+  // filter jobfairs, workshop and internships
   $('#activities-filter a').click(function(){
-    console.log('clicked');
   var selector = $(this).attr('data-filter');
   var id_div = $(this).attr('data-filter').replace('.','#');
   $('.filter_div').css('background-color','#02073F');
-  $(id_div).css('background-color','#ed125b');
+  $(id_div).css('background-color','#EC6C06');
   $container.isotope({ filter: selector });
-
-  console.log($container);
-  console.log(selector);
-
-
   return false;
 
+});
+
+
+$('.navbar-nav>li>a').on('click', function(){
+    $('.navbar-collapse').collapse('hide');
 });
 
 // scroll effects
