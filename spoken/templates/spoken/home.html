@@ -52,7 +52,7 @@
             All the content published on this website are shared under the CC BY SA license. Our courses are simple and easy to follow even for a beginner but they also meet the growing needs of the learner. 
           </p> 
         <p>
-        <a href="https://spoken-tutorial.org/about-us/" class="btn">Learn More</a>
+        <a href="https://spoken-tutorial.org/about-us/" class="btn" target="_blank">Learn More</a>
         </p> 
   </div>
 </section>
@@ -69,7 +69,7 @@
         </div>
         <div>
           <p>{{product.product_description}}</p>
-          <div class="link-app"><a href="{{product.product_url}}" class="stretched-link">Learn More <span class="app-i"><i class="fas fa-angle-double-right stretched-link"></i></span></a></div>
+          <div class="link-app"><a href="{{product.product_url}}" class="stretched-link" target="_blank">Learn More <span class="app-i"><i class="fas fa-angle-double-right stretched-link"></i></span></a></div>
         </div>       
       </div>
       {% endfor%}
@@ -85,9 +85,9 @@
     <div class="h-image"><img src="{% static '/spoken/images/activities2.jpg' %}"></div>
     <div class="a-content">
       <div class="btn-activities" id="activities-filter">
-       <div id="filter-jobfair" class="filter_div"><i class="fas fa-briefcase fa" ></i> <a href="" class="btn stretched-link "  data-filter=".filter-jobfair">Job Fairs</a></div>
-        <div id="filter-workshop" class="filter_div"><i class="fas fa-chalkboard-teacher fa" ></i><a href="" class="btn stretched-link"  data-filter=".filter-workshop">Workshops</a></div>
-        <div id="filter-internship" class="filter_div"><i class="fas fa-university fa" ></i><a href="" class="btn stretched-link"  data-filter=".filter-internship">Intenships</a></div>
+       <div id="filter-jobfair" class="filter_div"><i class="fas fa-briefcase fa" ></i> <a href="" class="btn stretched-link "  data-filter=".filter-jobfair" target="_blank">Job Fairs</a></div>
+        <div id="filter-workshop" class="filter_div"><i class="fas fa-chalkboard-teacher fa" ></i><a href="" class="btn stretched-link"  data-filter=".filter-workshop" target="_blank">Workshops</a></div>
+        <div id="filter-internship" class="filter_div"><i class="fas fa-university fa" ></i><a href="" class="btn stretched-link"  data-filter=".filter-internship" target="_blank">Intenships</a></div>
         </div>
         <hr>
         
@@ -107,7 +107,7 @@
             </div>
             </div> 
           {% endfor %}
-          <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore">Explore more Job Fairs </a></div>
+          <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore" target="_blank">Explore more Job Fairs </a></div>
         </div>
         <div class="filter-workshop box-activities">
           {% for workshop in workshops%}
@@ -120,7 +120,7 @@
             </div>
             </div> 
           {% endfor %}
-          <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore">Explore more Workshops </a></div>
+          <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore" target="_blank">Explore more Workshops </a></div>
         </div>
         <div class="filter-internship box-activities">
            {% for internship in internships%}
@@ -132,7 +132,7 @@
             </div>
             </div> 
           {% endfor %}
-          <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore">Explore more Internships </a></div>
+          <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore" target="_blank">Explore more Internships </a></div>
         </div>
       </div>
     </div>
@@ -168,7 +168,7 @@
                 <div class="testimonial-wrapper">
                   <div class="testimonial">
                   <p>{{ data.minified_content|len_cutter:250 }}</p>
-                  <a href=""  data-toggle="modal" data-target="#exampleModalCenter" >Read</a>
+                  <a href=""  data-toggle="modal" data-target="#exampleModalCenter" target="_blank">Read</a>
                   </div>         
                   <div class="media">
                     <div class="media-body">
@@ -223,8 +223,8 @@
     <p>We invite you to become a part of this amazing journey of making India IT-literate. Join our growing network of Resources Centres, Organisers, Content creators, Domain Experts, Translators, Dubbers, Reviewers and help us to reach every nook and corner of India. </p> 
 
   </div>
-  <a href="http://futureskills.nasscom.in/" class="collab-nasscom">Partnered with Nasscom</a>
-  <a href="https://spoken-tutorial.org/accounts/login/?next=/creation/collaborate/" class="btn">Join us</a>
+  <a href="http://futureskills.nasscom.in/" class="collab-nasscom" target="_blank">Partnered with Nasscom</a>
+  <a href="https://spoken-tutorial.org/accounts/login/?next=/creation/collaborate/" class="btn" target="_blank">Join us</a>
 </section>
 <!-- collaborate -->
 <!-- about PI & news & events  -->
@@ -241,9 +241,9 @@
       <div class="content">
       <h5>Kannan Moudgalya</h5>
       <h6>Professor of Chemical Engineering, IIT Bombay</h6>
-      <p><a href="https://www.youtube.com/watch?v=JaX_uD8JFpI&feature=youtu.be"><i class="fab fa-youtube"></i>TEDx Talk</a>
-      <br><a href="https://twitter.com/kannanmoudgalya"><i class="fab fa-twitter"></i>Follow</a>
-      <br><a href="https://www.che.iitb.ac.in/online/faculty/kannan-m-moudgalya">Details</a>
+      <p><a href="https://www.youtube.com/watch?v=JaX_uD8JFpI&feature=youtu.be" target="_blank"><i class="fab fa-youtube"></i>TEDx Talk</a>
+      <br><a href="https://twitter.com/kannanmoudgalya" target="_blank"><i class="fab fa-twitter"></i>Follow</a>
+      <br><a href="https://www.che.iitb.ac.in/online/faculty/kannan-m-moudgalya" target="_blank">Details</a>
       </p> 
         
       </div>
@@ -272,10 +272,10 @@
   <h2>Contact</h2>
   <div class="contact-wrapper blue-bg"> <!-- grid with 3 columns -->
     <div class="social-links"> <!--column 1-->
-       <p><i class="fab fa-youtube"></i><a href="https://www.youtube.com/user/SpokenTutorialIITB/">ST youtube Channel</a></p>
-       <p><i class="fab fa-youtube"></i><a href="https://www.youtube.com/channel/UCmyV3lKT1Gs1AfgtV8pp__Q">Health youtube Channel</a></p>
-       <p><i class="fab fa-facebook-square"></i><a href="https://www.facebook.com/SpokenTutorial.org">Facebook page</a></p>
-       <p><i class="fab fa-skype"></i><a href="">st-iitb</a></p>
+       <p><i class="fab fa-youtube"></i><a href="https://www.youtube.com/user/SpokenTutorialIITB/" target="_blank">ST youtube Channel</a></p>
+       <p><i class="fab fa-youtube"></i><a href="https://www.youtube.com/channel/UCmyV3lKT1Gs1AfgtV8pp__Q" target="_blank">Health youtube Channel</a></p>
+       <p><i class="fab fa-facebook-square"></i><a href="https://www.facebook.com/SpokenTutorial.org" target="_blank">Facebook page</a></p>
+       <p><i class="fab fa-skype"></i><a href="" target="_blank">st-iitb</a></p>
     </div>
     <div class="contact-details"> <!--column 2-->
       <p><i class="fas fa-map-marker-alt map-mark"></i>Spoken Tutorial Project,
@@ -320,35 +320,35 @@
   <div> <!--flex child 1-->
     <ul>
       <li><h6>Open Source</h6></li>
-      <li><a href="https://fossee.in/">FOSSEE Project</a></li>
-      <li><a href="https://www.scilab.in/">Scilab</a></li>
-      <li><a href="https://esim.fossee.in/"> eSim(Oscad)</a></li>
-      <li><a href="https://python.fossee.in/"> Python</a></li>
-      <li><a href="https://cfd.fossee.in/"> OpenFoam(CFD)</a></li>  
+      <li><a href="https://fossee.in/" target="_blank">FOSSEE Project</a></li>
+      <li><a href="https://www.scilab.in/" target="_blank">Scilab</a></li>
+      <li><a href="https://esim.fossee.in/" target="_blank"> eSim(Oscad)</a></li>
+      <li><a href="https://python.fossee.in/" target="_blank"> Python</a></li>
+      <li><a href="https://cfd.fossee.in/" target="_blank"> OpenFoam(CFD)</a></li>  
     </ul>
   </div>
   <div> <!--flex child 2-->
     <ul>
       <li><h6>Training </h6></li>
-      <li><a href="https://process.spoken-tutorial.org/index.php/Software-Training"> Software Training</a></li>
-      <li><a href="https://process.spoken-tutorial.org/index.php/Software-Training#Contacts_For_Training"> Contacts for Training</a></li>
-      <li><a href="https://spoken-tutorial.org/accounts/login/?next=/software-training/">  Training Dashboard</a></li>
-      <li><a href="https://spoken-tutorial.org/accounts/login/?next=/creation/">  Creation Dashboard </a></li>
+      <li><a href="https://process.spoken-tutorial.org/index.php/Software-Training" target="_blank"> Software Training</a></li>
+      <li><a href="https://process.spoken-tutorial.org/index.php/Software-Training#Contacts_For_Training" target="_blank"> Contacts for Training</a></li>
+      <li><a href="https://spoken-tutorial.org/accounts/login/?next=/software-training/" target="_blank">  Training Dashboard</a></li>
+      <li><a href="https://spoken-tutorial.org/accounts/login/?next=/creation/" target="_blank">  Creation Dashboard </a></li>
     </ul>
   </div>
   <div> <!--flex child 3-->
     <ul>
       <li><h6> Other </h6></li>
-      <li><a href="https://aakashlabs.org">Aakash Labs</a></li>
-      <li><a href="https://www.co-learn.in/"> Co-learn</a></li>
-      <li><a href="https://www.sakshat.ac.in/"> Education Mission</a></li>
+      <li><a href="https://aakashlabs.org" target="_blank">Aakash Labs</a></li>
+      <li><a href="https://www.co-learn.in/" target="_blank"> Co-learn</a></li>
+      <li><a href="https://www.sakshat.ac.in/" target="_blank"> Education Mission</a></li>
     </ul>
   </div> 
   <div><!--flex child 4-->
     <ul>
       <li><h6> About Us</h6></li>
-      <li><a href="https://spoken-tutorial.org/about-us/"> About Us</a></li>
-      <li><a href="https://spoken-tutorial.org/news/article/"> News</a></li>
+      <li><a href="https://spoken-tutorial.org/about-us/" target="_blank"> About Us</a></li>
+      <li><a href="https://spoken-tutorial.org/news/article/" target="_blank"> News</a></li>
       <!-- <li><a href="">  Click here to view stats</a></li> -->
       
     </ul>
