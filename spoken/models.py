@@ -113,3 +113,11 @@ class MediaTestimonials(models.Model):
 
     def __str__(self):
         return self.path
+
+class Award(models.Model):
+	title = models.CharField(max_length=500)
+	year = models.IntegerField(default=2020)
+	order = models.IntegerField()
+	link = models.CharField(max_length=300)
+
+
