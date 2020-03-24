@@ -1,0 +1,35 @@
+{% load static%}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="spoken tutorial landing page">
+  	<meta name="author" content="spoken tutorial">
+	<!--Bootsrtap css-->
+	<link rel="stylesheet" type="text/css" href="{% static '/bootstrap/css/bootstrap.min.css'%}">
+	<!--fontawesome-->
+	<link rel="stylesheet" type="text/css" href="{% static '/fontawesome/css/all.min.css'%}">
+	<!-- custom -->
+	<link rel="stylesheet" type="text/css" href="{% static '/spoken/style.css' %}">
+	<title>{% block title%}Spoken Tutorial{% endblock title%}</title>
+	<link rel = "icon" href ="{% static '/spoken/images/favicon.ico'%}" type = "image/x-icon"> 
+</head>
+<body>
+
+	{% block content  %}Problem in accessing index.html{% endblock content %}
+	<!--jquery-->
+	<script type="text/javascript" src="{% static '/jquery.js'%}"></script>
+	<!--popper-->
+	<script type="text/javascript" src="{% static '/popper.min.js'%}"></script>
+	<!--Bootstrap JS-->
+	<script type="text/javascript" src="{% static '/bootstrap/js/bootstrap.min.js'%}"></script>	
+	<!-- tab view for activities -->
+	<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
+	<!--scroll effect-->
+	<script type="text/javascript" src="{% static '/spoken/scrollreveal.js' %}"></script>
+	<!-- custom js -->
+	<script type="text/javascript" src="{% static '/spoken/script.js' %}"></script>
+</body>
+</html>
