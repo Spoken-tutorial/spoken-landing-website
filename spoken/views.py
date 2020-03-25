@@ -6,6 +6,9 @@ from .models import Products, Nav, Blended_workshops, Jobfair, Internship, Testi
 from datetime import datetime
 from django.utils import timezone
 from .forms import ContactForm
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import JobFairSerializer
 
 today = datetime.today().strftime('%Y-%m-%d')
 
@@ -35,3 +38,14 @@ def home(request):
     'awards':awards,}
 
     return render(request,'spoken/home.html',context)
+
+#api/jobfairs/
+class JobFairList(APIView):
+    def get(self,request):
+        jobfairs = Jobfair.objects.all()
+        serializer = JobFairSerializer(jobfairs,many=True)
+        return Response(serializer.data)
+
+
+    def post(self):
+        pass
