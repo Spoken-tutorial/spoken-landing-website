@@ -49,3 +49,9 @@ class JobFairList(APIView):
 
     def post(self):
         pass
+
+def jobfairs(request):
+    d = datetime.now()
+    current_year = d.year
+    context = {'current_year':current_year}
+    return render(request,'spoken/jobfairs.html',context)

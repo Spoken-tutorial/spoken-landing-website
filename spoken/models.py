@@ -74,6 +74,8 @@ class Jobfair(models.Model):
 	know_more_link = models.CharField(max_length=300)
 	updated = models.DateField(auto_now=True)
 	companies = models.ManyToManyField(Company)
+	num_students_registered = models.IntegerField(default=0)
+	num_students_placed = models.IntegerField(default=0)
 	def __str__(self):
 		return self.jobfair_title
 
@@ -99,7 +101,6 @@ class MediaTestimonials(models.Model):
     * path contains the location of the file,
     * user is the person who has send the testimonial.
     '''
-    # foss = models.ForeignKey(FossCategory, on_delete=models.PROTECT )
     foss = models.CharField(max_length=200,default="series")
     path = models.CharField(max_length=255)
     user = models.CharField(max_length=255)
