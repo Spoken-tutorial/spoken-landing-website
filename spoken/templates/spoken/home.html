@@ -57,6 +57,24 @@
   </div>
 </section>
 <!--about-->
+<!-- awards -->
+<section id="awards">
+  {% for award in awards %}
+  <div class="award-bg">
+    {% ifequal forloop.counter|divisibleby:"2" False %}
+     <i class="fas fa-award"></i>
+     {% else %}
+     <i class="fas fa-trophy"></i>
+    {% endifequal %}
+  
+   
+   <h5 class="year">{{award.year}}</h5>
+   <a href="{{award.link}}"><h5 class="title">{{award.title}}</h5></a>
+    
+  </div>
+  {% endfor %}
+</section>
+<!-- awards -->
 <!-- applications -->
 <section class="application " id="applications">
   <h2 class="text-center header-m">Applications</h2>
