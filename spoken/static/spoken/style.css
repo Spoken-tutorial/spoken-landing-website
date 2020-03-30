@@ -187,23 +187,18 @@ nav button{
 /*about*//***************************************************************************/
 .about{
 	display: grid;
-	grid-template-columns: 1fr 2fr;
-	padding: var(--section-padding);
+	grid-template-columns: 1fr 1fr;
 	grid-gap: 2rem;
 	box-shadow: var(--shadow);
 	border-radius: 10px;
 	margin:5rem 5%;
+	padding: 2% 2% 2% 2%;
 }
 .about .image{
-	align-self: flex-end;
-	justify-content: flex-end;
+	align-self: stretch;
+	justify-content: center;
 }
 
-.about .image img{
-	max-width: 100%;
-	max-height: 550px;
-	min-width: 300px;
-}
 .about .content{
 	line-height: 1.8rem;
 }
@@ -459,26 +454,15 @@ nav button{
 	background: var(--dark);
 	color: #fff;
 	position: relative;
-	padding: 10px;
+	padding: 1%; 
 	display: flex;
 	flex-wrap: wrap;
-}
-.btn-activities .btn1{
-	min-width: 120px;
-	color: black;
-	padding: 0.6rem 1.3rem;
-	text-decoration: none;
-	border:0;
 }
 
 .btn-activities div i{
 		font-size:2rem;
 	}
 
-
-.box-activities{
-	/*border:2px solid green;*/
-}
 .activities-container i{
 	color:  var(--btn-color);
 	size: 1.5rem;
@@ -594,7 +578,6 @@ nav button{
 /*collaboration*//***************************************************************************/
 
 /*testimonial*//***************************************************************************/	
-
 #testimonialCarousel{
 	display: flex;
 	flex-direction: column;
@@ -992,6 +975,7 @@ nav button{
 		 }
 
 
+
 	}
 
 @media (max-width: 992px) and (min-width: 768px){
@@ -1000,6 +984,9 @@ nav button{
 			grid-template-columns: 1fr 1fr;
 		}
 
+
+
+		
   }
 
  /*Small devices (landscape phones, less than 768px)*/
@@ -1017,48 +1004,41 @@ nav button{
 
 		/*about*****************************************/
 		.about{
-			background-image: linear-gradient(
-	      rgba(0, 38, 73, 0.8),
-	      rgba(0, 38, 73, 0.8)
-	    ), url('images/about-s.jpg');
-			background-attachment: fixed;
-			background-repeat: no-repeat;
 			background-size: 100%;
 			grid-template-columns: 1fr;
-			color: #fff;
 			border:2px solid red;
 			margin-top:2rem; 
 			margin-right: 0;
 			margin-left: 0;
+			display: grid;
+			grid-template-columns: 1fr;
 		}
 		.about .image{
-			display: none;
+			grid-row: 2/3;
 		}
 		.about .content {
+			grid-row: 1/2;
 			padding: 2rem 2rem;
-		}
-
-		.about .content h2{
-			color: #fff;
-		}
-		.about .content h6{
-			color: #fff;
 		}
 		/*about*****************************************/
 
-		/*quote*****************************************/
+/*quote*****************************************/
 				.quote{
 			grid-template-columns: 1fr;
 				}
 				.quote .image{
 					display: flex;
-					align-items: center;
+					align-items: stretch;
 					justify-content: center;
 				}
 				.quote img{
 				max-width: 30%;
 				}
-		/*quote*****************************************/
+
+
+		
+
+				/*quote*****************************************/
 
 		/*applications*****************************************/
 			
@@ -1117,7 +1097,6 @@ nav button{
 	grid-template-columns: repeat(2,1fr);
 	grid-template-rows: 1;	
 }
-
 
 .carousel{	
 		padding: 10px;	

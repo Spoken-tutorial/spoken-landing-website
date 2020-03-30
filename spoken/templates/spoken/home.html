@@ -43,7 +43,9 @@
 <!-- quote -->
 <!--about-->
 <section class="about" id="about">
-  <div class="image"><img src="{% static '/spoken/images/about_4.jpg' %}"></div>
+  <div class="embed-responsive embed-responsive-4by3 image">
+  <iframe class="embed-responsive-item" width="50%"  src="https://www.youtube.com/embed/UCWqRqp-G6w?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
   <div class="content">
     <h2>About Us</h2>
         <h6>Spoken Tutorial is a multi-award winning educational content portal.</h6> 
@@ -113,7 +115,7 @@
         <div class="filter-jobfair box-activities">
           {% for jobfair in jobfairs%}
           <div class="activities-event ">
-            <div class="date"><p><i class="fas fa-calendar-alt"></i>{{jobfair.jobfair_date}}</p></div>
+            <div class="date"><p><i class="fas fa-calendar-alt"></i>{{jobfair.jobfair_start_date}}</p></div>
             <div class="content">
             <h6>{{jobfair.jobfair_title}}</h6>
             <p>Participating Companies :  </p>
