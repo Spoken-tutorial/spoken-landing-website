@@ -1,0 +1,159 @@
+/*general*/
+:root{
+			/*--footer-color:#002649; 
+			--white:#fff;
+			--light :#F5F8FD ; 
+			--dark :#02073F ;
+			--main-font-color :#413e66 ;
+			*/
+			--btn-color:#18B1DC;  /*rgb(24,177,220)*/
+		/*	--line-color:#C9D4F6;
+			
+			--section-padding:0 10%;
+			--orange:#EC6C06;*/
+			--font:"Open Sans", sans-serif;
+			--shadow : 0 1px 10px rgb(104,104,104,0.5);
+
+}
+*{
+	
+}
+body *{
+			/*font-size: 16px;*/
+			/*font-family: "Open Sans", sans-serif;*/
+			margin:0;
+}
+/*general ends*/
+main{
+	
+}
+
+
+#jobfair_content{
+	/*background-color: yellow;*/
+	border:2px solid green;
+	min-height: 200px;
+	min-width: 100%;
+}
+#jobfair_content .header{
+	background-image:url('images/jd-bg.jpg');
+	color: #fff;
+	padding: 10%;
+}
+
+#jobfair_content .header .btn{
+	margin-top: 5%;
+}
+#jobfair_content .desc p{
+	
+	margin: 5%;
+	line-height: 2rem;
+	/*font-family: var(--font);*/
+	border:1px solid blue;
+}
+#jobfair_content .desc .job-profiles{
+	
+	/*background-color: #013A6B;*/
+	/*background-image: -webkit-linear-gradient(30deg, #002649 50%, #004E95 50%);*/
+
+}
+#jobfair_content .desc .eligibility{
+	
+	box-shadow: var(--shadow);
+	margin: 5%;
+	padding: 4% 2%;
+	/*background-color: #013A6B;*/
+	/*background-image: -webkit-linear-gradient(30deg, #002649 50%, #004E95 50%);*/
+	text-align: center;
+}
+#jobfair_content .numbers{
+	background-color: #013A6B;
+	background-image: linear-gradient(
+	      rgba(0, 38, 73, 0.6),
+	      rgba(0, 38, 73, 0.5)
+	    ), url('images/numbers-bg.jpg');
+	/*background-size: 100% 100%;*/
+	background-size: cover;
+	/*background-attachment: fixed;*/
+	padding: 4%;
+	color: #fff;
+}
+#jobfair_content .numbers .data{
+	text-align: center;
+	border: 1px solid rgb(255,255,255,0.5);
+	margin:2%;
+	color: #fff;
+	padding: 2%;
+}
+#jobfair_content .numbers .data h2{
+	/*text-align: center;
+	border: 1px solid red;
+	margin:2%;*/
+	color: #fff;
+	/*font-weight: 900;*/
+
+}
+#jobfair_content .numbers .data h6{
+	/*text-align: center;
+	border: 1px solid red;
+	margin:2%;*/
+	color: #fff;
+	font-weight: bold;
+
+}
+#jobfair_content .numbers .data i{
+	font-size: 1.5rem;
+
+}
+h5{
+	border:1px solid red;
+
+}
+
+#brochure{
+	/*background-color: pink;*/
+	border:2px solid red;
+	min-height: 200px;
+	min-width: 100%;
+}
+
+/*media queries*/
+
+/*Large devices (desktops, less than 1200px)*/
+@media (max-width: 1199.98px) {  }
+
+@media (min-width: 992px) {  
+	
+	main{
+		display: grid;
+		grid-template-columns: 1fr 1fr; 
+	}
+
+}
+
+
+/*Medium devices (tablets, less than 992px)*/
+@media (max-width: 991.98px) { 
+	
+	}
+
+@media (max-width: 992px) and (min-width: 768px){
+
+		
+  }
+
+ /*Small devices (landscape phones, less than 768px)*/
+@media (max-width: 767.98px) { 
+
+		}
+
+
+@media (max-width: 768px) and (min-width: 576px){}
+
+
+@media (max-width: 575.98px) {  
+
+
+}
+
+/*media queries*/

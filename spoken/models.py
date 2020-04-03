@@ -58,15 +58,22 @@ class Internship(models.Model):
 
 	def __str__(self):
 		return self.internship_title
-
-class Company(models.Model):
-	name = models.CharField(max_length=200)
+		
+class Technology(models.Model):
+	name = models.CharField(max_length=255)
 
 	def __str__(self):
 		return self.name
 
+class Company(models.Model):
+	name = models.CharField(max_length=200)
+	technologies = models.ManyToManyField(Technology)
+
+	def __str__(self):
+		return self.name
 
 class Jobfair(models.Model):
+	jobfair_id = models.CharField(max_length=50, blank=True,null=True)
 	jobfair_title = models.CharField(max_length=255)
 	jobfair_start_date = models.DateField(blank=True,null=True)
 	jobfair_end_date = models.DateField(blank=True,null=True)
@@ -76,9 +83,17 @@ class Jobfair(models.Model):
 	companies = models.ManyToManyField(Company)
 	num_students_registered = models.IntegerField(default=0)
 	num_students_placed = models.IntegerField(default=0)
+	technologies = models.ManyToManyField(Technology)
+	eligibility_criteria = models.TextField(default='')
+	selection_process = models.TextField(default='')
+	num_student_appeared = models.IntegerField(default=0)
+	registration_start_date = models.DateField(blank=True,null=True)
+	registration_end_date = models.DateField(blank=True,null=True)
+	# location
+
+
 	def __str__(self):
 		return self.jobfair_title
-
 
 class Testimonials(models.Model):
   user = models.ForeignKey(User, related_name = 'testimonial_created_by', on_delete=models.PROTECT )
