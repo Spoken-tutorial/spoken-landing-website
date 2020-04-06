@@ -1,8 +1,8 @@
 // for smooth scroll effect on nav menu click
 function scrollTopAnimated(clicked_link) { 
     elem_class = clicked_link.attr('href');
-    scroll_length = $(elem_class).offset().top - $('nav').outerHeight();
-            $("html, body").animate({ scrollTop: scroll_length },800); 
+    scroll_length = $(elem_class).offset().top - document.getElementById("logo").offsetHeight-70;
+    $("html, body").animate({ scrollTop: scroll_length },800); 
         } 
 
 $(document).ready(function(){
@@ -11,14 +11,13 @@ $(document).ready(function(){
   // default view - workshops
   $container.isotope({ filter: '.filter-workshop' });
   $('#filter-workshop').css('background-color','#EC6C06');
-
   // for smooth scroll
   $('.scroll_link').on('click',function(e){
   scrollTopAnimated($(this));
   });
 
   // filter jobfairs, workshop and internships
-  $('#activities-filter a').click(function(){
+  $('#activities-filter button').click(function(){
   var selector = $(this).attr('data-filter');
   var id_div = $(this).attr('data-filter').replace('.','#');
   $('.filter_div').css('background-color','#02073F');

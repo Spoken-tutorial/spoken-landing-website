@@ -7,11 +7,12 @@
 {% block content%}
 <!--bootstrap navbar--->
   <nav class="navbar navbar-expand-lg fixed-top navbar-light navbar-custom">
-  <a class="navbar-brand brand-custom" href="#"><img src="{% static '/spoken/images/logo.png' %}" width="30" height="30" class="d-inline-block " alt=""> Applications of Spoken Tutorials</a>
+    
+      <a id="logo" class="navbar-brand brand-custom" href=""><img src="{% static '/spoken/images/logo.png' %}" width="30" height="30" class="d-inline-block " alt="">  Applications of Spoken Tutorials</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav ml-auto">
       <li class="nav-item active">
         <a class="nav-link scroll_link " href="#home">Home<span class="sr-only">(current)</span></a>
@@ -44,7 +45,7 @@
 <!--about-->
 <section class="about" id="about">
   <div class="embed-responsive embed-responsive-4by3 image">
-  <iframe class="embed-responsive-item" width="50%"  src="https://www.youtube.com/embed/UCWqRqp-G6w?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  <iframe class="embed-responsive-item" width="100%"  src="https://www.youtube.com/embed/UCWqRqp-G6w?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>
   <div class="content">
     <h2>About Us</h2>
@@ -54,7 +55,7 @@
             All the content published on this website are shared under the CC BY SA license. Our courses are simple and easy to follow even for a beginner but they also meet the growing needs of the learner. 
           </p> 
         <p>
-        <a href="https://spoken-tutorial.org/about-us/" class="btn" target="_blank">Learn More</a>
+        <a class="about-btn btn" href="https://spoken-tutorial.org/about-us/" class="btn" target="_blank">Learn More</a>
         </p> 
   </div>
 </section>
@@ -68,20 +69,18 @@
      {% else %}
      <i class="fas fa-trophy"></i>
     {% endifequal %}
-  
-   
    <h5 class="year">{{award.year}}</h5>
    <a href="{{award.link}}"><h5 class="title">{{award.title}}</h5></a>
-    
   </div>
   {% endfor %}
 </section>
 <!-- awards -->
+
 <!-- applications -->
-<section class="application " id="applications">
-  <h2 class="text-center header-m">Applications</h2>
-  <div class="applications-grid">
-    {% for product in products%}
+<section id="applications">
+<h2 class="text-center header-m">Applications</h2>
+<div id="products">
+  {% for product in products%}
        <div class="box text-center">   
         <div class="header">         
           <img src="{{ product.logo.url }}">
@@ -89,26 +88,30 @@
         </div>
         <div>
           <p>{{product.product_description}}</p>
+          <hr>
           <div class="link-app"><a href="{{product.product_url}}" class="stretched-link" target="_blank">Learn More <span class="app-i"><i class="fas fa-angle-double-right stretched-link"></i></span></a></div>
         </div>       
       </div>
       {% endfor%}
-  </div>    
+</div>
 </section>
-<!-- applications -->
-
 <!-- activities -->
 <section class="events" id="activities"> <!-- container with heading, image and content -->
-   <h2 class="text-center header-m">Activities</h2>
-   <div class="activities"> <!--image and content-->
-    <div class="v-image"><img src="{% static '/spoken/images/activities1.jpg' %}"></div>
+    <h2 class="text-center header-m">Activities</h2>
+   <div class="activities"> 
+    <div class="act-image">
+      <div class="v-image"><img src="{% static '/spoken/images/activities1.jpg' %}"></div>
     <div class="h-image"><img src="{% static '/spoken/images/activities2.jpg' %}"></div>
+
+    </div>
+    
     <div class="a-content">
-      <div class="btn-activities" id="activities-filter">
-       <div id="filter-jobfair" class="filter_div"><i class="fas fa-briefcase fa" ></i> <a href="" class="btn stretched-link "  data-filter=".filter-jobfair" target="_blank">Job Fairs</a></div>
-        <div id="filter-workshop" class="filter_div"><i class="fas fa-chalkboard-teacher fa" ></i><a href="" class="btn stretched-link"  data-filter=".filter-workshop" target="_blank">Workshops</a></div>
-        <div id="filter-internship" class="filter_div"><i class="fas fa-university fa" ></i><a href="" class="btn stretched-link"  data-filter=".filter-internship" target="_blank">Intenships</a></div>
+        <div class="btn-activities" id="activities-filter">
+       <button id="filter-jobfair" class="filter_div" data-filter=".filter-jobfair"><i class="fas fa-briefcase fa" ></i> <span>Jobfair</span></button>
+        <button id="filter-workshop" class="filter_div" data-filter=".filter-workshop"><i class="fas fa-chalkboard-teacher fa" ></i><span>workshop</span></button>
+        <button id="filter-internship" class="filter_div" data-filter=".filter-internship"><i class="fas fa-university fa" ></i><span>Internship</span></button>
         </div>
+
         <hr>
         
       <div class=" activities-container ">
@@ -127,7 +130,7 @@
             </div>
             </div> 
           {% endfor %}
-          <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore" target="_blank">Explore more Job Fairs </a></div>
+     <!--      <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore" target="_blank">Explore more Job Fairs </a></div> -->
         </div>
         <div class="filter-workshop box-activities">
           {% for workshop in workshops%}
@@ -140,7 +143,7 @@
             </div>
             </div> 
           {% endfor %}
-          <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore" target="_blank">Explore more Workshops </a></div>
+          <!-- <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore" target="_blank">Explore more Workshops </a></div> -->
         </div>
         <div class="filter-internship box-activities">
            {% for internship in internships%}
@@ -152,21 +155,21 @@
             </div>
             </div> 
           {% endfor %}
-          <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore" target="_blank">Explore more Internships </a></div>
+          <!-- <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore" target="_blank">Explore more Internships </a></div> -->
         </div>
       </div>
     </div>
-  </div><!--image and content-->
+  </div> 
 </section> <!-- container with heading, image and content -->
 <!-- activities -->
 
 
 
 <!-- Testimonial -->
-<section id="testimonial">
-  <div id="testimonialCarousel" class="carousel slide" data-ride="carousel">
+ <section id="testimonial">
+  <div id="testimonialCarousel" class="carousel" data-ride="carousel">
    <h2 class="text-center header-m">Testimonials</h2>
- 
+  
   <ol class="carousel-indicators">
     <li data-target="#testimonialCarousel" data-slide-to="0" class="active"></li>
     <li data-target="#testimonialCarousel" data-slide-to="1"></li>
@@ -188,7 +191,7 @@
                 <div class="testimonial-wrapper">
                   <div class="testimonial">
                   <p>{{ data.minified_content|len_cutter:250 }}</p>
-                  <a href=""  data-toggle="modal" data-target="#exampleModalCenter" target="_blank">Read</a>
+                  <a href="{{data.source_link}}" target="_blank">Read</a>
                   </div>         
                   <div class="media">
                     <div class="media-body">
@@ -218,10 +221,8 @@
       {% for data in media_testimonials%}
     <div class=" media-testimonials-grid">  
        <video class="st_video align-self-center" title='{{ data.foss }}' controls preload data-setup="{}">
-      <!-- <source src="/media/testimonials/Moodle_Learning_Management_System.mp4" type="video/mp4" /> -->
       <source src="{{ media_url}}{{data.media}}" type="video/mp4"></source>
       </video>
-    <!-- <source src="{{ media_url}}{{data.media}}" type="video/mp4"></source>   -->
     <div class="content">
     <h6 class="mt-0">{{data.user}}</h6>
     <p>{{data.content}}</p>
@@ -279,7 +280,12 @@
     <h2>News / Events</h2>
     <hr>
     <div class="news-content">
-    <p>Check out the amazing testimonials, media articles, events, collaboration, seminars, talks and campaigns about the Spoken Tutorial Project. Browse through our gallery and see what the Project has been doing across India.</p>  
+    <p>Check out the amazing 
+      <span><a href="https://spoken-tutorial.org/testimonials/text/" target="_blank">testimonials, </a></span>
+      <span><a href="https://spoken-tutorial.org/news/articles-on-spoken-tutorial-project/" target="_blank">media articles, </a></span>
+      <span><a href="https://spoken-tutorial.org/news/news-and-events/" target="_blank">events, </a></span>
+      <span><a href="https://spoken-tutorial.org/news/official-letters-and-links/" target="_blank">collaboration, </a></span>
+ , seminars, talks and campaigns about the Spoken Tutorial Project. Browse through our gallery and see what the Project has been doing across India.</p>  
     </div>
     
   </div>
