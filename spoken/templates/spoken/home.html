@@ -7,7 +7,6 @@
 {% block content%}
 <!--bootstrap navbar--->
   <nav class="navbar navbar-expand-lg fixed-top navbar-light navbar-custom">
-    
       <a id="logo" class="navbar-brand brand-custom" href=""><img src="{% static '/spoken/images/logo.png' %}" width="30" height="30" class="d-inline-block " alt="">  Applications of Spoken Tutorials</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -60,21 +59,7 @@
   </div>
 </section>
 <!--about-->
-<!-- awards -->
-<section id="awards">
-  {% for award in awards %}
-  <div class="award-bg">
-    {% ifequal forloop.counter|divisibleby:"2" False %}
-     <i class="fas fa-award"></i>
-     {% else %}
-     <i class="fas fa-trophy"></i>
-    {% endifequal %}
-   <h5 class="year">{{award.year}}</h5>
-   <a href="{{award.link}}"><h5 class="title">{{award.title}}</h5></a>
-  </div>
-  {% endfor %}
-</section>
-<!-- awards -->
+
 
 <!-- applications -->
 <section id="applications">
@@ -95,6 +80,23 @@
       {% endfor%}
 </div>
 </section>
+
+<!-- awards -->
+<section id="awards">
+  {% for award in awards %}
+  <div class="award-bg">
+    {% ifequal forloop.counter|divisibleby:"2" False %}
+     <i class="fas fa-award"></i>
+     {% else %}
+     <i class="fas fa-trophy"></i>
+    {% endifequal %}
+   <h5 class="year">{{award.year}}</h5>
+   <a href="{{award.link}}"><h5 class="title">{{award.title}}</h5></a>
+  </div>
+  {% endfor %}
+</section>
+<!-- awards -->
+
 <!-- activities -->
 <section class="events" id="activities"> <!-- container with heading, image and content -->
     <h2 class="text-center header-m">Activities</h2>
@@ -284,8 +286,8 @@
       <span><a href="https://spoken-tutorial.org/testimonials/text/" target="_blank">testimonials, </a></span>
       <span><a href="https://spoken-tutorial.org/news/articles-on-spoken-tutorial-project/" target="_blank">media articles, </a></span>
       <span><a href="https://spoken-tutorial.org/news/news-and-events/" target="_blank">events, </a></span>
-      <span><a href="https://spoken-tutorial.org/news/official-letters-and-links/" target="_blank">collaboration, </a></span>
- , seminars, talks and campaigns about the Spoken Tutorial Project. Browse through our gallery and see what the Project has been doing across India.</p>  
+      <span><a href="https://spoken-tutorial.org/news/official-letters-and-links/" target="_blank">collaboration </a></span> and
+      <span><a href="https://spoken-tutorial.org/research-popular-articles/" target="_blank">articles </a></span> about the Spoken Tutorial Project and see what the Project has been doing across India.</p>  
     </div>
     
   </div>
@@ -298,8 +300,8 @@
   <h2>Contact</h2>
   <div class="contact-wrapper blue-bg"> <!-- grid with 3 columns -->
     <div class="social-links"> <!--column 1-->
-       <p><i class="fab fa-youtube"></i><a href="https://www.youtube.com/user/SpokenTutorialIITB/" target="_blank">ST youtube Channel</a></p>
-       <p><i class="fab fa-youtube"></i><a href="https://www.youtube.com/channel/UCmyV3lKT1Gs1AfgtV8pp__Q" target="_blank">Health youtube Channel</a></p>
+       <p><i class="fab fa-youtube"></i><a href="https://www.youtube.com/user/SpokenTutorialIITB/" target="_blank">ST YouTube Channel</a></p>
+       <p><i class="fab fa-youtube"></i><a href="https://www.youtube.com/channel/UCmyV3lKT1Gs1AfgtV8pp__Q" target="_blank">Health YouTube Channel</a></p>
        <p><i class="fab fa-facebook-square"></i><a href="https://www.facebook.com/SpokenTutorial.org" target="_blank">Facebook page</a></p>
        <p><i class="fab fa-skype"></i><a href="" target="_blank">st-iitb</a></p>
     </div>
@@ -365,8 +367,9 @@
   <div> <!--flex child 3-->
     <ul>
       <li><h6> Other </h6></li>
-      <li><a href="https://aakashlabs.org" target="_blank">Aakash Labs</a></li>
-      <li><a href="https://www.co-learn.in/" target="_blank"> Co-learn</a></li>
+      <li><a href="https://mhrd.gov.in/ict-initiatives" target="_blank">MHRD Initiatives</a></li>
+      <li><a href="http://futureskills.nasscom.in/" target="_blank">NASSCOM</a></li>
+      <li><a href="https://swayam.gov.in/explorer?searchText=kannan" target="_blank">SWAYAM</a></li>
       <li><a href="https://www.sakshat.ac.in/" target="_blank"> Education Mission</a></li>
     </ul>
   </div> 

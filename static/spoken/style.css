@@ -560,6 +560,7 @@ nav button{
 	font-size: 1.2rem;
 	color: var(--main-font-color);
 	font-weight: bold;
+	margin-bottom: 0.5rem;
 }
 #activities-filter button{
 	background-color: var(--dark);
