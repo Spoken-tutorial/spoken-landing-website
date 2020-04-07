@@ -13,9 +13,6 @@
 			--orange:#EC6C06;
 
 }
-*{
-	
-}
 body{
 			font-size: 16px;
 			font-family: "Open Sans", sans-serif;
@@ -40,7 +37,7 @@ h2{
 	text-decoration: none;
 	border:0;
 	border-radius: 5px;
-	width: 150px;
+	/*width: 150px;*/
 }
 .btn:hover{
 	background:#fff;
@@ -54,7 +51,7 @@ h2{
 	padding: 1.5rem 2rem;
 	box-shadow: var(--shadow);
 	border-radius: 1rem;
-	position: relative;
+	/*position: relative;*/
 }
 
 
@@ -212,6 +209,9 @@ nav button{
 .about h2{
 	margin:2rem 0;
 }
+.about .content a{
+	margin-top:5%;
+}
 /*about*//***************************************************************************/
 
 /*awards*//***************************************************************************/
@@ -228,11 +228,10 @@ nav button{
 		padding-bottom:4%;
 		padding-right: 2%;
 		padding-left: 2%;
-		margin-top: 5rem;
+		margin-top: 2%;
 }
 #awards{
 	display: grid;
-	/*grid-template-columns: repeat(6,1fr);*/
 	grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
 	grid-gap: 2rem;
 	min-height: 200px;
@@ -240,23 +239,17 @@ nav button{
 
 }
 #awards .award-bg{
-	/*background-color: var(--dark);*/
 	display: flex;
 	align-items: center;
 	flex-direction: column;
 	min-height: 200px;
-	padding: 5%;
-	/*border-radius: 50%;*/
 	box-shadow: var(--shadow);
-	/*opacity: 0.4;*/
 	border:2px solid #fff;
 
 }
 #awards .award-bg i{
-	/*color: var(--orange);*/
 	font-size: 2rem;
 	color: #fff;
-	/*opacity: 0.5;*/
 	line-height: 2.5rem;
 	margin-bottom: 2%;
 	color: var(--orange);
@@ -279,14 +272,42 @@ nav button{
 	max-height: 200px;
 }
 /*awards*//***************************************************************************/
+/*products*/
 
+#products{
+	display: grid;
+	grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+	grid-gap: 2rem;
+	min-height: 200px;
+	margin: 0 6%;
+
+}
+#products .box img{
+	width: 60%;
+	max-width: 150px;
+	max-height: 100px;
+	align-items: flex-end;
+	min-height: 100px;
+	min-width: 150px;
+}
+#products .header{
+	height: 40%;
+}
+#products p{
+	text-align: left;
+}
+
+#products hr{	
+	margin-bottom: 10px;
+}
+#applications h2{
+	margin:2rem 0;
+}
+/*products*/
 
 /*applications*//***************************************************************************/
 .application{
 	padding: 1%;
-}
-.application{
-	margin-top: 5rem;
 }
 
 .application .applications-grid{
@@ -300,7 +321,6 @@ nav button{
 	padding: 1.5rem 2rem;
 	box-shadow: var(--shadow);
 	border-radius: 1rem;
-	position: relative;
 }
 .application h2{
 	margin-bottom: 2rem;
@@ -308,8 +328,9 @@ nav button{
 .application .box .header{
 	display: flex;
 	flex-direction: column;
-	align-items:center;
+	align-items:flex-end;
 	min-height: 50%;
+
 }
 .application .box img{
 	width: 60%;
@@ -324,6 +345,7 @@ nav button{
 	color: #004E96;
 	border-bottom: 1px solid rgb(0,78,150,0.3);
 	padding-bottom: 2px;
+	align-items: flex-end;
 }
 .box p{
 	font-family: var(--font);
@@ -339,13 +361,9 @@ nav button{
 	margin-bottom: 1rem;
 }
 .box .link-app{
-	position: absolute;
-	margin:0 auto;
 	bottom: 0.5rem;
 }
-.box a:hover i{
-	margin-left: 10px;
-}
+
 .box-ls img{
 	display: none;
 }
@@ -355,10 +373,13 @@ nav button{
 /*applications*//***************************************************************************/
 /*activities*//***************************************************************************/
 .events{
-	margin-top:5rem;
-	/*border:1px solid red;*/
+	margin-top:2%;
 }
-
+.act-image{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 .activities{
 	display: grid;
 	grid-template-columns:  1fr 3fr;
@@ -376,7 +397,9 @@ nav button{
 	justify-content: center;
 	display: none;
 }
-
+.activities{
+	padding: 2% 2%;
+}
 .activities .h-image{
 	min-height: 400px;
 	min-width: 300px;
@@ -404,7 +427,6 @@ nav button{
 .activities .btn:hover{
 	color: #fff;
 	text-decoration: underline;
-
 }
 
 .box-activities{
@@ -432,7 +454,6 @@ nav button{
 .btn-activities{
 	display: grid;
 	grid-template-columns: repeat(3,1fr);
-	justify-items:center;
 }
 
 .btn-activities .btn{
@@ -453,7 +474,7 @@ nav button{
 	align-items: center;
 	background: var(--dark);
 	color: #fff;
-	position: relative;
+	/*position: relative;*/
 	padding: 1%; 
 	display: flex;
 	flex-wrap: wrap;
@@ -470,32 +491,34 @@ nav button{
 }
 .activities-event{
 	padding: 1rem 0;
-	margin-right: 10%;
+	margin:0;
+	background-color: #fff;
 }
 
 .activities-event p{
-	line-height: 0.5rem;
+	line-height: 1.5rem;
+	font-size: 0.9rem;
+}
+
+.filter_div span{
+	padding:3% ;
+	font-size: 1rem;
+}
+.filter_div{
+	padding: 2%;
+	margin:2%;
 }
 .filter-jobfair .activities-event{
-	display:grid;
-	grid-template-columns: 1fr  3fr;
 	text-align:center;
 	margin: 0;
-	height: 100px;
 }
 .filter-workshop .activities-event{
-	display:grid;
-	grid-template-columns: 1fr 1fr 3fr;
 	text-align:center;
 	margin: 0;
-	height: 100px;
 }
 .filter-internship .activities-event{
-	display:grid;
-	grid-template-columns: 1fr  3fr;
 	text-align:center;
 	margin: 0;	
-	height: 100px;
 }
 .activities-event .date{
 	border-right: 1px solid #e0e0e0;
@@ -507,8 +530,9 @@ nav button{
 	line-height: 1.5rem;
 }
 .activities-event {
-	border-bottom: 1px solid  #e0e0e0;
-	box-shadow: var(--shadow);
+	box-shadow: 0 1px 5px rgb(104,104,104,0.5);
+	margin-right: 10px;
+	margin: 0;
 }
 
 .box_card{
@@ -536,6 +560,14 @@ nav button{
 	font-size: 1.2rem;
 	color: var(--main-font-color);
 	font-weight: bold;
+	margin-bottom: 0.5rem;
+}
+#activities-filter button{
+	background-color: var(--dark);
+	color: #fff;
+}
+.filter_div i{
+
 }
 /*activities*//***************************************************************************/
 
@@ -549,7 +581,7 @@ nav button{
 		background-attachment: fixed;
 		padding-top:4%;
 		padding-bottom:5%;
-		margin-top: 5rem;
+		margin-top: 2%;
 		}
 .collab .content{
 			color: whitesmoke;
@@ -587,6 +619,8 @@ nav button{
 	order: 10;
 	padding: 0;
 	margin: 0;
+	margin-top:20px;
+
 }
 .carousel .testimonial-wrapper a{
 	color: var(--dark);
@@ -615,18 +649,16 @@ nav button{
 	background: var(--light);
 	border: 1px solid #efefef;
 	border-width: 0 0 1px 1px;
-	position: absolute;
 	bottom: -8px;
 	left: 46px;
 	transform: rotateZ(-46deg);
 }
 .carousel h2 {
-	margin: 5rem;
+	margin: 2%;
 }
 .carousel h2::after {
 	content: "";
 	width: 100px;
-	position: absolute;
 	margin: 0 auto;
 	height: 4px;
 	border-radius: 1px;
@@ -645,8 +677,7 @@ nav button{
 	font-size: 13px;
 }
 .carousel .media {
-	position: relative;
-	padding: 0 0 0 20px;
+	padding: 0 0 0 0;
 }
 
 .carousel .testimonial-wrapper {
@@ -654,7 +685,6 @@ nav button{
 }
 .carousel .testimonial {
     color: rgb(0,0,0,0.6);
-    position: relative;
     padding: 15px;
     border: 1px solid #efefef;
     border-radius: 3px;
@@ -676,14 +706,13 @@ nav button{
 	background: #f1f1f1;
 	border: 1px solid #efefef;
 	border-width: 0 0 1px 1px;
-	position: absolute;
 	bottom: -8px;
 	left: 46px;
 	transform: rotateZ(-46deg);
 }
 
 .carousel .overview {
-	padding: 3px 0 0 15px;
+	padding: 3px 0 0 0;
 }
 .carousel .overview .details {
 	padding: 5px 0 8px;
@@ -701,11 +730,12 @@ nav button{
 .carousel-indicators li {	
     background: #e2e2e2;
     border: 4px solid #fff;
+    
 }
 .carousel-indicators li.active {
 	color: #fff;
     background: var(--orange);
-    border: 5px double;    
+    border: 5px doublemargin-top:20px;
 }
 /*testimonial*//***************************************************************************/
 
@@ -725,6 +755,7 @@ nav button{
 	box-shadow: var(--shadow);
 	padding:2%;
 	border-radius: 10px;
+	background-color: #fff;
 }
 .media-testimonials video{
 	width:80%;
@@ -757,7 +788,7 @@ nav button{
 	grid-template-columns: repeat(2,1fr);
 	padding: 0 10%;
 	grid-gap: 2rem;
-	margin-top: 5rem;
+	margin-top: 2%;
 }
 .info-wrapper .info-style{
 	box-shadow: var(--shadow);
@@ -821,13 +852,19 @@ nav button{
 .info-wrapper .news *{
 	text-align: left;
 }
-
+.news-content {
+	line-height: 2rem;
+}
+.news-content a{
+	text-decoration: underline;
+	color: rgb(0,0,0);
+}
 /*info*//***************************************************************************/
 
 
 /*contact*//***************************************************************************/
 #contact{
-	margin-top: 5rem;
+	margin-top: 2%;
 }
 #contact h2{
 	margin-bottom: 2rem;
@@ -949,6 +986,19 @@ nav button{
 	.applications-grid{
 		grid-template-columns: repeat(3,1fr);
 	}
+
+.filter-jobfair .activities-event{
+	display: grid;
+		grid-template-columns: 1fr 3fr;
+}
+.filter-internship	.activities-event{
+		display: grid;
+		grid-template-columns: 1fr 3fr;
+	}
+	.filter-workshop .activities-event{
+		display: grid;
+		grid-template-columns: 1fr 1fr 3fr;
+	}
 }
 
 
@@ -956,8 +1006,31 @@ nav button{
 @media (max-width: 991.98px) { 
 	/*about*****************************************/
 	.about{
-		padding: 0;
+		padding: 2%;
+		margin:5%;
 	}
+
+	/*about*****************************************/
+		.about{
+			background-size: 100%;
+			grid-template-columns: 1fr;
+			margin-top:2rem; 
+			display: grid;
+			grid-template-columns: 1fr;
+			justify-content: center;
+		}
+		.about .image{
+			grid-row: 2/3;
+			width: 90%;
+			margin: auto;
+		}
+		.about .content {
+			grid-row: 1/2;
+			width: 90%;
+			margin: auto;
+		}
+		/*about*****************************************/
+
 	/*contact*****************************************/
 		.contact-wrapper{
 		grid-template-columns: 1fr 1fr ;
@@ -969,13 +1042,9 @@ nav button{
 		.footer-links{
 			padding: 0;
 		}
-
 		.media-testimonials{
 		 	padding:10px 10px;
 		 }
-
-
-
 	}
 
 @media (max-width: 992px) and (min-width: 768px){
@@ -983,16 +1052,10 @@ nav button{
 		.applications-grid{
 			grid-template-columns: 1fr 1fr;
 		}
-
-
-
-		
   }
 
  /*Small devices (landscape phones, less than 768px)*/
-@media (max-width: 767.98px) { 
-
-
+@media (max-width: 768px) { 
 		nav{
 			padding: 0;
 		}
@@ -1001,27 +1064,7 @@ nav button{
 			font-size: 0.9rem;
 			font-weight: bold;
 		}
-
-		/*about*****************************************/
-		.about{
-			background-size: 100%;
-			grid-template-columns: 1fr;
-			border:2px solid red;
-			margin-top:2rem; 
-			margin-right: 0;
-			margin-left: 0;
-			display: grid;
-			grid-template-columns: 1fr;
-		}
-		.about .image{
-			grid-row: 2/3;
-		}
-		.about .content {
-			grid-row: 1/2;
-			padding: 2rem 2rem;
-		}
-		/*about*****************************************/
-
+	
 /*quote*****************************************/
 				.quote{
 			grid-template-columns: 1fr;
@@ -1034,11 +1077,21 @@ nav button{
 				.quote img{
 				max-width: 30%;
 				}
+		/*quote*****************************************/
 
+		/*about**********/
+		.about{
+			margin:5%;
+		}
+		.about .image{
+			width:95%;
+		}
+		.about .content{
+			width:95%;
+		}
 
 		
-
-				/*quote*****************************************/
+		/*about**********/
 
 		/*applications*****************************************/
 			
@@ -1054,9 +1107,7 @@ nav button{
 		.activities .v-image{
 			display: block;
 			display: flex;
-			justify-content: center;
-
-			
+			justify-content: center;	
 		}
 		.activities .v-image img{
 			max-width: 100%;
@@ -1086,6 +1137,7 @@ nav button{
 		/*INFO*/
 		.info-wrapper{
 			grid-template-columns: 1fr;
+			padding: 0 5%;
 		}
 
 		/*footer*****************************************/
@@ -1104,17 +1156,25 @@ nav button{
 		}
 
 
-@media (max-width: 768px) and (min-width: 576px){}
+@media (max-width: 768px) and (min-width: 576px){
+
+	#products{
+		margin:2%;
+	}
+
+}
 
 
 @media (max-width: 575.98px) {  
+	.about{
+			margin:5%;
+	}
 
 	.media-testimonials-grid{
 		grid-template-columns: 1fr;
 		align-items: center;
 		align-content: center;
 		justify-content: center;
-	
 	}
 
 	.media-testimonials-grid video{
@@ -1136,8 +1196,6 @@ nav button{
 	border-left: 5px solid #004E95;*/
 
 }
-
-
 			.info-wrapper .about_pi .bio{
 				grid-template-columns: 1fr;
 			}
@@ -1147,7 +1205,6 @@ nav button{
 		grid-template-columns: 1fr;
 
 	}
-
 			html *{
 				padding: 0;
 				margin: 0;
@@ -1184,11 +1241,13 @@ nav button{
 			.application .applications-grid{
 			grid-template-columns: 1fr;
 		}
-		.application .box{
+		#products .box{
 			width: 100%;
+			padding: 5%;
 		}
-		.application{
-				padding: 1%;
+		#products{
+				margin-right:  5%;
+				margin-left:  5%;
 			}
 		/*applications*****************************************/
 
@@ -1221,7 +1280,12 @@ nav button{
 	.testimonial-wrapper{
 		margin-bottom: 2rem;
 	}
-
 }
+@media (max-width: 375px) {
+	.navbar-toggler{
+		padding: 0;
+		border:1px solid red;
 
+	}
+}
 /*media queries*/
