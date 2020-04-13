@@ -74,16 +74,9 @@ class Internship(models.Model):
 
 	def __str__(self):
 		return self.internship_title
-		
-class Technology(models.Model):
-	name = models.CharField(max_length=255)
-
-	def __str__(self):
-		return self.name
 
 class Company(models.Model):
 	name = models.CharField(max_length=200)
-	technologies = models.ManyToManyField(Technology)
 
 	def __str__(self):
 		return self.name
@@ -102,7 +95,6 @@ class Jobfair(models.Model):
 	companies = models.ManyToManyField(Company)
 	num_students_registered = models.IntegerField(default=0)
 	num_students_placed = models.IntegerField(default=0)
-	technologies = models.ManyToManyField(Technology)
 	eligibility_criteria = models.TextField(default='')
 	selection_process = models.TextField(default='')
 	num_student_appeared = models.IntegerField(default=0)

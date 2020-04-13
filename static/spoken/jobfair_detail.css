@@ -44,6 +44,14 @@ main{
 #jobfair_content .header .btn{
 	margin-top: 5%;
 }
+#jobfair_content .header i{
+	color: var(--orange);
+	padding: 2%;
+	padding-left: 0;
+}
+#jobfair_content .header h5{
+	color: #fff;
+}
 #jobfair_content .desc p{
 	
 	margin: 5%;
@@ -52,7 +60,8 @@ main{
 	border:1px solid blue;
 }
 #jobfair_content .desc .job-profiles{
-	
+	display: grid;
+	grid-template-columns: repeat(auto-fit,minmax(100px,1fr));
 	/*background-color: #013A6B;*/
 	/*background-image: -webkit-linear-gradient(30deg, #002649 50%, #004E95 50%);*/
 
