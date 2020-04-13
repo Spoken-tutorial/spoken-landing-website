@@ -6,6 +6,7 @@ from .models import Products, Nav, Blended_workshops, Jobfair, Internship, Testi
 from datetime import datetime
 from django.utils import timezone
 from .forms import ContactForm
+from django.contrib import messages
 
 today = datetime.today().strftime('%Y-%m-%d')
 
@@ -24,9 +25,9 @@ def home(request):
     navs = Nav.objects.filter(status=1)
     products = Products.objects.all()
     now = timezone.now()
-    jobfairs = Jobfair.objects.filter(jobfair_start_date__gte=now).order_by('jobfair_start_date')[:3]
-    internships = Internship.objects.filter(internship_date__gte=now).order_by('internship_date')[:2]
-    workshops = Blended_workshops.objects.filter(workshop_date__gte=now).order_by('workshop_date')[:3]
+    jobfairs = Jobfair.objects.all().order_by('-jobfair_start_date')[:3]
+    internships = Internship.objects.all().order_by('-internship_start_date')[:3]
+    workshops = Blended_workshops.objects.all().order_by('-workshop_start_date')[:3]
     testimonials = Testimonials.objects.all()[:9]
     media_testimonials = MediaTestimonials.objects.all()[:3]
     awards = Award.objects.all().order_by('order');

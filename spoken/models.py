@@ -1,12 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import User
+from model_utils import Choices
+
 # Create your models here.
 class Products(models.Model):
 	product_name = models.CharField(max_length=200)
 	product_url = models.CharField(max_length=300)
-	product_description = models.CharField(max_length=1000)
+	product_description = models.TextField()
 	logo = models.FileField(upload_to='logos/')
 	updated = models.DateField(auto_now=True)
+
+	class Meta:
+		verbose_name='Product'
+		verbose_name_plural='Products'
 
 	def __str__(self):
 		return self.product_name
@@ -21,17 +27,26 @@ class Nav(models.Model):
 	status = models.BooleanField(default=0)
 	updated = models.DateField(auto_now=True)
 
+	class Meta:
+		verbose_name='Navigation Tab'
+		verbose_name_plural='Navigation Tabs'
+
 	def __str__(self):
 		return self.nav_name
 
 
 class Blended_workshops(models.Model):
 	workshop_title = models.CharField(max_length=255)
-	workshop_date = models.DateField()
+	workshop_start_date = models.DateField(blank=True,null=True)
+	workshop_end_date = models.DateField(blank=True,null=True)
 	workshop_content = models.TextField()
 	workshop_logo = models.FileField(upload_to='logos/workshop_logos/',blank=True,null=True)
 	know_more_link = models.CharField(max_length=300)
 	updated = models.DateField(auto_now=True)
+
+	class Meta:
+		verbose_name='Blended Workshop'
+		verbose_name_plural='Blended Workshop'
 
 	def __str__(self):
 		return self.workshop_title
@@ -51,7 +66,8 @@ class ContactMsg(models.Model):
 
 class Internship(models.Model):
 	internship_title = models.CharField(max_length=255)
-	internship_date = models.DateField()
+	internship_start_date = models.DateField(blank=True,null=True)
+	internship_end_date = models.DateField(blank=True,null=True)
 	internship_desc = models.TextField()
 	know_more_link = models.CharField(max_length=300)
 	updated = models.DateField(auto_now=True)
@@ -64,6 +80,10 @@ class Company(models.Model):
 
 	def __str__(self):
 		return self.name
+
+	class Meta:
+		verbose_name='Company'
+		verbose_name_plural='Companies'
 
 
 class Jobfair(models.Model):
@@ -79,19 +99,22 @@ class Jobfair(models.Model):
 
 
 class Testimonials(models.Model):
-  user = models.ForeignKey(User, related_name = 'testimonial_created_by', on_delete=models.PROTECT )
-  approved_by = models.ForeignKey(User, related_name = 'testimonial_approved_by', null=True, on_delete=models.PROTECT )
   user_name = models.CharField(max_length=200)
+  user_short_description = models.CharField(max_length=300,blank=True,null=True,help_text="short description about user. Eg. college name, position")
   actual_content = models.TextField()
-  minified_content = models.TextField()
-  short_description = models.TextField(blank=True,null=True)
-  source_title = models.CharField(max_length=200, blank=True,null=True)
-  source_link = models.URLField(blank=True,null=True)
-  status = models.PositiveSmallIntegerField(default = 0)
-  created = models.DateTimeField(auto_now_add=True)
-  updated = models.DateTimeField(auto_now = True, null=True)
+  CATEGORY = Choices(('spoken_tutorials', ('spoken tutorials')), ('school_system', ('school system')),('forums', ('forums')),('online_test', ('online test')),('health_nutrition', ('health & nutrition')))
+  category = models.CharField(choices=CATEGORY, default=CATEGORY.spoken_tutorials, max_length=100)
+  created = models.DateField(blank=True,null=True)
+  updated = models.DateField(auto_now = True, null=True)
   show = models.BooleanField(default=1)
 
+  def __str__(self):
+  	return '%s - %s' % (self.user_name, self.user_short_description)
+
+  class Meta(object):
+        verbose_name = 'Text Testimonial'
+        verbose_name_plural = 'Text Testimonials'
+  
 
 class MediaTestimonials(models.Model):
     '''
@@ -99,26 +122,30 @@ class MediaTestimonials(models.Model):
     * path contains the location of the file,
     * user is the person who has send the testimonial.
     '''
-    # foss = models.ForeignKey(FossCategory, on_delete=models.PROTECT )
-    foss = models.CharField(max_length=200,default="series")
-    path = models.CharField(max_length=255)
+    CATEGORY = Choices(('spoken_tutorials', ('spoken tutorials')), ('school_system', ('school system')),('forums', ('forums')),('online_test', ('online test')),('health_nutrition', ('health & nutrition')))
+    category = models.CharField(choices=CATEGORY, default=CATEGORY.spoken_tutorials, max_length=100)
     user = models.CharField(max_length=255)
-    workshop_details = models.CharField(max_length=255, default='Workshop')
-    content = models.CharField(max_length=500)
-    created = models.DateTimeField(auto_now_add=True)
+    user_short_desc = models.CharField(max_length=255,help_text='short description of user',default='')
+    additional_details = models.CharField(max_length=255, default='Workshop',help_text='workshop, jobfair or other detail')
+    content = models.TextField()
+    created = models.DateField(auto_now_add=True)
     media = models.FileField(upload_to='testimonials/',blank=False,null=False,default='')
+    show = models.BooleanField(default=1)
 
     class Meta(object):
-        verbose_name = 'Media Testimonials'
+        verbose_name = 'Media Testimonial'
         verbose_name_plural = 'Media Testimonials'
 
     def __str__(self):
-        return self.path
+        return '%s' % (self.user)
 
 class Award(models.Model):
 	title = models.CharField(max_length=500)
 	year = models.IntegerField(default=2020)
-	order = models.IntegerField()
+	order = models.IntegerField(help_text="Award with lower order will appear first in the list")
 	link = models.CharField(max_length=300)
+
+	def __str__(self):
+		return self.title
 
 
