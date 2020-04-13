@@ -7,11 +7,11 @@
 {% block content%}
 <!--bootstrap navbar--->
   <nav class="navbar navbar-expand-lg fixed-top navbar-light navbar-custom">
-  <a class="navbar-brand brand-custom" href="#"><img src="{% static '/spoken/images/logo.png' %}" width="30" height="30" class="d-inline-block " alt=""> Applications of Spoken Tutorials</a>
+      <a id="logo" class="navbar-brand brand-custom" href=""><img src="{% static '/spoken/images/logo.png' %}" class="d-inline-block " alt="">  Applications of Spoken Tutorials</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav ml-auto">
       <li class="nav-item active">
         <a class="nav-link scroll_link " href="#home">Home<span class="sr-only">(current)</span></a>
@@ -44,7 +44,7 @@
 <!--about-->
 <section class="about" id="about">
   <div class="embed-responsive embed-responsive-4by3 image">
-  <iframe class="embed-responsive-item" width="50%"  src="https://www.youtube.com/embed/UCWqRqp-G6w?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  <iframe class="embed-responsive-item" width="100%"  src="https://www.youtube.com/embed/UCWqRqp-G6w?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>
   <div class="content">
     <h2>About Us</h2>
@@ -54,11 +54,37 @@
             All the content published on this website are shared under the CC BY SA license. Our courses are simple and easy to follow even for a beginner but they also meet the growing needs of the learner. 
           </p> 
         <p>
-        <a href="https://spoken-tutorial.org/about-us/" class="btn" target="_blank">Learn More</a>
+        <a class="about-btn btn" href="https://spoken-tutorial.org/about-us/" class="btn" target="_blank">Learn More</a>
         </p> 
   </div>
 </section>
 <!--about-->
+
+
+<!-- applications -->
+<section id="applications1" class="">
+<h2 class="text-center header-m">Applications</h2>
+<div id="products">
+  {% for product in products%}
+       <div class="app">
+        <div class="app-name">
+          <div class="logo-bg"><img src="{{ product.logo.url }}"></div>
+          
+        <h4>{{product.product_name}}</h4>
+         <br>
+        </div>
+       <br>
+        <p>{{product.product_description}}</p>
+        <!-- <hr> -->
+        <div class="app-link">
+          <!-- <hr> -->
+          <a href="" class="btn1 ">Learn More  <span class="app-i"><i class="fas fa-angle-double-right"></i></span></a>
+        </div>
+      </div>
+      {% endfor%}
+</div>
+</section>
+
 <!-- awards -->
 <section id="awards">
   {% for award in awards %}
@@ -68,52 +94,35 @@
      {% else %}
      <i class="fas fa-trophy"></i>
     {% endifequal %}
-  
-   
    <h5 class="year">{{award.year}}</h5>
    <a href="{{award.link}}"><h5 class="title">{{award.title}}</h5></a>
-    
   </div>
   {% endfor %}
 </section>
 <!-- awards -->
-<!-- applications -->
-<section class="application " id="applications">
-  <h2 class="text-center header-m">Applications</h2>
-  <div class="applications-grid">
-    {% for product in products%}
-       <div class="box text-center">   
-        <div class="header">         
-          <img src="{{ product.logo.url }}">
-          <h4>{{product.product_name}}</h4>
-        </div>
-        <div>
-          <p>{{product.product_description}}</p>
-          <div class="link-app"><a href="{{product.product_url}}" class="stretched-link" target="_blank">Learn More <span class="app-i"><i class="fas fa-angle-double-right stretched-link"></i></span></a></div>
-        </div>       
-      </div>
-      {% endfor%}
-  </div>    
-</section>
-<!-- applications -->
 
 <!-- activities -->
 <section class="events" id="activities"> <!-- container with heading, image and content -->
-   <h2 class="text-center header-m">Activities</h2>
-   <div class="activities"> <!--image and content-->
-    <div class="v-image"><img src="{% static '/spoken/images/activities1.jpg' %}"></div>
+    <h2 class="text-center header-m">Activities</h2>
+   <div class="activities"> 
+    <div class="act-image">
+      <div class="v-image"><img src="{% static '/spoken/images/activities1.jpg' %}"></div>
     <div class="h-image"><img src="{% static '/spoken/images/activities2.jpg' %}"></div>
+
+    </div>
+    
     <div class="a-content">
-      <div class="btn-activities" id="activities-filter">
-       <div id="filter-jobfair" class="filter_div"><i class="fas fa-briefcase fa" ></i> <a href="" class="btn stretched-link "  data-filter=".filter-jobfair" target="_blank">Job Fairs</a></div>
-        <div id="filter-workshop" class="filter_div"><i class="fas fa-chalkboard-teacher fa" ></i><a href="" class="btn stretched-link"  data-filter=".filter-workshop" target="_blank">Workshops</a></div>
-        <div id="filter-internship" class="filter_div"><i class="fas fa-university fa" ></i><a href="" class="btn stretched-link"  data-filter=".filter-internship" target="_blank">Intenships</a></div>
+        <div class="btn-activities" id="activities-filter">
+       <button id="filter-jobfair" class="filter_div" data-filter=".filter-jobfair"><i class="fas fa-briefcase fa" ></i> <span>Jobfair</span></button>
+        <button id="filter-workshop" class="filter_div" data-filter=".filter-workshop"><i class="fas fa-chalkboard-teacher fa" ></i><span>workshop</span></button>
+        <button id="filter-internship" class="filter_div" data-filter=".filter-internship"><i class="fas fa-university fa" ></i><span>Internship</span></button>
         </div>
+
         <hr>
         
       <div class=" activities-container ">
         <div class="filter-jobfair box-activities">
-          {% for jobfair in jobfairs%}
+          {% for jobfair in jobfairs reversed%}
           <div class="activities-event ">
             <div class="date"><p><i class="fas fa-calendar-alt"></i>{{jobfair.jobfair_start_date}}</p></div>
             <div class="content">
@@ -127,12 +136,12 @@
             </div>
             </div> 
           {% endfor %}
-          <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore" target="_blank">Explore more Job Fairs </a></div>
+     <!--      <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore" target="_blank">Explore more Job Fairs </a></div> -->
         </div>
         <div class="filter-workshop box-activities">
-          {% for workshop in workshops%}
+          {% for workshop in workshops reversed%}
           <div class="activities-event">
-            <div class="icon date"><p><i class="fas fa-calendar-alt"></i>{{workshop.workshop_date}}</p></div>
+            <div class="icon date"><p><i class="fas fa-calendar-alt"></i>{{workshop.workshop_start_date}}</p></div>
             <div class="image"><img src="{% static '/spoken/images/logo.png' %}"></div>
             <div class="content">
              <h6>{{workshop.workshop_title}}</h6>
@@ -140,33 +149,33 @@
             </div>
             </div> 
           {% endfor %}
-          <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore" target="_blank">Explore more Workshops </a></div>
+          <!-- <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore" target="_blank">Explore more Workshops </a></div> -->
         </div>
         <div class="filter-internship box-activities">
-           {% for internship in internships%}
+           {% for internship in internships reversed%}
           <div class="activities-event">
-            <div class="icon date"><p><i class="fas fa-calendar-alt"></i>{{internship.internship_date}}</p></div>
+            <div class="icon date"><p><i class="fas fa-calendar-alt"></i>{{internship.internship_start_date}}</p></div>
             <div class="content">
              <h6>{{internship.internship_title}}</h6>
              <p>{{internship.internship_desc}}</p>
             </div>
             </div> 
           {% endfor %}
-          <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore" target="_blank">Explore more Internships </a></div>
+          <!-- <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore" target="_blank">Explore more Internships </a></div> -->
         </div>
       </div>
     </div>
-  </div><!--image and content-->
+  </div> 
 </section> <!-- container with heading, image and content -->
 <!-- activities -->
 
 
 
 <!-- Testimonial -->
-<section id="testimonial">
-  <div id="testimonialCarousel" class="carousel slide" data-ride="carousel">
+ <section id="testimonial">
+  <div id="testimonialCarousel" class="carousel" data-ride="carousel">
    <h2 class="text-center header-m">Testimonials</h2>
- 
+  
   <ol class="carousel-indicators">
     <li data-target="#testimonialCarousel" data-slide-to="0" class="active"></li>
     <li data-target="#testimonialCarousel" data-slide-to="1"></li>
@@ -187,8 +196,31 @@
    <div class="col-sm-6">
                 <div class="testimonial-wrapper">
                   <div class="testimonial">
-                  <p>{{ data.minified_content|len_cutter:250 }}</p>
-                  <a href=""  data-toggle="modal" data-target="#exampleModalCenter" target="_blank">Read</a>
+                  <span><i class="fas fa-quote-left"></i></span>
+                  <p> {{ data.actual_content|len_cutter:250 }}</p>
+                  <a href="https://spoken-tutorial.org/testimonials/text/" target="_blank" data-toggle="modal" data-target="#testimonial-{{forloop.counter}}">Read</a>
+<!-- Modal -->
+<div class="modal fade" id="testimonial-{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">
+          <h5 id="exampleModalLongTitle">{{data.user_name}}</h5>
+          <h6>{{data.user_short_description}}</h6>
+        </div>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>{{data.actual_content}}</p>
+      </div>
+      <div class="modal-footer">
+        <a href="https://spoken-tutorial.org/testimonials/text/" target="_blank" class="btn">Read More Testimonials</a> 
+      </div>
+    </div>
+  </div>
+</div>
                   </div>         
                   <div class="media">
                     <div class="media-body">
@@ -209,42 +241,43 @@
   </div> 
   </div>
   </div>
-
-
 </section>
-<section class=" media-testimonials">
-    <div >
-    <div>
-      {% for data in media_testimonials%}
-    <div class=" media-testimonials-grid">  
-       <video class="st_video align-self-center" title='{{ data.foss }}' controls preload data-setup="{}">
-      <!-- <source src="/media/testimonials/Moodle_Learning_Management_System.mp4" type="video/mp4" /> -->
-      <source src="{{ media_url}}{{data.media}}" type="video/mp4"></source>
-      </video>
-    <!-- <source src="{{ media_url}}{{data.media}}" type="video/mp4"></source>   -->
-    <div class="content">
-    <h6 class="mt-0">{{data.user}}</h6>
-    <p>{{data.content}}</p>
-    </div>
-</div>
-      {% endfor %}
-      
-    </div>
+
+<section class="video-testimonials">
+  {% for data in media_testimonials%}
+  <div class="item">
+  <div class="header">
+    <video controls>
+      <source src="{{ media_url}}{{data.media}}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
   </div>
-  
+  <div class="content">
+     <h5>{{data.user}}</h5>
+    <h6>{{data.workshop_details}}</h6>
+    <p>{{data.content}}</p>
+  </div>
+  <div class="blank"></div>
+  </div>
+   {% endfor %}
 </section>
-
-<!-- testimonial -->
 
 <!-- collaborate -->
-<section class="collab container-fluid">
-  <div class="content">
-    <h1>Collaborate with us</h1>
-    <p>We invite you to become a part of this amazing journey of making India IT-literate. Join our growing network of Resources Centres, Organisers, Content creators, Domain Experts, Translators, Dubbers, Reviewers and help us to reach every nook and corner of India. </p> 
+<section class="collab ">
+  <div class="partners">
+    <h2 class="collab-nasscom">Our Partners</h2>
+    <div class="logos">
+    <a href="http://futureskills.nasscom.in/" target="_blank"><img src="{% static '/spoken/images/nasscom.png' %}"></a>
+    <a href="https://swayam.gov.in/explorer?searchText=kannan" target="_blank"><img src="{% static '/spoken/images/swayam_logo.png' %}"></a>
 
+    </div>
+    
   </div>
-  <a href="http://futureskills.nasscom.in/" class="collab-nasscom" target="_blank">Partnered with Nasscom</a>
-  <a href="https://spoken-tutorial.org/accounts/login/?next=/creation/collaborate/" class="btn" target="_blank">Join us</a>
+  <div class="content">
+    <h2>Collaborate with us</h2>
+    <p>We invite you to become a part of this amazing journey of making India IT-literate. Join our growing network of Resources Centres, Organisers, Content creators, Domain Experts, Translators, Dubbers, Reviewers and help us to reach every nook and corner of India. </p> 
+    <a href="https://spoken-tutorial.org/accounts/login/?next=/creation/collaborate/" class="btn" target="_blank">Join us</a>
+  </div>
 </section>
 <!-- collaborate -->
 <!-- about PI & news & events  -->
@@ -279,7 +312,12 @@
     <h2>News / Events</h2>
     <hr>
     <div class="news-content">
-    <p>Check out the amazing testimonials, media articles, events, collaboration, seminars, talks and campaigns about the Spoken Tutorial Project. Browse through our gallery and see what the Project has been doing across India.</p>  
+    <p>Check out the amazing 
+      <span class="link-style"><a href="https://spoken-tutorial.org/testimonials/text/" target="_blank">testimonials, </a></span>
+      <span class="link-style"><a href="https://spoken-tutorial.org/news/articles-on-spoken-tutorial-project/" target="_blank">media articles, </a></span>
+      <span class="link-style"><a href="https://spoken-tutorial.org/news/news-and-events/" target="_blank">events, </a></span>
+      <span class="link-style"><a href="https://spoken-tutorial.org/news/official-letters-and-links/" target="_blank">collaboration </a></span> and
+      <span class="link-style"><a href="https://spoken-tutorial.org/research-popular-articles/" target="_blank">articles </a></span> about the Spoken Tutorial Project and see what the Project has been doing across India.</p>  
     </div>
     
   </div>
@@ -292,8 +330,8 @@
   <h2>Contact</h2>
   <div class="contact-wrapper blue-bg"> <!-- grid with 3 columns -->
     <div class="social-links"> <!--column 1-->
-       <p><i class="fab fa-youtube"></i><a href="https://www.youtube.com/user/SpokenTutorialIITB/" target="_blank">ST youtube Channel</a></p>
-       <p><i class="fab fa-youtube"></i><a href="https://www.youtube.com/channel/UCmyV3lKT1Gs1AfgtV8pp__Q" target="_blank">Health youtube Channel</a></p>
+       <p><i class="fab fa-youtube"></i><a href="https://www.youtube.com/user/SpokenTutorialIITB/" target="_blank">ST YouTube Channel</a></p>
+       <p><i class="fab fa-youtube"></i><a href="https://www.youtube.com/channel/UCmyV3lKT1Gs1AfgtV8pp__Q" target="_blank">Health YouTube Channel</a></p>
        <p><i class="fab fa-facebook-square"></i><a href="https://www.facebook.com/SpokenTutorial.org" target="_blank">Facebook page</a></p>
        <p><i class="fab fa-skype"></i><a href="" target="_blank">st-iitb</a></p>
     </div>
@@ -359,8 +397,9 @@
   <div> <!--flex child 3-->
     <ul>
       <li><h6> Other </h6></li>
-      <li><a href="https://aakashlabs.org" target="_blank">Aakash Labs</a></li>
-      <li><a href="https://www.co-learn.in/" target="_blank"> Co-learn</a></li>
+      <li><a href="https://mhrd.gov.in/ict-initiatives" target="_blank">MHRD Initiatives</a></li>
+      <li><a href="http://futureskills.nasscom.in/" target="_blank">NASSCOM</a></li>
+      <li><a href="https://swayam.gov.in/explorer?searchText=kannan" target="_blank">SWAYAM</a></li>
       <li><a href="https://www.sakshat.ac.in/" target="_blank"> Education Mission</a></li>
     </ul>
   </div> 
