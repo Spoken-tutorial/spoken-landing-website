@@ -12,18 +12,25 @@
 		<h1>{{jobfair.jobfair_title}}</h1>
 		<h5><i class="fas fa-calendar-alt"></i>{{jobfair.jobfair_start_date}}</h5>
 		<h5><i class="fas fa-map-marker-alt"></i>location : temporary</h5>
-		<a href="#" class="btn">Register</a>
+		<!-- <a href="#" class="btn">Register</a> -->
 	</div>
 	<div class="desc">
 		<p>{{jobfair.jobfair_desc}}</p>
+		<h4>Participating Companies</h4>
 		<div class="job-profiles">
-		
-		
-
+			{% for item in jobfair.companies.all%}
+			<div class="company">
+				<h6>{{item}}</h6>
+			</div>
+			{% endfor %}
 		</div>
 		<div class="eligibility">
 			<h4>Eligibility Criteria</h4>
 			<p>{{jobfair.eligibility_criteria}}</p>
+		</div>
+		<div class="eligibility">
+			<h4>Selection Criteria</h4>
+			<p>{{jobfair.selection_process}}</p>
 		</div>
 	</div>
 	<div class="numbers">
@@ -47,12 +54,37 @@
 		</div>
 	</div>
 	<div class="dates">
-		<div></div>
-		<div></div>
+		<div class="date-banner">
+		<h4>Important Dates</h4>	
+		</div>
+		<div>
+			<div class="registration">
+				<span><i class="far fa-calendar-alt"></i></span><p>Registration : 
+				{% get_formatted_year jobfair.registration_start_date jobfair.registration_end_date as date %}
+				{{date}}</p>
+			</div>
+			<div class="jobfair">
+				<span><i class="far fa-calendar-alt"></i></span><p>Jobfair : {% get_formatted_year jobfair.jobfair_start_date jobfair.jobfair_end_date as date %}
+				{{date}}</p>
+			</div>
+
+		</div>
 	</div>
 	
 </section>
-<section id="brochure"></section>
+<section id="brochure">
+	{% if jobfair.brochure %}
+	<a href="{{ jobfair.brochure.url }}" download>
+  	<h4>Download Brochure<span><i class="fas fa-file-download"></i></span></h4>
+	</a>
+	<div class="jobfair-brochure">
+		<img src="{{ jobfair.brochure.url }}">
+	</div>
+	{% else %}
+	<h5>Brochure to be uploaded soon!</h5>
+	{% endif %}
+
+</section>
 
 </main>
 

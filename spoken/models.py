@@ -100,6 +100,7 @@ class Jobfair(models.Model):
 	num_student_appeared = models.IntegerField(default=0)
 	registration_start_date = models.DateField(blank=True,null=True)
 	registration_end_date = models.DateField(blank=True,null=True)
+	brochure = models.FileField(upload_to='brochures_jobfair/',blank=True,null=True)
 	# location
 
 
