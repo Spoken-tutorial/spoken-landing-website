@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'spoken',
     'rest_framework',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+IMPORT_EXPORT_USE_TRANSACTIONS = True

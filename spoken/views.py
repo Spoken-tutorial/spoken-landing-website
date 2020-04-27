@@ -58,8 +58,6 @@ def jobfairs(request):
     return render(request,'spoken/jobfairs.html',context)
 
 def jobfair_detail(request,jobfair_id):
-    # return HttpResponse('Test {}'.format(job_id))
-    # jobfair_id = jobfair_id
     jobfair_obj = Jobfair.objects.filter(jobfair_id=jobfair_id)[0]
     context = {'jobfair_id':jobfair_id,'jobfair':jobfair_obj}
     return render(request,'spoken/jobfair_detail.html',context)

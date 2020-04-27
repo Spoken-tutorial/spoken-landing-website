@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 from model_utils import Choices
-
 # Create your models here.
 class Products(models.Model):
 	product_name = models.CharField(max_length=200)
@@ -76,7 +75,7 @@ class Internship(models.Model):
 		return self.internship_title
 
 class Company(models.Model):
-	name = models.CharField(max_length=200)
+	name = models.CharField(max_length=200,unique=True)
 
 	def __str__(self):
 		return self.name
@@ -92,7 +91,8 @@ class Jobfair(models.Model):
 	jobfair_desc = models.TextField()
 	know_more_link = models.CharField(max_length=300)
 	updated = models.DateField(auto_now=True)
-	companies = models.ManyToManyField(Company)
+	companies = models.ManyToManyField(Company,blank=True,null=True)
+	companies_csv = models.FileField(upload_to='companies_csv/',blank=True,null=True,default='')
 	num_students_registered = models.IntegerField(default=0)
 	num_students_placed = models.IntegerField(default=0)
 	eligibility_criteria = models.TextField(default='')
@@ -101,12 +101,9 @@ class Jobfair(models.Model):
 	registration_start_date = models.DateField(blank=True,null=True)
 	registration_end_date = models.DateField(blank=True,null=True)
 	brochure = models.FileField(upload_to='brochures_jobfair/',blank=True,null=True)
-	# location
-
-
 	def __str__(self):
 		return self.jobfair_title
-
+	
 class Testimonials(models.Model):
   user_name = models.CharField(max_length=200)
   user_short_description = models.CharField(max_length=300,blank=True,null=True,help_text="short description about user. Eg. college name, position")
