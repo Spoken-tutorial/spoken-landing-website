@@ -91,7 +91,7 @@ class Jobfair(models.Model):
 	jobfair_desc = models.TextField()
 	know_more_link = models.CharField(max_length=300)
 	updated = models.DateField(auto_now=True)
-	companies = models.ManyToManyField(Company,blank=True,null=True)
+	companies = models.ManyToManyField(Company,blank=True)
 	companies_csv = models.FileField(upload_to='companies_csv/',blank=True,null=True,default='')
 	num_students_registered = models.IntegerField(default=0)
 	num_students_placed = models.IntegerField(default=0)

@@ -1,3 +1,6 @@
 *.pyc
 *.swp
 .env
+
+#media folder
+media/*
