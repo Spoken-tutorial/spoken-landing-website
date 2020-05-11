@@ -50,7 +50,7 @@ class CompanyAdmin(ImportExportModelAdmin):
 
 @admin.register(Jobfair)
 class JobfairAdmin(admin.ModelAdmin):
-	list_display = ('jobfair_title','jobfair_start_date','jobfair_end_date','know_more_link','temp')
+	list_display = ('jobfair_title','jobfair_start_date','jobfair_end_date','know_more_link')
 	filter_horizontal = ('companies',)
 
 	def save_model(self, request, obj, form, change):
