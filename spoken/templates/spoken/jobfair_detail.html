@@ -1,0 +1,98 @@
+{%extends "base.html"%}
+{% load static %}
+{% load helper %}
+{% block css  %}
+<link rel="stylesheet" type="text/css" href="{% static '/spoken/jobfair_detail.css' %}">
+{% endblock css %}
+
+{% block content %}
+<main>
+<section id="jobfair_content">
+	<div class="header">
+		<h1>{{jobfair.jobfair_title}}</h1>
+		<h5><i class="fas fa-calendar-alt"></i>{{jobfair.jobfair_start_date}}</h5>
+		<h5><i class="fas fa-map-marker-alt"></i>location : temporary</h5>
+		<!-- <a href="#" class="btn">Register</a> -->
+	</div>
+	<div class="desc">
+		<p>{{jobfair.jobfair_desc}}</p>
+		<h4>Participating Companies</h4>
+		<div class="job-profiles">
+			{% for item in jobfair.companies.all%}
+			<div class="company">
+				<h6>{{item}}</h6>
+			</div>
+			{% endfor %}
+		</div>
+		<div class="eligibility">
+			<h4>Eligibility Criteria</h4>
+			<p>{{jobfair.eligibility_criteria}}</p>
+		</div>
+		<div class="eligibility">
+			<h4>Selection Criteria</h4>
+			<p>{{jobfair.selection_process}}</p>
+		</div>
+	</div>
+	<div class="numbers">
+		<div class="data">
+			
+			<h2>{{jobfair.num_students_registered}}</h2>
+			<i class="fas fa-users"></i>
+			<h6>Applications Received</h6>
+		</div>
+		<div class="data">
+			
+			<h2>{{jobfair.num_student_appeared}}</h2>
+			<i class="fas fa-user-check"></i>
+			<h6>Students Appeared</h6>
+		</div>
+		<div class="data">
+			
+			<h2>{{jobfair.num_students_placed}}</h2>
+			<i class="fas fa-briefcase"></i>
+			<h6>Students Placed</h6>
+		</div>
+	</div>
+	<div class="dates">
+		<div class="date-banner">
+		<h4>Important Dates</h4>	
+		</div>
+		<div>
+			<div class="registration">
+				<span><i class="far fa-calendar-alt"></i></span><p>Registration : 
+				{% get_formatted_year jobfair.registration_start_date jobfair.registration_end_date as date %}
+				{{date}}</p>
+			</div>
+			<div class="jobfair">
+				<span><i class="far fa-calendar-alt"></i></span><p>Jobfair : {% get_formatted_year jobfair.jobfair_start_date jobfair.jobfair_end_date as date %}
+				{{date}}</p>
+			</div>
+
+		</div>
+	</div>
+	
+</section>
+<section id="brochure">
+	{% if jobfair.brochure %}
+	<a href="{{ jobfair.brochure.url }}" download>
+  	<h4>Download Brochure<span><i class="fas fa-file-download"></i></span></h4>
+	</a>
+	<div class="jobfair-brochure">
+		<img src="{{ jobfair.brochure.url }}">
+	</div>
+	{% else %}
+	<h5>Brochure to be uploaded soon!</h5>
+	{% endif %}
+
+</section>
+
+</main>
+
+
+{% endblock content %}
+
+{% block script %}
+<script type="text/javascript">
+
+</script>
+{% endblock script %}

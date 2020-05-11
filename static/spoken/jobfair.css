@@ -1,0 +1,193 @@
+:root{
+      --footer-color:#002649; 
+      --white:#fff;
+      --light :#F5F8FD ; 
+      --dark :#02073F ;
+      --main-font-color :#413e66 ;
+      --shadow : 0 1px 10px rgb(104,104,104,0.5);
+      --btn-color:#18B1DC;
+      --line-color:#C9D4F6;
+      --font:"Open Sans", sans-serif;
+      --section-padding:0 10%;
+      --orange:#EC6C06;
+
+}
+
+h2{
+  color: var(--main-font-color);
+  font-weight: bold;
+}
+/*--------------------------------------------------------------
+# Jobfair
+--------------------------------------------------------------*/
+
+#schedule {
+  padding: 10px 0 10px 0;
+}
+
+#schedule .nav-tabs {
+  text-align: center;
+  margin: auto;
+  display: block;
+  border-bottom: 0;
+}
+
+#schedule .nav-tabs li {
+  display: inline-block;
+}
+
+#schedule .nav-tabs a {
+  font-weight: 600;
+  font-size: 1.2rem;
+  border: 1px solid #ebebed;
+  color: #fff;
+  padding: 10px 50px;
+  background-color: var(--dark);
+}
+
+#schedule .nav-tabs a.active {
+  background-color: var(--orange);
+  color: #fff;
+  text-decoration: underline;
+}
+#schedule .nav-tabs a:hover {
+ text-decoration: underline;
+} 
+
+#schedule .schedule-item {
+  border: 1px solid rgb(239,232,232);
+  padding-top: 1%;
+  padding-bottom: 1%;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  color: black;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  box-shadow: 0 1px 1px rgb(104,104,104,0.5);
+}
+
+#schedule .schedule-item:hover {
+  background-color: #f6f7fd
+}
+
+#schedule .schedule-item .speaker img {
+  height: 100%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  margin-left: 50%;
+  transition: all ease-in-out 0.3s;
+}
+
+#schedule .schedule-item h4 span {
+  font-style: italic;
+  color: #19328e;
+  font-weight: normal;
+  font-size: 16px;
+}
+
+#schedule .schedule-item p {
+  font:var(--font);
+  margin-bottom: 1%;
+  line-height: 1.8rem;
+}
+
+.section-header{
+  text-align: center;
+}
+
+.title{
+ color: var(--dark);
+ font-size: 0.5rem;
+}
+.content{
+  line-height: 1.5rem;
+  padding: 0 4%;
+}
+.content h4 {
+  color: var(--dark);
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.content h6 {
+  font-size: 1.1rem;
+  color: var(--dark);
+  font-weight: bold;
+}
+
+.date{
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--dark);
+}
+.content-date{
+  display: grid;
+  grid-template-columns: 1fr;
+  align-content: center;
+  justify-content: center;
+
+}
+.content-date i{
+  margin-bottom:25px;
+  color :var(--orange);
+  font-size: 2rem;
+}
+.content i{
+  margin-bottom:10px;
+  font-size: 1.5rem;
+  color:var(--orange);
+  margin-right: 2%;
+}
+
+.content .details{
+  text-decoration: none;
+}
+.content .details a{
+  color: #000000;
+}
+.content .students-num{
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  grid-gap: 1rem;
+}
+
+.nav-link{
+  text-decoration: underline;
+}
+.nav-link:hover{
+  text-decoration: underline;
+}
+#event_date{
+  text-align: center;
+  font-size: 2rem;
+}
+/*media queries*/
+
+@media (max-width: 767.98px) { 
+  body *{
+    font-size: 0.9rem;
+  }
+  #schedule .nav-tabs a {
+    font-size: 0.9rem;
+}
+  #schedule .schedule-item{
+    display: grid;
+    grid-template-columns: 1fr;
+}
+.content-date{
+  display: flex;
+  justify-content: center;
+}
+.content-date div{
+  justify-content: space-between;
+}
+.content-date i{
+  padding-right: 10px;
+}
+.content-date i{
+  font-size: 1.2rem;
+}
+.content i{
+  font-size: 1.2rem;
+}
+}
