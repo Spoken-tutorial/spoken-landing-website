@@ -62,7 +62,7 @@
 
 
 <!-- applications -->
-<section id="applications1" class="">
+<section id="applications" class="">
 <h2 class="text-center header-m">Applications</h2>
 <div id="products">
   {% for product in products%}
@@ -78,7 +78,7 @@
         <!-- <hr> -->
         <div class="app-link">
           <!-- <hr> -->
-          <a href="" class="btn1 ">Learn More  <span class="app-i"><i class="fas fa-angle-double-right"></i></span></a>
+          <a href="{{product.product_url}}" class="btn1" target="_blank">Learn More  <span class="app-i"><i class="fas fa-angle-double-right"></i></span></a>
         </div>
       </div>
       {% endfor%}
@@ -95,7 +95,7 @@
      <i class="fas fa-trophy"></i>
     {% endifequal %}
    <h5 class="year">{{award.year}}</h5>
-   <a href="{{award.link}}"><h5 class="title">{{award.title}}</h5></a>
+   <a href="{{award.link}}" target="_blank"><h5 class="title">{{award.title}}</h5></a>
   </div>
   {% endfor %}
 </section>
@@ -124,14 +124,21 @@
         <div class="filter-jobfair box-activities">
           {% for jobfair in jobfairs reversed%}
           <div class="activities-event ">
-            <div class="date"><p><i class="fas fa-calendar-alt"></i>{{jobfair.jobfair_start_date}}</p></div>
+            <div class="date">
+              <p><i class="fas fa-calendar-alt"></i></p>
+            <p>{% get_formatted_year jobfair.jobfair_start_date jobfair.jobfair_end_date as date %}
+        {{date}}</p>
+            </div>
             <div class="content">
             <h6>{{jobfair.jobfair_title}}</h6>
             <p>Participating Companies :  </p>
             <p>
               {% for company in jobfair.companies.all%}
-              <span style="padding-right: 1rem;">{{company}}</span>
-              {% endfor%}
+              <span>{{company}}</span>
+              {% if not forloop.last %}
+              <span style="padding-right: 1rem;">,</span>
+              {% endif %}
+              {% endfor %}
             </p>
             </div>
             </div> 
@@ -141,8 +148,13 @@
         <div class="filter-workshop box-activities">
           {% for workshop in workshops reversed%}
           <div class="activities-event">
-            <div class="icon date"><p><i class="fas fa-calendar-alt"></i>{{workshop.workshop_start_date}}</p></div>
-            <div class="image"><img src="{% static '/spoken/images/logo.png' %}"></div>
+            <div class="icon date"><p><i class="fas fa-calendar-alt"></i></p>
+              <p>{% get_formatted_year workshop.workshop_start_date workshop.workshop_end_date as date %}
+        {{date}}</p>
+            </div>
+            {% if workshop.workshop_logo %}
+            <div class="image"><img src="{{workshop.workshop_logo.url}}"></div>
+            {% endif %}
             <div class="content">
              <h6>{{workshop.workshop_title}}</h6>
              <p>{{workshop.workshop_content}}</p>
@@ -154,7 +166,10 @@
         <div class="filter-internship box-activities">
            {% for internship in internships reversed%}
           <div class="activities-event">
-            <div class="icon date"><p><i class="fas fa-calendar-alt"></i>{{internship.internship_start_date}}</p></div>
+            <div class="icon date"><p><i class="fas fa-calendar-alt"></i></p>
+            <p>{% get_formatted_year internship.internship_start_date internship.internship_end_date as date %}
+        {{date}}</p>
+            </div>
             <div class="content">
              <h6>{{internship.internship_title}}</h6>
              <p>{{internship.internship_desc}}</p>
@@ -173,7 +188,7 @@
 
 <!-- Testimonial -->
  <section id="testimonial">
-  <div id="testimonialCarousel" class="carousel" data-ride="carousel">
+  <div id="testimonialCarousel" class="carousel" data-ride="carousel" data-interval="false">
    <h2 class="text-center header-m">Testimonials</h2>
   
   <ol class="carousel-indicators">
@@ -226,7 +241,7 @@
                     <div class="media-body">
                       <div class="overview">
                         <div class="name"><b>{{data.user_name}}</b></div>
-                        <div class="details">{{data.short_description}}</div>
+                        <div class="details">{{data.user_short_description}}</div>
                       </div>                    
                     </div>
                   </div>
@@ -240,9 +255,11 @@
   </div>
   </div> 
   </div>
+
+
   </div>
 </section>
-
+<!-- <div style="margin:100px;border:2px solid red;height: 20px;"></div> -->
 <section class="video-testimonials">
   {% for data in media_testimonials%}
   <div class="item">
@@ -253,8 +270,10 @@
     </video>
   </div>
   <div class="content">
-     <h5>{{data.user}}</h5>
-    <h6>{{data.workshop_details}}</h6>
+    <h6>{{data.user}}</h6>
+    <p>{{data.user_short_desc}}</p>
+    <p class="add-details">{{data.additional_details}}</p>
+
     <p>{{data.content}}</p>
   </div>
   <div class="blank"></div>

@@ -3,4 +3,12 @@
 .env
 
 #media folder
-media/*
+# media/*
+media
+assets
+admin
+#local
+fixtures
+#alternate images
+static/spoken/images/app*.jpg
+static/spoken/images/nasscom.webp
