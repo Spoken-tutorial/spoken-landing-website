@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import JobFairSerializer
 from django.contrib import messages
+import urllib, json
 
 today = datetime.today().strftime('%Y-%m-%d')
 
@@ -17,8 +18,23 @@ def home(request):
     if request.method == 'POST':
         c = ContactForm(request.POST)
         if c.is_valid():
-            c.save()
-            messages.add_message(request,messages.INFO,'Message submitted!')
+
+            recaptcha_response = request.POST.get('g-recaptcha-response')
+            url = 'https://www.google.com/recaptcha/api/siteverify'
+            values ={
+                'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+                'response': recaptcha_response
+                }
+            data = urllib.parse.urlencode(values).encode()
+            req =  urllib.request.Request(url, data=data)
+            response = urllib.request.urlopen(req)
+            result = json.loads(response.read().decode())
+
+            if result['success']:
+                c.save()
+                messages.add_message(request,messages.INFO,'Message submitted!')
+            else:
+                messages.error(request, 'Invalid reCAPTCHA. Please try again.')
             return redirect('/spoken#contact')
             #c = ContactForm()
     else:
@@ -26,7 +42,7 @@ def home(request):
 
     # return HttpResponse("Hello, world. You're at the spoken landing page.")
     navs = Nav.objects.filter(status=1)
-    products = Products.objects.all()
+    products = Products.objects.all().order_by('order')
     now = timezone.now()
     jobfairs = Jobfair.objects.all().order_by('-jobfair_start_date')[:3]
     internships = Internship.objects.all().order_by('-internship_start_date')[:3]
@@ -37,6 +53,8 @@ def home(request):
     context = {'jobfairs':jobfairs,'internships':internships,'workshops':workshops,'products':products, 
     'nav_list':navs, 'form':c, 'testimonials':testimonials,'media_testimonials':media_testimonials,'media_url' : settings.MEDIA_URL,
     'awards':awards,}
+
+    context['SITE_KEY'] = settings.GOOGLE_RECAPTCHA_SITE_KEY
 
     return render(request,'spoken/home.html',context)
 

@@ -81,7 +81,7 @@ class JobfairAdmin(admin.ModelAdmin):
 
 @admin.register(Products)
 class ProductsAdmin(admin.ModelAdmin):
-	list_display = ('product_name', 'product_url')
+	list_display = ('product_name', 'product_url', 'order')
 
 @admin.register(MediaTestimonials)
 class ProductsAdmin(admin.ModelAdmin):

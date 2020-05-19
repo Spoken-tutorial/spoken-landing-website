@@ -8,6 +8,7 @@ class Products(models.Model):
 	product_description = models.TextField()
 	logo = models.FileField(upload_to='logos/')
 	updated = models.DateField(auto_now=True)
+	order = models.IntegerField(default=1)
 
 	class Meta:
 		verbose_name='Product'
