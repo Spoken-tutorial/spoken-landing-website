@@ -4,6 +4,9 @@
 {% block title%} Applications of Spoken Tutorials {% endblock title%}
 {% load helper %}
 
+{% block script %}<script src='https://www.google.com/recaptcha/api.js'></script>{% endblock script %}
+
+
 {% block content%}
 <!--bootstrap navbar--->
   <nav class="navbar navbar-expand-lg fixed-top navbar-light navbar-custom">
@@ -71,10 +74,9 @@
           <div class="logo-bg"><img src="{{ product.logo.url }}"></div>
           
         <h4>{{product.product_name}}</h4>
-         <br>
         </div>
-       <br>
-        <p>{{product.product_description}}</p>
+       <!-- <br> -->
+        <p style="text-decoration: none;">{{product.product_description|safe}}</p>
         <!-- <hr> -->
         <div class="app-link">
           <!-- <hr> -->
@@ -86,6 +88,7 @@
 </section>
 
 <!-- awards -->
+<h2 class="text-center header-m">Awards and Recognition</h2>
 <section id="awards">
   {% for award in awards %}
   <div class="award-bg">
@@ -114,7 +117,7 @@
     <div class="a-content">
         <div class="btn-activities" id="activities-filter">
        <button id="filter-jobfair" class="filter_div" data-filter=".filter-jobfair"><i class="fas fa-briefcase fa" ></i> <span>Jobfair</span></button>
-        <button id="filter-workshop" class="filter_div" data-filter=".filter-workshop"><i class="fas fa-chalkboard-teacher fa" ></i><span>workshop</span></button>
+        <button id="filter-workshop" class="filter_div" data-filter=".filter-workshop"><i class="fas fa-chalkboard-teacher fa" ></i><span>Workshop</span></button>
         <button id="filter-internship" class="filter_div" data-filter=".filter-internship"><i class="fas fa-university fa" ></i><span>Internship</span></button>
         </div>
 
@@ -382,7 +385,10 @@
               </div>
             </div>
             {{ form.subject|as_crispy_field }}
-            {{ form.message|as_crispy_field }}                
+            {{ form.message|as_crispy_field }} 
+
+            <div class="g-recaptcha" data-sitekey="{{SITE_KEY}}"></div>               
+
             <button type="submit" class="btn form-btn">Submit</button>       
         </form> 
         </div>
@@ -426,6 +432,7 @@
     <ul>
       <li><h6> About Us</h6></li>
       <li><a href="https://spoken-tutorial.org/about-us/" target="_blank"> About Us</a></li>
+      <li><a href="https://spoken-tutorial.org/team/Creation-Team/" target="_blank"> Team</a></li>
       <li><a href="https://spoken-tutorial.org/news/article/" target="_blank"> News</a></li>
       <!-- <li><a href="">  Click here to view stats</a></li> -->
       
