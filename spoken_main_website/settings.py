@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'spoken',
     'rest_framework',
     'import_export',
+    'sso',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'sso.middleware.SSO',
 ]
 
 ROOT_URLCONF = 'spoken_main_website.urls'
@@ -145,3 +147,5 @@ IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 GOOGLE_RECAPTCHA_SECRET_KEY = os.getenv("GOOGLE_RECAPTCHA_SECRET_KEY")
 GOOGLE_RECAPTCHA_SITE_KEY = os.getenv("GOOGLE_RECAPTCHA_SITE_KEY")
+
+SAML_FOLDER = os.path.join(BASE_DIR, 'saml')
