@@ -30,26 +30,8 @@ class SSO:
             # request.session['AuthNRequestID'] = auth.get_last_request_id()
             # return HttpResponseRedirect(sso_built_url)
         elif 'sso2' in req['get_data']:
-            return_to = OneLogin_Saml2_Utils.get_self_url(req) + reverse('attrs')
+            return_to = OneLogin_Saml2_Utils.get_self_url(req) + request.META['PATH_INFO']
             return HttpResponseRedirect(auth.login(return_to))
-        elif 'slo' in req['get_data']:
-            name_id = session_index = name_id_format = name_id_nq = name_id_spnq = None
-            if 'samlNameId' in request.session:
-                name_id = request.session['samlNameId']
-            if 'samlSessionIndex' in request.session:
-                session_index = request.session['samlSessionIndex']
-            if 'samlNameIdFormat' in request.session:
-                name_id_format = request.session['samlNameIdFormat']
-            if 'samlNameIdNameQualifier' in request.session:
-                name_id_nq = request.session['samlNameIdNameQualifier']
-            if 'samlNameIdSPNameQualifier' in request.session:
-                name_id_spnq = request.session['samlNameIdSPNameQualifier']
-
-            return HttpResponseRedirect(auth.logout(name_id=name_id, session_index=session_index, nq=name_id_nq, name_id_format=name_id_format, spnq=name_id_spnq))
-            # If LogoutRequest ID need to be stored in order to later validate it, do instead
-            # slo_built_url = auth.logout(name_id=name_id, session_index=session_index)
-            # request.session['LogoutRequestID'] = auth.get_last_request_id()
-            # return HttpResponseRedirect(slo_built_url)
         elif 'acs' in req['get_data']:
             request_id = None
             if 'AuthNRequestID' in request.session:
@@ -69,6 +51,8 @@ class SSO:
                 request.session['samlNameIdSPNameQualifier'] = auth.get_nameid_spnq()
                 request.session['samlSessionIndex'] = auth.get_session_index()
                 if 'RelayState' in req['post_data'] and OneLogin_Saml2_Utils.get_self_url(req) != req['post_data']['RelayState']:
+                    if not req['post_data']['RelayState']:
+                        req['post_data']['RelayState'] = request.build_absolute_uri('/')
                     return HttpResponseRedirect(auth.redirect_to(req['post_data']['RelayState']))
             elif auth.get_settings().is_debug_active():
                     error_reason = auth.get_last_error_reason()
