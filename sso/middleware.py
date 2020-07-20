@@ -6,6 +6,8 @@ from onelogin.saml2.auth import OneLogin_Saml2_Auth
 from onelogin.saml2.settings import OneLogin_Saml2_Settings
 from onelogin.saml2.utils import OneLogin_Saml2_Utils
 from .views import prepare_django_request, init_saml_auth
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 
 class SSO:
 
@@ -50,6 +52,10 @@ class SSO:
                 request.session['samlNameIdNameQualifier'] = auth.get_nameid_nq()
                 request.session['samlNameIdSPNameQualifier'] = auth.get_nameid_spnq()
                 request.session['samlSessionIndex'] = auth.get_session_index()
+
+                user = authenticate(request, auth=auth)
+                if user is not None:
+                    login(request, user)                 
                 if 'RelayState' in req['post_data'] and OneLogin_Saml2_Utils.get_self_url(req) != req['post_data']['RelayState']:
                     if not req['post_data']['RelayState']:
                         req['post_data']['RelayState'] = request.build_absolute_uri('/')

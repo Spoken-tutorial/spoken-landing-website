@@ -149,3 +149,8 @@ GOOGLE_RECAPTCHA_SECRET_KEY = os.getenv("GOOGLE_RECAPTCHA_SECRET_KEY")
 GOOGLE_RECAPTCHA_SITE_KEY = os.getenv("GOOGLE_RECAPTCHA_SITE_KEY")
 
 SAML_FOLDER = os.path.join(BASE_DIR, 'saml')
+
+AUTHENTICATION_BACKENDS = [
+    'sso.backends.SSOBackend',
+    'django.contrib.auth.backends.ModelBackend'
+    ]
