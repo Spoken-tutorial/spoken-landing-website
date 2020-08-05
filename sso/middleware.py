@@ -32,7 +32,8 @@ class SSO:
             # request.session['AuthNRequestID'] = auth.get_last_request_id()
             # return HttpResponseRedirect(sso_built_url)
         elif 'sso2' in req['get_data']:
-            return_to = OneLogin_Saml2_Utils.get_self_url(req) + request.META['PATH_INFO']
+            req['get_data'].pop('sso2')
+            return_to = OneLogin_Saml2_Utils.get_self_url(req) + request.META['PATH_INFO']+'?'+req['get_data'].urlencode()
             return HttpResponseRedirect(auth.login(return_to))
         elif 'acs' in req['get_data']:
             request_id = None
