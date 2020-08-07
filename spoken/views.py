@@ -111,4 +111,26 @@ def get_tutorials(foss, lang):
                 if i['language'] == lang:
                     return i['videos']
 
+def get_tutorial_detail(foss, lang, tutorial):
+    tutorials = get_tutorials(foss, lang)
+    for t in tutorials:
+        if t['title'] == tutorial:
+            return t
 
+
+class TutorialSearch(TemplateView):
+    template_name = 'spoken/tutorial_search.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        search_foss = self.request.GET.get('search_foss', None)
+        search_language = self.request.GET.get('search_language', None)
+        if search_foss and search_language:
+            tutorials = get_tutorials(search_foss, search_language)
+            if tutorials:
+                context["foss"] = search_foss
+                context["language"] = search_language
+                context["tutorials"] = tutorials
+        context["foss_list"] = get_foss_lists()
+        return context
+    

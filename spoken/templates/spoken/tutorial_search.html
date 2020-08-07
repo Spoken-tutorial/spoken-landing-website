@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content%}
+{% for f in foss_list %}
+{{f}}
+{% endfor %}
+
+
+{{foss}}
+{{language}}
+
+
+{% for t in tutorials %}
+{{t.title}}
+{% endfor %}
+{% endblock content%}
