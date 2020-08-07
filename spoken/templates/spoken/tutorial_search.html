@@ -1,16 +1,29 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content%}
-{% for f in foss_list %}
-{{f}}
-{% endfor %}
+<form method="get" action="{% url 'tutorial_search' %}">
+  <div class="form-group">
+    <label for="exampleFormControlSelect1">Foss</label>
+    <select class="form-control" id="foss">
+    {% for f in foss_lang_list %}
+      <option value= "{{f.foss}}" >{{f.foss}}</option>
+    {% endfor %}
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="exampleFormControlSelect1">Language</label>
+    <select class="form-control" id="lang">
+      <option value= "" ></option>
+    </select>
+  </div>
+ 
+</form>
 
-
-{{foss}}
-{{language}}
-
-
-{% for t in tutorials %}
-{{t.title}}
-{% endfor %}
 {% endblock content%}
+
+{% block script %}
+<script type="text/javascript">
+ var foss_lang_list = "{{foss_lang_list|escapejs}}";
+ console.log(foss_lang_list)
+</script>
+{% endblock script %}

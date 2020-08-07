@@ -117,6 +117,10 @@ def get_tutorial_detail(foss, lang, tutorial):
         if t['title'] == tutorial:
             return t
 
+def get_all_foss_lang():
+    foss = get_foss_lists()
+    return [{'foss': f, 'languages': get_foss_languages(f)} for f in foss]
+
 
 class TutorialSearch(TemplateView):
     template_name = 'spoken/tutorial_search.html'
@@ -131,7 +135,7 @@ class TutorialSearch(TemplateView):
                 context["foss"] = search_foss
                 context["language"] = search_language
                 context["tutorials"] = tutorials
-        context["foss_list"] = get_foss_lists()
+        context["foss_lang_list"] = get_all_foss_lang()
         return context
 
 class TutorialWatch(TemplateView):
