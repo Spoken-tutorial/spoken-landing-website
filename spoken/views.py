@@ -133,4 +133,16 @@ class TutorialSearch(TemplateView):
                 context["tutorials"] = tutorials
         context["foss_list"] = get_foss_lists()
         return context
+
+class TutorialWatch(TemplateView):
+    template_name = 'spoken/tutorial_watch.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        foss = self.request.GET.get('foss', None)
+        language = self.request.GET.get('language', None)
+        tutorial = self.request.GET.get('tutorial', None)
+        context["tutorial"] = get_tutorial_detail(foss, language, tutorial)
+        return context
+    
     
