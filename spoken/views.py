@@ -85,6 +85,11 @@ def jobfair_detail(request,jobfair_id):
 
 
 class TutorialSearch(TemplateView):
+    """
+    Search tutorial based on get url parameters. 
+    Parameters: (search_foss, search_language)
+    Example pattern: localhost:8000/spoken/tutorial-search/?search_foss=Advance+C&search_language=English
+    """
     template_name = 'spoken/tutorial_search.html'
 
     def get_context_data(self, **kwargs):
@@ -101,6 +106,11 @@ class TutorialSearch(TemplateView):
         return context
 
 class TutorialWatch(TemplateView):
+    """
+    Watch a specific tutorial by passing get url parameters.
+    Parameters: (foss, language, tutorial)
+    Example Url: http://localhost:8000/spoken/tutorial-watch/?foss=Advanced+Cpp&language=English&tutorial=Constructor+And+Destructor
+    """
     template_name = 'spoken/tutorial_watch.html'
 
     def get_context_data(self, **kwargs):
