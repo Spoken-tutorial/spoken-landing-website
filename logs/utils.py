@@ -1,8 +1,8 @@
 
-from analytics_system import MONGO_CLIENT
-
+from logs import MONGO_CLIENT
 
 db = MONGO_CLIENT.logs
+
 tutorial_progress_logs = db.tutorial_progress_logs
 
 def update_tutorial_progress(data):
