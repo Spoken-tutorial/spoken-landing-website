@@ -1,29 +1,23 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
 {% load static %}
-{% block content%}
-<form method="get" action="{% url 'tutorial_search' %}">
-  <div class="form-group">
-    <label for="exampleFormControlSelect1">Foss</label>
-    <select class="form-control" id="foss">
-    {% for f in foss_lang_list %}
-      <option value= "{{f.foss}}" >{{f.foss}}</option>
-    {% endfor %}
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="exampleFormControlSelect1">Language</label>
-    <select class="form-control" id="lang">
-      <option value= "" ></option>
-    </select>
-  </div>
- 
-</form>
-
-{% endblock content%}
-
-{% block script %}
-<script type="text/javascript">
- var foss_lang_list = "{{foss_lang_list|escapejs}}";
- console.log(foss_lang_list)
-</script>
-{% endblock script %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Spoken Tutorial"
+    />
+    <title>Spoken Tutorial</title>
+   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+   <link rel="stylesheet" type="text/css" href="{% static '/spoken/bulma-pageloader.min.css' %}">
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="spoken"></div>
+  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <script type="text/javascript" src="{% static '/spoken/tutorial.js' %}"></script>
+  </body>
+</html>

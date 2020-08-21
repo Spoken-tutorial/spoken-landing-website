@@ -1,5 +1,6 @@
 from django.core.cache import cache
 import requests
+from logs.models import TutorialProgress
 
 def get_spokentutorials():
     spokentutorials = cache.get('spokentutorials')
@@ -38,3 +39,22 @@ def get_tutorial_detail(foss, lang, tutorial):
 def get_all_foss_lang():
     foss = get_foss_lists()
     return [{'foss': f, 'languages': get_foss_languages(f)} for f in foss]
+
+def get_tutorials_completion_status(foss, lang, user):
+    tutorials = get_tutorials(foss, lang)
+    ts=[]
+    for t in tutorials:
+        try:
+            tp=TutorialProgress.objects.get(
+                user=user, 
+                tutorial=t['title'],
+                foss=foss,
+                language=lang
+                )
+            t['status']=tp.status
+            print(t['title'], t['status'])
+        except:
+            t['status'] =False
+        ts.append(t)
+    return ts
+

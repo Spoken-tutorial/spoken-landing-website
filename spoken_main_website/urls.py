@@ -25,5 +25,6 @@ urlpatterns = [
     path('spoken/', include('spoken.urls')),
     path('api/jobfairs/', spoken_views.JobFairList.as_view()),
     path('sso/', include('sso.urls', namespace='sso')),
+    path('logs/', include('logs.urls', namespace='logs')),
     url(r'^$', spoken_views.home, name='home'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

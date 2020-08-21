@@ -91,34 +91,4 @@ class TutorialSearch(TemplateView):
     Example pattern: localhost:8000/spoken/tutorial-search/?search_foss=Advance+C&search_language=English
     """
     template_name = 'spoken/tutorial_search.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        search_foss = self.request.GET.get('search_foss', None)
-        search_language = self.request.GET.get('search_language', None)
-        if search_foss and search_language:
-            tutorials = get_tutorials(search_foss, search_language)
-            if tutorials:
-                context["foss"] = search_foss
-                context["language"] = search_language
-                context["tutorials"] = tutorials
-        context["foss_lang_list"] = get_all_foss_lang()
-        return context
-
-class TutorialWatch(TemplateView):
-    """
-    Watch a specific tutorial by passing get url parameters.
-    Parameters: (foss, language, tutorial)
-    Example Url: http://localhost:8000/spoken/tutorial-watch/?foss=Advanced+Cpp&language=English&tutorial=Constructor+And+Destructor
-    """
-    template_name = 'spoken/tutorial_watch.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        foss = self.request.GET.get('foss', None)
-        language = self.request.GET.get('language', None)
-        tutorial = self.request.GET.get('tutorial', None)
-        context["tutorial"] = get_tutorial_detail(foss, language, tutorial)
-        return context
-    
     

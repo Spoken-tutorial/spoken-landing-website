@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'import_export',
     'sso',
+    'logs',
 ]
 
 MIDDLEWARE = [
@@ -165,3 +166,10 @@ if DEBUG:
     STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 else:
     STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer'
+    ]
+}
