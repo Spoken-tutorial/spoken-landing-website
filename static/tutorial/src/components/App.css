@@ -1,0 +1,75 @@
+
+.has-text-muted {
+  color: #95A5A6;
+}
+.spacer {
+  height:20px;
+}
+.nav-left .searchbox {
+  margin-top: 10px;
+}
+.avatar-photo {
+  border-radius: 50px;
+}
+.video-title {
+  font-size: 1.5em;
+  font-weight: 500;
+}
+.box.video-description {
+  padding:20px 20px 5px 20px;
+}
+.video-description-more {
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-top: -15px;
+}
+.related-card .video-title {
+  display:block;
+  font-size: 13px;
+  font-weight: 500;
+}
+.related-card .video-account,.related-card .video-views {
+  display:block;
+  font-size: 11px;
+  color: #95A5A6;
+}
+
+.related-card img {
+  height:68px;
+}
+.related-card.media .media, .related-card.media+.media {
+    border-top: none;
+}
+.related-list .autoplay {
+  padding-bottom: 10px;
+}
+
+.related-list .autoplay .autoplay-title {
+  font-weight: bold;
+}
+.related-list .autoplay .autoplay-toggle {
+  float:right;
+}
+.related-list .autoplay .autoplay-toggle .fa{
+  font-size: 13px;
+  padding:5px 10px;
+}
+
+.video-js-responsive-container.vjs-hd {
+  padding-top: 56.25%;
+}
+.video-js-responsive-container.vjs-sd {
+  padding-top: 75%;
+}
+.video-js-responsive-container {
+  width: 100%;
+  position: relative;
+}
+.video-js-responsive-container .video-js {
+  height: 100% !important; 
+  width: 100% !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
