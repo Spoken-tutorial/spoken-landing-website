@@ -15,14 +15,39 @@
   font-size: 1.5em;
   font-weight: 500;
 }
-.box.video-description {
-  padding:20px 20px 5px 20px;
+.video-description {
+  border-bottom: 2px solid #004E95;
 }
 .video-description-more {
   font-size: 12px;
   font-weight: bold;
   text-transform: uppercase;
   margin-top: -15px;
+}
+
+.tutorialName{
+  color: #004E95;
+}
+.tutorialName:hover{
+  color: rgba(0,0,0,1);
+}
+.media-border+.media-border{
+  border-top: 1px solid rgba(0,0,0,0.2);
+}
+.progressWrap{
+   display : flex;
+  align-items : center;
+}
+.info{
+  color: rgba(0,0,0,0.5);
+  font-size: 15px;
+}
+.floatBottom{
+  margin-top: auto!important;
+}
+.tutorialDesc{
+  font-size: 0.9rem;
+  color: rgba(0,0,0,1);
 }
 .related-card .video-title {
   display:block;
@@ -72,4 +97,108 @@
   position: absolute;
   top: 0;
   left: 0;
+}
+.box-temp{
+  border: 2px solid green;
+}
+.mr{
+  margin-left: 0;
+}
+.ml{
+  margin-left: 300px;
+}
+
+.wrapper {
+  display: flex;
+}
+
+/**** MAIN ****/
+#main {
+  position: relative;
+  width: 100%;
+  transition: margin-left 0.3s ease-in-out;
+  background: #fff;
+  border-left:1px solid rgba(0,0,0,0.2);
+}
+
+#main.isopen {
+ transition: margin-left 0.3s ease-in-out;
+ margin-left: -300px;
+ width: 100%;
+}
+
+#sidebarWrapper{
+  height: 100vh;
+  position: sticky!important;
+  top: 0;
+}
+#sidebarWrapper .columns, #main .columns{
+  margin: 0!important;
+}
+
+#sidebar{
+  width: 300px;
+  height: 100vh;
+}
+
+, ul{ 
+  background-color: #3E3E3E; 
+  height: 100vh;
+}
+
+.playlistToggle{
+  width: 200px;
+  height: 50px;
+  font-size: 1.2rem;
+  color: #fff;
+  border : 1px solid rgba(255,255,255,.35);
+  background: #002649;
+}
+.videoTitle{
+  height: 50px;
+  font-size: 1.2rem;
+  background: #3A3A3A;
+  border: none!important;
+  display: flex;
+  color: #004E95;
+  font-weight: bold;
+}
+.topBanner{
+  width: 100%;
+  border-bottom: 1px solid rgba(255,255,255,.35);
+  background: rgba(0,0,0,1);
+  border: 1px solid rgba(0,0,0,0.2);  
+}
+.hideSidebar{
+  margin-left: -300px;
+}
+
+/*White Theme */
+.topBanner, #sidebar,.videoTitle{
+  background-color: #fff;
+  color: black;
+}
+.videoStyle{
+  width: 80%;
+}
+.videoMax{
+  width: 100%;
+}
+.toggleWrapper{
+  border-right: 1px solid rgba(0,0,0,0.2);
+}
+.videoTitle p{
+  color: rgba(0,78,149,0.9);
+}
+
+
+@media only screen and (max-width: 768px) {
+  #main.isopen {
+   transition: margin-left 0.3s ease-in-out;
+   margin-left: -80vw;
+   width: 100%;
+  }
+  #sidebar{
+    width: 80vw;
+  }
 }

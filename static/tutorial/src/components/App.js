@@ -27,11 +27,18 @@ class App extends Component {
       current_language: '',
       video_status:false,
       time_completed:0,
+      
     };
+    this.handleClick = this.handleClick.bind(this)
+  }
+  
+  handleClick(){
+    this.setState({ isOpen : !this.state.isOpen})
   }
   
   componentDidMount() {
-    fetch(`${process.env.SERVER_API_URL}`+"spoken/api/tutorial-search/"+location.search)
+    console.log(window.location.search);
+    fetch(`${process.env.SERVER_API_URL}`+"spoken/api/tutorial-search/"+window.location.search)
       .then(res =>{
         return res.json()
       })
@@ -89,7 +96,7 @@ class App extends Component {
   }
 
   saveComplete(event){
-    axios.post(`${process.env.SERVER_API_URL}`+"logs/get_set_progress/", 
+    axios.post(`${process.env.SERVER_API_URL}`+"logs/get_set_progress/",
     {
       tutorial: this.state.tutorial.title,
       foss: this.state.current_foss,
@@ -109,6 +116,15 @@ class App extends Component {
     ))
     return count/total *100
   }
+  getProgress(completed,total_duration){
+    if (total_duration) {
+      return completed/total_duration *100;
+    }else{
+      return 0;
+    }
+}
+
+  
 
   render(){
     const divStyle = {
@@ -116,6 +132,23 @@ class App extends Component {
       backgroundImage: 'green',
       align: 'right'
     };
+    const progressStyle = {
+      color: "white",
+      backgroundColor: "DodgerBlue",
+      width: "150px",
+      height: "5px",
+      fontFamily: "Arial"
+    };
+
+    const courseProgress = {
+      color: "white",
+      backgroundColor: "DodgerBlue",
+      width: "150px",
+      height: "5px",
+      fontFamily: "Arial"
+    }
+
+
     const { error, isLoaded, foss_lang_list, current_foss, current_language, search_foss, search_language, languages, tutorials , tutorial, video_status, time_completed} = this.state;
     if (error) {
       return <div>Error: {error.message}</div>;
@@ -125,9 +158,10 @@ class App extends Component {
       return (
     <div>
     <div className="spacer"></div>
-    <div className="container">
+    <div>
 
-    <div className="box video-description">
+    <div className="container">
+      <div className=" video-description py-4">
     <div className="columns">
         <div className="column is-8">
     <form method='get' action="/spoken/tutorial-search/"> 
@@ -135,10 +169,10 @@ class App extends Component {
           <div className="column is-10">
           <div className="columns">
 
-          <div  className="column is-4">
+          <div  className="column is-5">
           <div class="field">
           <div class="control">
-          <div className="select is-primary">
+          <div className="select is-info">
             <select name="search_foss" onChange={this.handleFoss.bind(this)} value={search_foss}>
             {foss_lang_list.map(item => (
               <option value={item.foss}>{item.foss}</option>
@@ -149,10 +183,10 @@ class App extends Component {
           </div>
           </div>
 
-          <div  className="column is-3">
-          <div class="field is-grouped">
+          <div  className="column is-5">
+          <div class="field">
           <div class="control">
-          <div className="select is-primary" >
+          <div className="select is-info is-fullwidth" >
           <select name="search_language" onChange={this.handleChange.bind(this)} value={search_language}>
           {languages.map(item => (
               <option value={item}>{item}</option>
@@ -162,11 +196,10 @@ class App extends Component {
         </div>
         </div>
         </div>
-
-        <div  className="column is-3">
-        <div class="field is-grouped">
+        <div  className="column is-2">
+        <div class="field">
           <div class="control">
-            <button type="submit" class="button is-primary is-outlined">Search</button>
+            <button type="submit" class="button is-info is-outlined">Search</button>
           </div>
         </div>
         </div>
@@ -174,28 +207,58 @@ class App extends Component {
         </div>
       </div>
     </form>
-    <div className="spacer"></div>
     </div>
     </div>
-    </div>
-    <progress class="progress is-success" value={this.getTutorialProgress()} max="100">{this.getTutorialProgress()}% Completed</progress>
-    <div className="spacer"></div>
-    {tutorial ? <Watch current_foss={current_foss} current_language={current_language} tutorial={tutorial} tutorials={tutorials} video_status={video_status} saveComplete={this.saveComplete} time_completed={time_completed}/> : 
     <div className="columns">
+    <div className="column is-2"><span className="content has-text-grey">Total Tutorials : 12</span></div>
+    <div className="column content has-text-grey mr-3 progressWrap"><progress className="progress is-info mr-3" value={this.getTutorialProgress()} max="100" style={courseProgress}>  {this.getTutorialProgress()}%</progress>20% completed</div>
+    </div>
+    </div>
+    </div>
+    
+    
+    
+    {tutorial ? <Watch current_foss={current_foss} current_language={current_language} tutorial={tutorial} tutorials={tutorials} video_status={video_status} saveComplete={this.saveComplete} time_completed={time_completed}/> : 
+    <div className="container"><div className="columns">
         <div className="column is-8">
             {            
             tutorials.map(item => (
-            <div className="box video-description">
-                    <p><strong><a href={`${process.env.SERVER_API_URL}`+"spoken/tutorial-search/?search_foss="+current_foss+"&search_language="+current_language+"&search_tutorial="+item.title}>{item.title}</a></strong>
-                    &nbsp;<span>{item.status? <i style={divStyle} class="fas fa-check"></i>: <i style={divStyle} class="fas fa-play"></i> }</span>
-                    </p>
-                    <p>{item.description}</p>
-                    <hr/>
-                    <p className="has-text-centered has-text-muted video-description-more">Show More</p>
+            <>
+            <div className="media media-border">
+                <div className="media-left is-hidden-mobile">
+                  <div className="image is-110x110">
+                    <img src={item.card[0]} alt="Image" />
+                  </div>
                 </div>
-              ))}
+                <div className="media-content">
+                  <div className="content">
+                  <p><strong><a className="tutorialName" href={"http://localhost:8000/spoken/tutorial-search/?search_foss="+current_foss+"&search_language="+current_language+"&search_tutorial="+item.title}>{item.title}</a></strong>
+                    &nbsp;<span>
+                    {item.status ? <i style={divStyle} class="fas fa-check"></i> : 
+                    ( item.time_completed == 0) ? <i class="far fa-play-circle"></i> :
+                    <i style={divStyle} class="far fa-play-circle"></i> }</span>
+                    </p>
+                    <p className="tutorialDesc">{item.description}</p>
+                  </div>
+                  <div className="columns floatBottom">
+                    <div className="column is-one-quarter text-muted info progressWrap"><span>
+                    {item.status ? 'Completed' : 
+                    ( item.time_completed == 0) ? <span>Total time - {item.duration}</span> :
+                    <progress className="progress is-info " value={this.getProgress(item.time_completed,item.total_duration)} max={100} style={{width: "150px",height:"5px"}}>
+                    item.time_completed</progress> }</span></div>
+                    <div className="column text-muted">
+                    {(item.views == 0) ? '' : <span className="info">views - {item.views}</span>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+))}
       </div>
-    </div>}
+    </div>
+  </div>}
+
+
 
     </div>
     </div>
