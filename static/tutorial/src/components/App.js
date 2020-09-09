@@ -157,23 +157,23 @@ class App extends Component {
     } else {
       return (
     <div>
-    <div className="spacer"></div>
+    
     <div>
 
-    <div className="container">
-      <div className=" video-description py-4">
-    <div className="columns">
-        <div className="column is-8">
-    <form method='get' action="/spoken/tutorial-search/"> 
-      <div className="columns">
-          <div className="column is-10">
-          <div className="columns">
+    
+      <div className=" video-description py-2 darkBg">
 
+    <div className="container">
+        <div className="column">
+    <form method='get' action="/spoken/tutorial-search/"> 
+      <div className="columns is-centered">
+          <div className="column is-8">
+          <div className="columns">
           <div  className="column is-5">
           <div class="field">
           <div class="control">
           <div className="select is-info">
-            <select name="search_foss" onChange={this.handleFoss.bind(this)} value={search_foss}>
+            <select name="search_foss" onChange={this.handleFoss.bind(this)} value={search_foss} className="selectStyle">
             {foss_lang_list.map(item => (
               <option value={item.foss}>{item.foss}</option>
               ))}
@@ -187,7 +187,7 @@ class App extends Component {
           <div class="field">
           <div class="control">
           <div className="select is-info is-fullwidth" >
-          <select name="search_language" onChange={this.handleChange.bind(this)} value={search_language}>
+          <select name="search_language" onChange={this.handleChange.bind(this)} value={search_language} className="selectStyle">
           {languages.map(item => (
               <option value={item}>{item}</option>
               ))}
@@ -199,27 +199,26 @@ class App extends Component {
         <div  className="column is-2">
         <div class="field">
           <div class="control">
-            <button type="submit" class="button is-info is-outlined">Search</button>
+            <button type="submit" class="button submitStyle">Search</button>
           </div>
         </div>
         </div>
         </div>
         </div>
+        
       </div>
+
     </form>
     </div>
     </div>
-    <div className="columns">
-    <div className="column is-2"><span className="content has-text-grey">Total Tutorials : 12</span></div>
-    <div className="column content has-text-grey mr-3 progressWrap"><progress className="progress is-info mr-3" value={this.getTutorialProgress()} max="100" style={courseProgress}>  {this.getTutorialProgress()}%</progress>20% completed</div>
+    
     </div>
-    </div>
-    </div>
+   
     
     
     
     {tutorial ? <Watch current_foss={current_foss} current_language={current_language} tutorial={tutorial} tutorials={tutorials} video_status={video_status} saveComplete={this.saveComplete} time_completed={time_completed}/> : 
-    <div className="container"><div className="columns">
+    <div className="container mt-4"><div className="columns">
         <div className="column is-8">
             {            
             tutorials.map(item => (

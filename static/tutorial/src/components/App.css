@@ -1,4 +1,7 @@
-
+body{
+  max-width: 100%;
+    overflow-x: hidden;
+}
 .has-text-muted {
   color: #95A5A6;
 }
@@ -16,7 +19,8 @@
   font-weight: 500;
 }
 .video-description {
-  border-bottom: 2px solid #004E95;
+  border-bottom: 1px solid #004E95!important;
+    padding-bottom: 16px!important;
 }
 .video-description-more {
   font-size: 12px;
@@ -82,7 +86,9 @@
 }
 
 .video-js-responsive-container.vjs-hd {
-  padding-top: 56.25%;
+ /* padding-top: 56.25%;*/
+ height: 500px!important;
+ width: 100%;
 }
 .video-js-responsive-container.vjs-sd {
   padding-top: 75%;
@@ -105,7 +111,7 @@
   margin-left: 0;
 }
 .ml{
-  margin-left: 300px;
+  margin-left: 350px;
 }
 
 .wrapper {
@@ -123,7 +129,7 @@
 
 #main.isopen {
  transition: margin-left 0.3s ease-in-out;
- margin-left: -300px;
+ margin-left: -350px;
  width: 100%;
 }
 
@@ -137,7 +143,7 @@
 }
 
 #sidebar{
-  width: 300px;
+  width: 350px;
   height: 100vh;
 }
 
@@ -153,6 +159,12 @@
   color: #fff;
   border : 1px solid rgba(255,255,255,.35);
   background: #002649;
+  border-radius: 6px;
+}
+.playlistToggle:hover{
+  background: rgba(0,38,73,0.9);
+  cursor: pointer;
+  border: 2px solid #002649;
 }
 .videoTitle{
   height: 50px;
@@ -162,6 +174,11 @@
   display: flex;
   color: #004E95;
   font-weight: bold;
+  flex-direction: column;
+}
+.videoTitle span{
+  margin: auto;
+
 }
 .topBanner{
   width: 100%;
@@ -170,7 +187,7 @@
   border: 1px solid rgba(0,0,0,0.2);  
 }
 .hideSidebar{
-  margin-left: -300px;
+  margin-left: -350px;
 }
 
 /*White Theme */
@@ -179,7 +196,7 @@
   color: black;
 }
 .videoStyle{
-  width: 80%;
+  width: 100%;
 }
 .videoMax{
   width: 100%;
@@ -190,8 +207,42 @@
 .videoTitle p{
   color: rgba(0,78,149,0.9);
 }
-
-
+.tutorialProgress{
+  font-size: 12px;
+  margin:0!important;
+}
+.tutorialProgress progress{
+  height: 4px;
+}
+.blueColor{
+  color: rgba(0,78,149,0.9);
+  font-size: 1.5rem;
+}
+.darkBg{
+  background: #F7F7F7!important;
+}
+.blueBg{
+  background: #ECF0F3!important;
+}
+.submitStyle{
+  border-color: #004E95;
+  color: #004E95;
+  border: 2px solid #004E95;
+  /* background: #004E95; */
+  /* color: #fff; */
+  font-weight: bold;
+}
+.selectStyle{
+  border: 2px solid #004E95!important;
+}
+.divider{
+  border: 1px solid #004E95!important;
+  margin-bottom: 16px;
+}
+.tutorialProgress progress{
+  border: 1px solid rgba(0,0,0,0.2);
+  width: 100px;
+}
 @media only screen and (max-width: 768px) {
   #main.isopen {
    transition: margin-left 0.3s ease-in-out;

@@ -3,6 +3,7 @@ import VideoPlayer from './videoplayer';
 import Tabs from './Tabs';
 import Tab from './Tabs';
 
+
 class Main extends React.Component {
   constructor(props){
     super(props);
@@ -12,11 +13,19 @@ class Main extends React.Component {
   this.handleClick = this.handleClick.bind(this)
   }
   
+
   handleClick(){
     this.setState({ isOpen : !this.state.isOpen})
     console.log(!this.state.isOpen)
   }
   render(){
+    const courseProgress = {
+      color: "white",
+      backgroundColor: "DodgerBlue",
+      width: "150px",
+      height: "5px",
+      fontFamily: "Arial"
+    }
    const mainStatus = this.state.isOpen ? "isopen" : "";
    const videoJsOptions = {
       autoplay: true,
@@ -29,15 +38,17 @@ class Main extends React.Component {
     }
     return(
     <div className={mainStatus} id="main" >
-        <div className="columns topBanner">
+        <div className="columns topBanner blueBg">
         <div className="column is-one-third toggleWrapper">
           <button onClick={this.handleClick} className="playlistToggle">
           <i class="fas fa-list"></i>  <span>Tutorial List</span>
         </button>
+          
         </div>
         <div className="column">
-          <button className="videoTitle">
-          <span className="subtitle">Tutorial Name</span>
+          <button className="videoTitle blueBg">
+          <span className="is-size-6 mb-2">{this.props.tutorial.title}</span>
+          <span className="tutorialProgress"><progress className="progress is-info mr-3" value="20" max="100" ></progress>20%</span>
         </button>
         </div>
         </div>
@@ -48,11 +59,15 @@ class Main extends React.Component {
           <div className="tabsWrapper">
         
        <Tabs>
-         <Tab label="Tab 1">
+         <Tab label="Details">
            <div>
              <p className="has-text-weight-bold is-size-5">Course Details : </p>
-             <p>Tutorial Name </p>
-             <p className="has-text-grey">Time : 10 min 20 sec </p>
+             <p>{this.props.current_foss}  : {this.props.tutorial.title}</p>
+             <p className="has-text-grey">Time : {this.props.tutorial.duration} </p>
+             <hr/>
+             <p className="has-text-weight-bold">Description : </p>
+             <p>{this.props.tutorial.description} </p>
+             
            </div>
          </Tab>
          <Tab label="Tab 2">

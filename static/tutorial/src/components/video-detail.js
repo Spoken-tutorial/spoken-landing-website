@@ -41,8 +41,8 @@ class VideoDetail extends Component {
       return (
       <div>
       <div className="wrapper">
-        <Sidebar id="sidebar" className={hideSidebar} />
-        <Main className={mainStatus} />       
+        <Sidebar id="sidebar" className={hideSidebar} tutorials={this.props.tutorials}/>
+        <Main className={mainStatus} current_foss={this.props.current_foss} current_language={this.props.current_language} tutorial={this.props.tutorial} />       
     </div>
     </div>
  
