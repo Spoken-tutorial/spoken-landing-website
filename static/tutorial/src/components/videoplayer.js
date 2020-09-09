@@ -38,7 +38,7 @@ export default class VideoPlayer extends React.Component {
       });
 
       console.log('Log Time', this.state.logTime)
-      axios.post(`${process.env.SERVER_API_URL}`+"logs/save_tutorial_progress/", 
+      axios.post(`${process.env.SERVER_API_URL}`+"logs/save_tutorial_progress/",
           {
             tutorial: this.props.tutorial_title,
             foss: this.props.current_foss,
@@ -78,8 +78,8 @@ export default class VideoPlayer extends React.Component {
   // see https://github.com/videojs/video.js/pull/3856
   render() {
     return (
-      <div>	
-        <div data-vjs-player>
+      <div className={` ${this.props.isOpen ? 'videoMax' : 'videoStyle'}`} >	
+        <div data-vjs-player >
           <video ref={ node => this.videoNode = node } className="video-js vjs-theme-fantasy video-js-responsive-container vjs-hd" width="100%" height="auto"></video>
         </div>
       </div>

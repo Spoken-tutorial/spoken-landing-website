@@ -51,10 +51,18 @@ def get_tutorials_completion_status(foss, lang, user):
                 foss=foss,
                 language=lang
                 )
+            tutorial_views = TutorialProgress.objects.filter(tutorial=t['title'],
+                foss=foss,
+                language=lang).count()
             t['status']=tp.status
-            print(t['title'], t['status'])
+            t['time_completed'] =tp.time_completed
+            t['total_duration'] =tp.total_duration
+            t['views'] = tutorial_views
         except:
             t['status'] =False
+            t['time_completed'] =0
+            t['total_duration'] =0
+            t['views'] = 0
         ts.append(t)
     return ts
 
