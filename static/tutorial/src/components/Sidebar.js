@@ -14,17 +14,14 @@ class Sidebar extends React.Component {
 
  handleClick(){
     this.setState({ isOpen : !this.state.isOpen})
-    console.log(!this.state.isOpen)
   }
 
   render(){
-    const sidebarBtnStatus = this.state.isOpen ? "sidebarBtn" : "";
-    console.log(this.props.tutorials);;
     return(
     <div id="sidebarWrapper">
     <div className="columns">
       <div className="column topBanner blueBg">
-        <button className={`videoTitle ml-0 pl-0 blueBg ${sidebarBtnStatus}`}
+        <button className={`videoTitle ml-0 pl-0 blueBg`}
          onClick={this.handleClick}>
           <span><i class="far fa-list-alt blueColor"></i> Contents</span>
         </button>

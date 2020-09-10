@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import VideoDetail from './video-detail';
-import Playlist from './playlist';
 
 class Watch extends Component {
 

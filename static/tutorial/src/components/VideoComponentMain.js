@@ -16,7 +16,6 @@ class Main extends React.Component {
 
   handleClick(){
     this.setState({ isOpen : !this.state.isOpen})
-    console.log(!this.state.isOpen)
   }
   render(){
    const mainStatus = this.state.isOpen ? "isopen" : "";

@@ -30,15 +30,10 @@ class App extends Component {
       total_duration:0,
       
     };
-    this.handleClick = this.handleClick.bind(this)
-  }
-  
-  handleClick(){
-    this.setState({ isOpen : !this.state.isOpen})
+    
   }
   
   componentDidMount() {
-    console.log(window.location.search);
     fetch(`${process.env.SERVER_API_URL}`+"spoken/api/tutorial-search/"+window.location.search)
       .then(res =>{
         return res.json()
