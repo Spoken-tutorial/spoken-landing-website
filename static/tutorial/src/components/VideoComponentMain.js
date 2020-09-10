@@ -28,14 +28,14 @@ class Main extends React.Component {
     }
    const mainStatus = this.state.isOpen ? "isopen" : "";
    const videoJsOptions = {
-      autoplay: true,
-      muted: true,
-      controls: true,
-      sources: [{
-        src: "https://spoken-tutorial.org/media/videos/44/448/Classes-And-Objects-English.ogv",
-        type: 'video/ogg'
-      }]
-    }
+    autoplay: true,
+    muted: true,
+    controls: true,
+    sources: [{
+      src: this.props.tutorial.sources[0],
+      type: 'video/ogg'
+    }]
+  }
     return(
     <div className={mainStatus} id="main" >
         <div className="columns topBanner blueBg">
@@ -55,13 +55,13 @@ class Main extends React.Component {
         
       <div className="main">
         <div>
-          <VideoPlayer isOpen={mainStatus} current_foss="Bash" current_language="English" tutorial_title="Introduction" time_completed="2" { ...videoJsOptions } />
+          <VideoPlayer isOpen={mainStatus} current_foss={this.props.current_foss} current_language={this.props.current_language} tutorial_title={this.props.tutorial.title} time_completed={this.props.time_completed} { ...videoJsOptions } />
           <div className="tabsWrapper">
         
        <Tabs>
          <Tab label="Details">
            <div>
-             <p className="has-text-weight-bold is-size-5">Course Details : </p>
+             <p className="has-text-weight-bold is-size-5">Tutorial Details : </p>
              <p>{this.props.current_foss}  : {this.props.tutorial.title}</p>
              <p className="has-text-grey">Time : {this.props.tutorial.duration} </p>
              <hr/>
