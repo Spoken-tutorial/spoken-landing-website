@@ -27,6 +27,7 @@ class App extends Component {
       current_language: '',
       video_status:false,
       time_completed:0,
+      total_duration:0,
       
     };
     this.handleClick = this.handleClick.bind(this)
@@ -55,6 +56,7 @@ class App extends Component {
             current_language: result['language'],
             video_status:result['video_status'],
             time_completed:result['time_completed'],
+            total_duration:result['total_duration'],
             isLoaded: true
           });
         },
@@ -68,7 +70,6 @@ class App extends Component {
           });
         }
       )
-
   
   }
 
@@ -125,31 +126,16 @@ class App extends Component {
 }
 
   
-
+  
   render(){
+
     const divStyle = {
       color: 'green',
       backgroundImage: 'green',
       align: 'right'
     };
-    const progressStyle = {
-      color: "white",
-      backgroundColor: "DodgerBlue",
-      width: "150px",
-      height: "5px",
-      fontFamily: "Arial"
-    };
 
-    const courseProgress = {
-      color: "white",
-      backgroundColor: "DodgerBlue",
-      width: "150px",
-      height: "5px",
-      fontFamily: "Arial"
-    }
-
-
-    const { error, isLoaded, foss_lang_list, current_foss, current_language, search_foss, search_language, languages, tutorials , tutorial, video_status, time_completed} = this.state;
+    const { error, isLoaded, foss_lang_list, current_foss, current_language, search_foss, search_language, languages, tutorials , tutorial, video_status, time_completed,total_duration} = this.state;
     if (error) {
       return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
@@ -217,13 +203,14 @@ class App extends Component {
     
     
     
-    {tutorial ? <Watch current_foss={current_foss} current_language={current_language} tutorial={tutorial} tutorials={tutorials} video_status={video_status} saveComplete={this.saveComplete} time_completed={time_completed}/> : 
-    <div className="container mt-4"><div className="columns">
+    {tutorial ? <Watch current_foss={current_foss} current_language={current_language} tutorial={tutorial} tutorials={tutorials} video_status={video_status} saveComplete={this.saveComplete} time_completed={time_completed} 
+    progressValue={this.getProgress(time_completed,total_duration)} /> : 
+    <div className="container mt-4 "><div className="columns tutorialListWrapper">
         <div className="column is-8">
             {            
             tutorials.map(item => (
             <>
-            <div className="media media-border">
+            <div className="media media-border px-3">
                 <div className="media-left is-hidden-mobile">
                   <div className="image is-110x110">
                     <img src={item.card[0]} alt="Image" />
@@ -253,6 +240,17 @@ class App extends Component {
               </div>
             </>
 ))}
+      </div>
+      <div className="column is-4 ">
+      <div className="courseDetails px-4 py-4 box">
+        <p className="has-text-weight-bold">Course Details</p>
+        <p>Course : {current_foss}</p>
+        <p>Language : {current_language}</p>
+        <hr/>
+        <p className="has-text-weight-bold">Course Progress : </p>
+        <progress className="progress is-info " value={this.getTutorialProgress()} max={100} style={{width: "150px",height:"5px"}}>
+                    {this.getTutorialProgress()} Complete</progress>{this.getTutorialProgress()}% Complete
+      </div>
       </div>
     </div>
   </div>}

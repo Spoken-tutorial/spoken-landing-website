@@ -177,7 +177,7 @@ body{
   flex-direction: column;
 }
 .videoTitle span{
-  margin: auto;
+  margin: auto 0;
 
 }
 .topBanner{
@@ -211,9 +211,6 @@ body{
   font-size: 12px;
   margin:0!important;
 }
-.tutorialProgress progress{
-  height: 4px;
-}
 .blueColor{
   color: rgba(0,78,149,0.9);
   font-size: 1.5rem;
@@ -240,9 +237,21 @@ body{
   margin-bottom: 16px;
 }
 .tutorialProgress progress{
-  border: 1px solid rgba(0,0,0,0.2);
+  border: 1px solid rgba(0,0,0,0.8);
   width: 100px;
+  height: 4px;
 }
+.courseDetails{
+  border: 1px solid rgba(0,0,0,0.2);
+}
+.tutorialListWrapper .media-content{
+  overflow-x: hidden;
+}
+.tutorialListWrapper .media-content{
+  overflow-y: hidden;
+}
+
+
 @media only screen and (max-width: 768px) {
   #main.isopen {
    transition: margin-left 0.3s ease-in-out;
@@ -252,4 +261,12 @@ body{
   #sidebar{
     width: 80vw;
   }
+  .tutorialListWrapper{
+  display: flex;
+  flex-direction: column-reverse;
+} 
+  .courseDetails{
+  margin: 2px 10px;
+}
+
 }

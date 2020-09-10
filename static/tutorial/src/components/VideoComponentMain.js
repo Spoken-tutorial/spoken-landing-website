@@ -19,13 +19,6 @@ class Main extends React.Component {
     console.log(!this.state.isOpen)
   }
   render(){
-    const courseProgress = {
-      color: "white",
-      backgroundColor: "DodgerBlue",
-      width: "150px",
-      height: "5px",
-      fontFamily: "Arial"
-    }
    const mainStatus = this.state.isOpen ? "isopen" : "";
    const videoJsOptions = {
     autoplay: true,
@@ -48,7 +41,7 @@ class Main extends React.Component {
         <div className="column">
           <button className="videoTitle blueBg">
           <span className="is-size-6 mb-2">{this.props.tutorial.title}</span>
-          <span className="tutorialProgress"><progress className="progress is-info mr-3" value="20" max="100" ></progress>20%</span>
+          <span className="tutorialProgress"><progress className="progress is-info mr-3" value={this.props.progressValue} max="100" ></progress></span>
         </button>
         </div>
         </div>
@@ -59,7 +52,7 @@ class Main extends React.Component {
           <div className="tabsWrapper">
         
        <Tabs>
-         <Tab label="Details">
+         <Tab label="Course Details">
            <div>
              <p className="has-text-weight-bold is-size-5">Tutorial Details : </p>
              <p>{this.props.current_foss}  : {this.props.tutorial.title}</p>
@@ -70,37 +63,14 @@ class Main extends React.Component {
              
            </div>
          </Tab>
-         <Tab label="Tab 2">
-           <div>
-             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-              sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
-              . Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-               nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore 
-             </p>
-           </div>
-         </Tab>
-         <Tab label="Tab 3">
-           <div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-              sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
-              . Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-               nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore 
-             </p>
-           </div>
-         </Tab>
-         <Tab label="Tab 4">
-           <div>
-             <p>Tab 4 content</p>
-           </div>
-         </Tab>
-         <Tab label="Tab 5">
+         <Tab label="Resources">
            <div>
              
-             <p>Tab 5 content</p>
+           </div>
+         </Tab>
+         <Tab label="Forums">
+           <div>
+            
            </div>
          </Tab>
        </Tabs>

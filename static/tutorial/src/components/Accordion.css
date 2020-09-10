@@ -52,5 +52,15 @@
 .accordion:hover, .active{
   background-color: rgba(0,78,149,0.2);
 }
+.accordion_text {
+  display: inline;
+}
+.accordion_text a{
+  color: rgba(0,0,0,0.8)!important;
+  
+}
+.accordion_text a:hover{
+  color: rgba(0,78,149,0.9);
+}
 
 

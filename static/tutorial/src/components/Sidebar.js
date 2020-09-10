@@ -19,6 +19,7 @@ class Sidebar extends React.Component {
 
   render(){
     const sidebarBtnStatus = this.state.isOpen ? "sidebarBtn" : "";
+    console.log(this.props.tutorials);;
     return(
     <div id="sidebarWrapper">
     <div className="columns">
@@ -34,7 +35,9 @@ class Sidebar extends React.Component {
       {
         this.props.tutorials.map(tutorial =>
         <li>
-       <Accordion title={tutorial.title} content={tutorial.description} />
+       <Accordion title={tutorial.title} 
+       content={`<a href="?search_foss=${this.props.current_foss}&search_language=${this.props.current_language}&search_tutorial=${tutorial.title}">${tutorial.description}</a> `}
+        videoLink={`${process.env.SERVER_API_URL}?search_foss=${this.props.current_foss}&search_language=${this.props.current_language}&search_tutorial=${tutorial.title}`}/>
        </li>
        )
       }
