@@ -14,16 +14,14 @@ class Sidebar extends React.Component {
 
  handleClick(){
     this.setState({ isOpen : !this.state.isOpen})
-    console.log(!this.state.isOpen)
   }
 
   render(){
-    const sidebarBtnStatus = this.state.isOpen ? "sidebarBtn" : "";
     return(
     <div id="sidebarWrapper">
     <div className="columns">
       <div className="column topBanner blueBg">
-        <button className={`videoTitle ml-0 pl-0 blueBg ${sidebarBtnStatus}`}
+        <button className={`videoTitle ml-0 pl-0 blueBg`}
          onClick={this.handleClick}>
           <span><i class="far fa-list-alt blueColor"></i> Contents</span>
         </button>
@@ -34,7 +32,9 @@ class Sidebar extends React.Component {
       {
         this.props.tutorials.map(tutorial =>
         <li>
-       <Accordion title={tutorial.title} content={tutorial.description} />
+       <Accordion title={tutorial.title} 
+       content={`<a href="?search_foss=${this.props.current_foss}&search_language=${this.props.current_language}&search_tutorial=${tutorial.title}">${tutorial.description}</a> `}
+        videoLink={`${process.env.SERVER_API_URL}?search_foss=${this.props.current_foss}&search_language=${this.props.current_language}&search_tutorial=${tutorial.title}`}/>
        </li>
        )
       }

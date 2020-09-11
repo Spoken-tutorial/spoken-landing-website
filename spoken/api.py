@@ -21,16 +21,19 @@ class TutorialSearchAPI(APIView):
             context["language"] = search_language
             context["foss_languages"] = get_foss_languages(search_foss)
             context["tutorials"] = get_tutorials_completion_status(search_foss, search_language, request.user) if request.user.is_authenticated else get_tutorials(search_foss, search_language)
+            
             if search_tutorial:
                 context["tutorial"] = get_tutorial_detail(search_foss, search_language, search_tutorial)
                 if request.user.is_authenticated:
                     try:
+                        
                         tp=TutorialProgress.objects.get(
                         user=request.user, 
                         tutorial=context["tutorial"]["title"],
                         foss=context["foss"],
                         language=context["language"]
                         )
+                        context["total_duration"] = tp.total_duration
                         if tp.status:
                             time_completed=tp.total_duration
                         else:

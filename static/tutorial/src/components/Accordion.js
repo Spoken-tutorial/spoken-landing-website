@@ -20,7 +20,10 @@ function Accordion(props){
         <p className="accordion_title">{props.title} <span className="chevron"><i class="fas fa-chevron-down"></i></span></p>
       </button>
       <div ref={content} style={{maxHeight: `${setHeight}`}} className="accordion_content px-3 ">
-        <div className="accordion_text py-3" dangerouslySetInnerHTML={{ __html: props.content}}>
+      <div className="my-4">
+      <a href={props.videoLink}><i class="far fa-play-circle"></i></a><div className="accordion_text py-3 ml-3" dangerouslySetInnerHTML={{ __html: props.content}}>
+      </div>
+        
 
         </div>
       </div>
