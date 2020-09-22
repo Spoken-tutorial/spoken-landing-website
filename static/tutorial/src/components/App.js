@@ -28,7 +28,7 @@ class App extends Component {
       video_status:false,
       time_completed:0,
       total_duration:0,
-      
+      is_authenticated:false
     };
     
   }
@@ -52,7 +52,8 @@ class App extends Component {
             video_status:result['video_status'],
             time_completed:result['time_completed'],
             total_duration:result['total_duration'],
-            isLoaded: true
+            isLoaded: true,
+            is_authenticated: result['is_authenticated'] ? result['is_authenticated'] : false
           });
         },
         // Note: it's important to handle errors here
@@ -130,7 +131,7 @@ class App extends Component {
       align: 'right'
     };
 
-    const { error, isLoaded, foss_lang_list, current_foss, current_language, search_foss, search_language, languages, tutorials , tutorial, video_status, time_completed,total_duration} = this.state;
+    const { error, isLoaded, foss_lang_list, current_foss, current_language, search_foss, search_language, languages, tutorials , tutorial, video_status, time_completed,total_duration, is_authenticated} = this.state;
     if (error) {
       return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
@@ -199,7 +200,7 @@ class App extends Component {
     
     
     {tutorial ? <Watch current_foss={current_foss} current_language={current_language} tutorial={tutorial} tutorials={tutorials} video_status={video_status} saveComplete={this.saveComplete} time_completed={time_completed} 
-    progressValue={this.getProgress(time_completed,total_duration)} /> : 
+    progressValue={this.getProgress(time_completed,total_duration)} is_authenticated={is_authenticated}/> : 
     <div className="container mt-4 "><div className="columns tutorialListWrapper">
         <div className="column is-8">
             {            
@@ -213,7 +214,7 @@ class App extends Component {
                 </div>
                 <div className="media-content">
                   <div className="content">
-                  <p><strong><a className="tutorialName" href={"http://localhost:8000/spoken/tutorial-search/?search_foss="+current_foss+"&search_language="+current_language+"&search_tutorial="+item.title}>{item.title}</a></strong>
+                  <p><strong><a className="tutorialName" href={`${process.env.SERVER_API_URL}`+"spoken/tutorial-search/?search_foss="+current_foss+"&search_language="+current_language+"&search_tutorial="+item.title}>{item.title}</a></strong>
                     &nbsp;<span>
                     {item.status ? <i style={divStyle} class="fas fa-check"></i> : 
                     ( item.time_completed == 0) ? <i class="far fa-play-circle"></i> :

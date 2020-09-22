@@ -26,7 +26,7 @@ class TutorialSearchAPI(APIView):
                 context["tutorial"] = get_tutorial_detail(search_foss, search_language, search_tutorial)
                 if request.user.is_authenticated:
                     try:
-                        
+                        context["is_authenticated"] = True
                         tp=TutorialProgress.objects.get(
                         user=request.user, 
                         tutorial=context["tutorial"]["title"],

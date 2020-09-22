@@ -32,7 +32,7 @@ class VideoDetail extends Component {
       <div>
       <div className="wrapper">
         <Sidebar id="sidebar" className={hideSidebar} tutorials={this.props.tutorials} current_foss={this.props.current_foss} current_language={this.props.current_language}/>
-        <Main className={mainStatus} current_foss={this.props.current_foss} current_language={this.props.current_language} tutorial= {this.props.tutorial} video_status={this.props.video_status} saveComplete={this.props.saveComplete} time_completed={this.props.time_completed} progressValue={this.props.progressValue}/>       
+        <Main className={mainStatus} current_foss={this.props.current_foss} current_language={this.props.current_language} tutorial= {this.props.tutorial} video_status={this.props.video_status} saveComplete={this.props.saveComplete} time_completed={this.props.time_completed} progressValue={this.props.progressValue} is_authenticated={this.props.is_authenticated}/>       
     </div>
     </div>
  

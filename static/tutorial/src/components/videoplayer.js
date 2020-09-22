@@ -20,6 +20,7 @@ export default class VideoPlayer extends React.Component {
       console.log('onPlayerReady', this)
       
     });
+    if (this.props.is_authenticated){
     this.player.currentTime(this.props.time_completed*60)
     var intervalId = setInterval(this.saveTutorialCompletion, 1000);
     this.setState({
@@ -27,6 +28,7 @@ export default class VideoPlayer extends React.Component {
       logTime: Math.abs(parseInt(this.player.currentTime() / 60)),
       currentTime: Math.abs(parseInt(this.player.currentTime()))
     });
+  }
   }
 
   saveTutorialCompletion(){
