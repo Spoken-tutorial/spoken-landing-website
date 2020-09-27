@@ -40,7 +40,7 @@ class Sidebar extends React.Component {
       }
       
         </ul>
-      }
+      
      </div>
     )
   }

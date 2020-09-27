@@ -250,8 +250,58 @@ body{
 .tutorialListWrapper .media-content{
   overflow-y: hidden;
 }
-
-
+.forumInfo p{
+  font-size: 0.8rem;
+  color: rgba(0,0,0,0.7);
+}
+.forumInfo span{
+  font-size: 0.8rem;
+  color: rgba(0,0,0,0.7);
+}
+.forumInfo p span,.forumInfo span{
+  margin-left: 12px;
+}
+.forumTitle{
+  color: rgb(0,0,0)!important;
+  margin-left: 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.4);
+}
+.resIcon .forumInfo .fa-clock,.forumInfo .fa-calendar-alt,.forumInfo .fa-envelope, .forumInfo .fa-link{
+  color: rgba(0,78,149,1);
+}
+.resIcon{
+  color: rgba(0,78,149,1);
+  margin-right: 12px;
+}
+/*.resPreReq{
+  border-bottom: 1px solid rgba(0,0,0,0.3);
+  width: 100%;
+}*/
+.res a{
+  color: rgba(0,0,0,0.5);
+}
+.res a:hover{
+  color: #004E95;
+}
+.res span{
+ border-bottom: 1px solid rgba(0,0,0,0.3);
+}
+.logoST img{
+  width: 50px!important;
+  height: 50px!important;
+  margin-right: 12px;
+}
+.logoST{
+  display: flex;
+  align-items: center;
+}
+.title1{
+  font-weight: bold;
+}
+.title2{
+  font-weight: bold;
+  color: orange;
+}
 @media only screen and (max-width: 768px) {
   #main.isopen {
    transition: margin-left 0.3s ease-in-out;
