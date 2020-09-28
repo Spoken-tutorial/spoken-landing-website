@@ -16,7 +16,7 @@ class Main extends React.Component {
       isOpen: false,
       resource: null
     }
-  this.handleClick = this.handleClick.bind(this)
+  
   }
 
   componentDidMount(){
@@ -30,9 +30,7 @@ class Main extends React.Component {
         }
   }
   
-  handleClick(){
-    this.setState({ isOpen : !this.state.isOpen})
-  }
+  
 
   render(){
 
@@ -48,10 +46,10 @@ class Main extends React.Component {
   }
 
     return(
-    <div className={mainStatus} id="main" >
+    <div className={this.props.mainStatus} id="main" >
         <div className="columns topBanner blueBg">
         <div className="column is-one-third toggleWrapper">
-          <button onClick={this.handleClick} className="playlistToggle">
+          <button onClick={this.props.handleClick} className="playlistToggle">
           <i class="fas fa-list"></i>  <span>Tutorial List</span>
         </button>
           
@@ -72,18 +70,18 @@ class Main extends React.Component {
        <Tabs>
          <Tab label="Course Details">
            <div>
-             <p className="has-text-weight-bold is-size-5">Tutorial Details : </p>
+             <p className="has-text-weight-bold is-size-5 highlight">Tutorial Details : </p>
              <p>{this.props.current_foss}  : {this.props.tutorial.title}</p>
              <p className="has-text-grey">Time : {this.props.tutorial.duration} </p>
              <hr/>
-             <p className="has-text-weight-bold">Description : </p>
+             <p className="has-text-weight-bold highlight">Description : </p>
              <p>{this.props.tutorial.description} </p>
              
            </div>
          </Tab>
          <Tab label="Resources">
          <div>
-             <p className="has-text-weight-bold is-size-5 mb-3">Tutorial Resources : </p>
+             <p className="has-text-weight-bold is-size-5 mb-3 highlight">Tutorial Resources : </p>
              <div class="tags has-addons res">
               <a href={this.state.resource ? this.state.resource.prerequisite : "#"} target="_blank">
               <i class="far fa-file-video mr-3 resIcon"></i> 
@@ -130,29 +128,27 @@ class Main extends React.Component {
          <Tab label="Forums">
          {this.state.resource ? this.state.resource.questions.map(item => (
          <article class="media">
-              <figure class="media-left">
-                <p class="image is-64x64">
-                  
-                </p>
-              </figure>
-              <div class="media-content">
+              <div class="media-content forumQues">
                 <div class="content">
                   <p className="forumInfo">
                   <i class="fas fa-link"></i>
-                    <a target="_blank" className="forumTitle" href={"https://forums.spoken-tutorial.org/question/"+item.id}>{item.question}</a>
-                    <p><i class="far fa-clock"></i><span>{item.minute_range}</span> : <span>{item.second_range}</span></p>
-                  </p>
+                    <a target="_blank" className="forumTitle" href={"https://forums.spoken-tutorial.org/question/"+item.id}>{item.question}</a></p>
+                    <p className="forumInfo"><i class="far fa-clock"></i><span>{item.minute_range}</span> : <span>{item.second_range}</span></p>
+                  
                 </div>
-                <nav class="level is-mobile">
-                <div class="level-left">
-                  <p class="level-item forumInfo">
+                <div className="columns">
+                  <div className="column px-0">
+                    <p class="forumInfo">
                   <i class="far fa-calendar-alt"></i><span>{moment(item.date).tz(moment.tz.guess()).format('MMMM Do YYYY, h:mm:ss a')}</span>
                   </p>
-                  <p class="level-item forumInfo">
-                  <i class="far fa-envelope"></i><span>{item.user}</span>
+                  </div>
+                  <div className="column px-0">
+                <p class="forumInfo">
+                  <i class="far fa-user"></i><span>{item.user}</span>
                   </p>
+                  </div>
                 </div>
-              </nav>
+                
             </div>
           </article>
          )): ""}

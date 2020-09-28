@@ -26,7 +26,7 @@ class Tabs extends React.Component{
         })}
          
         <TabButtons activeTab={this.state.activeTab} buttons={buttons} changeTab={this.changeTab}/>
-        <div className="tab-content px-3 py-3">{content}</div>
+        <div className="tab-content py-3">{content}</div>
         
       </div>
     );

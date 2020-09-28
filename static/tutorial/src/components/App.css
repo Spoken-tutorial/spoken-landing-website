@@ -129,7 +129,7 @@ body{
 
 #main.isopen {
  transition: margin-left 0.3s ease-in-out;
- margin-left: -350px;
+ /*margin-left: -350px;*/
  width: 100%;
 }
 
@@ -188,6 +188,8 @@ body{
 }
 .hideSidebar{
   margin-left: -350px;
+  /*visibility: hidden;*/
+  display: none;
 }
 
 /*White Theme */
@@ -266,7 +268,8 @@ body{
   margin-left: 12px;
   border-bottom: 1px solid rgba(0,0,0,0.4);
 }
-.resIcon .forumInfo .fa-clock,.forumInfo .fa-calendar-alt,.forumInfo .fa-envelope, .forumInfo .fa-link{
+.fa-clock,
+.resIcon .forumInfo .fa-clock,.forumInfo .fa-envelope, .forumInfo .fa-link{
   color: rgba(0,78,149,1);
 }
 .resIcon{
@@ -302,6 +305,10 @@ body{
   font-weight: bold;
   color: orange;
 }
+.forumQues{
+  border-left: 2px solid orange!important;
+    padding-left: 1rem!important;
+}
 @media only screen and (max-width: 768px) {
   #main.isopen {
    transition: margin-left 0.3s ease-in-out;
@@ -317,6 +324,13 @@ body{
 } 
   .courseDetails{
   margin: 2px 10px;
+}
+.hideSidebar{
+  margin-left: 0;
+  display: block;
+}
+.video-js-responsive-container.vjs-hd {
+  height: 400px!important;
 }
 
 }
