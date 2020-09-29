@@ -6,23 +6,16 @@ class Sidebar extends React.Component {
 
   constructor(props){
     super(props);
-    this.state={
-      isOpen: false
-    }
-    this.handleClick = this.handleClick.bind(this)
   }
 
- handleClick(){
-    this.setState({ isOpen : !this.state.isOpen})
-  }
+
 
   render(){
     return(
-    <div id="sidebarWrapper">
+    <div id="sidebarWrapper" className={this.props.hideSidebar}>
     <div className="columns">
       <div className="column topBanner blueBg">
-        <button className={`videoTitle ml-0 pl-0 blueBg`}
-         onClick={this.handleClick}>
+        <button className={`videoTitle ml-0 pl-0 blueBg`}>
           <span><i class="far fa-list-alt blueColor"></i> Contents</span>
         </button>
     </div>
@@ -38,9 +31,8 @@ class Sidebar extends React.Component {
        </li>
        )
       }
-      
         </ul>
-      }
+      
      </div>
     )
   }

@@ -8,6 +8,7 @@ import moment from 'moment-timezone';
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
 
+var r ;
 class Main extends React.Component {
   constructor(props){
     super(props);
@@ -15,7 +16,7 @@ class Main extends React.Component {
       isOpen: false,
       resource: null
     }
-  this.handleClick = this.handleClick.bind(this)
+  
   }
 
   componentDidMount(){
@@ -29,10 +30,10 @@ class Main extends React.Component {
         }
   }
   
-  handleClick(){
-    this.setState({ isOpen : !this.state.isOpen})
-  }
+  
+
   render(){
+
    const mainStatus = this.state.isOpen ? "isopen" : "";
    const videoJsOptions = {
     autoplay: true,
@@ -43,11 +44,12 @@ class Main extends React.Component {
       type: 'video/ogg'
     }]
   }
+
     return(
-    <div className={mainStatus} id="main" >
+    <div className={this.props.mainStatus} id="main" >
         <div className="columns topBanner blueBg">
         <div className="column is-one-third toggleWrapper">
-          <button onClick={this.handleClick} className="playlistToggle">
+          <button onClick={this.props.handleClick} className="playlistToggle">
           <i class="fas fa-list"></i>  <span>Tutorial List</span>
         </button>
           
@@ -68,82 +70,85 @@ class Main extends React.Component {
        <Tabs>
          <Tab label="Course Details">
            <div>
-             <p className="has-text-weight-bold is-size-5">Tutorial Details : </p>
+             <p className="has-text-weight-bold is-size-5 highlight">Tutorial Details : </p>
              <p>{this.props.current_foss}  : {this.props.tutorial.title}</p>
              <p className="has-text-grey">Time : {this.props.tutorial.duration} </p>
              <hr/>
-             <p className="has-text-weight-bold">Description : </p>
+             <p className="has-text-weight-bold highlight">Description : </p>
              <p>{this.props.tutorial.description} </p>
              
            </div>
          </Tab>
          <Tab label="Resources">
          <div>
-             <p className="has-text-weight-bold is-size-5">Tutorial Resources : </p>
-             <div class="tags has-addons">
-                <span class="tag">Prerequisite</span>
-                <a href={this.state.resource ? this.state.resource.prerequisite : "#"} target="_blank"><span class="tag is-primary">Watch</span></a>
+             <p className="has-text-weight-bold is-size-5 mb-3 highlight">Tutorial Resources : </p>
+             <div class="tags has-addons res">
+              <a href={this.state.resource ? this.state.resource.prerequisite : "#"} target="_blank">
+              <i class="far fa-file-video mr-3 resIcon"></i> 
+              <span>Watch Prerequisite Video</span></a>
             </div>
-             <div class="tags has-addons">
-                <span class="tag">Instruction Sheet</span>
-                <a href={ this.state.resource ? this.state.resource.instruction_sheet : "#"} target="_blank"><span class="tag is-success">Download</span></a>
+             <div class="tags has-addons res">
+                <a href={this.state.resource ? this.state.resource.installation_sheet : "#"} target="_blank">
+                <i class="fas fa-file-download resIcon"></i>
+                <span >Installation Sheet</span>
+                </a>
             </div>
-             <div class="tags has-addons">
-                <span class="tag">Installation Sheet</span>
-                <a href={this.state.resource ? this.state.resource.installation_sheet : "#"} target="_blank"><span class="tag is-success">Download</span></a>
+             <div class="tags has-addons res">
+                <a href={this.state.resource ? this.state.resource.code_file : "#"} target="_blank">
+                <i class="fas fa-file-download resIcon"></i>
+                <span >Code Files</span>
+                </a>
             </div>
-             <div class="tags has-addons">
-                <span class="tag">Code Files</span>
-                <a href={this.state.resource ? this.state.resource.code_file : "#"} target="_blank"><span class="tag is-success">Download</span></a>
+             <div class="tags has-addons res">
+                <a href={this.state.resource ? this.state.resource.assignment : "#"} target="_blank">
+                <i class="fas fa-file-download resIcon"></i>
+                <span >Assignments</span>
+                </a>
             </div>
-             <div class="tags has-addons">
-                <span class="tag">Assignments</span>
-                <a href={this.state.resource ? this.state.resource.assignment : "#"} target="_blank"><span class="tag is-success">Download</span></a>
+             <div class="tags has-addons res">
+                <a href={this.state.resource ? this.state.resource.slide : "#"} target="_blank">
+                <i class="fas fa-file-download resIcon"></i>
+                <span >Slides</span>
+                </a>
             </div>
-             <div class="tags has-addons">
-                <span class="tag">Slides</span>
-                <a href={this.state.resource ? this.state.resource.slide : "#"} target="_blank"><span class="tag is-success">Download</span></a>
+             <div class="tags has-addons res">
+                <a href={this.state.resource ? this.state.resource.script : "#"} target="_blank">
+                <i class="fas fa-external-link-alt resIcon"></i>
+                <span >Script</span>
+                </a>
             </div>
-             <div class="tags has-addons">
-                <span class="tag">Script</span>
-                <a href={this.state.resource ? this.state.resource.script : "#"} target="_blank"><span class="tag is-warning">View</span></a>
-            </div>
-             <div class="tags has-addons">
-                <span class="tag">Timed Script</span>
-                <a href={this.state.resource ? this.state.resource.timed_script : ""} target="_blank"><span class="tag is-warning">View</span></a>
+             <div class="tags has-addons res">
+                <a href={this.state.resource ? this.state.resource.timed_script : ""} target="_blank">
+                <i class="fas fa-external-link-alt resIcon"></i>
+                <span >Timed Script</span>
+                </a>
             </div>
           </div>
          </Tab>
          <Tab label="Forums">
          {this.state.resource ? this.state.resource.questions.map(item => (
          <article class="media">
-              <figure class="media-left">
-                <p class="image is-64x64">
-                  
-                </p>
-              </figure>
-              <div class="media-content">
+              <div class="media-content forumQues">
                 <div class="content">
-                  <p>
-                    <a href={"https://forums.spoken-tutorial.org/question/"+item.id}>{item.question}</a>
+                  <p className="forumInfo">
+                  <i class="fas fa-link"></i>
+                    <a target="_blank" className="forumTitle" href={"https://forums.spoken-tutorial.org/question/"+item.id}>{item.question}</a></p>
+                    <p className="forumInfo"><i class="far fa-clock"></i><span>{item.minute_range}</span> : <span>{item.second_range}</span></p>
+                  
+                </div>
+                <div className="columns">
+                  <div className="column px-0">
+                    <p class="forumInfo">
+                  <i class="far fa-calendar-alt"></i><span>{moment(item.date).tz(moment.tz.guess()).format('MMMM Do YYYY, h:mm:ss a')}</span>
                   </p>
+                  </div>
+                  <div className="column px-0">
+                <p class="forumInfo">
+                  <i class="far fa-user"></i><span>{item.user}</span>
+                  </p>
+                  </div>
                 </div>
-                <nav class="level is-mobile">
-                <div class="level-left">
-                  <a class="level-item">
-                  <span class="tag is-primary">{item.minute_range}</span>
-                  </a>
-                  <a class="level-item">
-                  <span class="tag is-link">{item.second_range}</span>
-                  </a>
-                  <a class="level-item">
-                  <span class="tag is-warning">{moment(item.date).tz(moment.tz.guess()).format('MMMM Do YYYY, h:mm:ss a')}</span>
-                  </a>
-                  <a class="level-item">
-                  <span class="tag is-danger">{item.user}</span>
-                  </a>
-                </div>
-              </nav>
+                
             </div>
           </article>
          )): ""}

@@ -148,8 +148,11 @@ class App extends Component {
     <div className="container">
         <div className="column">
     <form method='get' action="/spoken/tutorial-search/"> 
-      <div className="columns is-centered">
-          <div className="column is-8">
+      <div className="columns">
+      <div className="column is-2 logoST">
+      <img src="/static/spoken/images/logo.png" /> <span className="mr-1 title1">Spoken</span> <span className="title2">Tutorial</span>
+      </div>
+          <div className="column is-9 is-centered">
           <div className="columns">
           <div  className="column is-5">
           <div class="field">
