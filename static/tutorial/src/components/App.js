@@ -150,14 +150,15 @@ class App extends Component {
     <form method='get' action="/spoken/tutorial-search/"> 
       <div className="columns">
       <div className="column is-2 logoST">
-      <img src="/static/spoken/images/logo.png" /> <span className="mr-1 title1">Spoken</span> <span className="title2">Tutorial</span>
+      <img src="/static/spoken/images/logo.png" /> 
+      <p><span className="mr-1 title1">Spoken</span> <span className="title2">Tutorial</span></p>
       </div>
           <div className="column is-9 is-centered">
           <div className="columns">
           <div  className="column is-5">
           <div class="field">
           <div class="control">
-          <div className="select is-info">
+          <div className="select is-info is-fullwidth">
             <select name="search_foss" onChange={this.handleFoss.bind(this)} value={search_foss} className="selectStyle">
             {foss_lang_list.map(item => (
               <option value={item.foss}>{item.foss}</option>
