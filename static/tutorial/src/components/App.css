@@ -309,6 +309,21 @@ body{
   border-left: 2px solid orange!important;
     padding-left: 1rem!important;
 }
+#loginStatus{
+  position: fixed;
+  top: 20px;
+  right: 2px;
+  color: #004E95;
+}
+#loginStatus .icon{
+  color: #004E95;
+}
+@media only screen and (max-width: 992px) {
+  .playlistToggle{
+    width: 100%;
+    font-size: 1rem;
+  }
+}
 @media only screen and (max-width: 768px) {
   #main.isopen {
    transition: margin-left 0.3s ease-in-out;
