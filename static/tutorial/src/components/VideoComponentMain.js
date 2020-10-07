@@ -106,18 +106,6 @@ class Main extends React.Component {
                 </a>
             </div>
              <div class="tags has-addons res">
-                <a href={this.state.resource ? this.state.resource.slide : "#"} target="_blank">
-                <i class="fas fa-file-download resIcon"></i>
-                <span >Slides</span>
-                </a>
-            </div>
-             <div class="tags has-addons res">
-                <a href={this.state.resource ? this.state.resource.script : "#"} target="_blank">
-                <i class="fas fa-external-link-alt resIcon"></i>
-                <span >Script</span>
-                </a>
-            </div>
-             <div class="tags has-addons res">
                 <a href={this.state.resource ? this.state.resource.timed_script : ""} target="_blank">
                 <i class="fas fa-external-link-alt resIcon"></i>
                 <span >Timed Script</span>

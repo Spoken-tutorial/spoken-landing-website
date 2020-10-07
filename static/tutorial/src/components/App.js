@@ -249,7 +249,7 @@ class App extends Component {
         <hr/>
         <p className="has-text-weight-bold">Course Progress : </p>
         <progress className="progress is-info " value={this.getTutorialProgress()} max={100} style={{width: "150px",height:"5px"}}>
-                    {this.getTutorialProgress()} Complete</progress>{this.getTutorialProgress()}% Complete
+                    {this.getTutorialProgress()} Complete</progress>{parseInt(this.getTutorialProgress())}% Complete
       </div>
       </div>
     </div>
