@@ -11,6 +11,11 @@ class Sidebar extends React.Component {
 
 
   render(){
+    const divStyle = {
+      color: 'green',
+      backgroundImage: 'green',
+      align: 'right'
+    };
     return(
     <div id="sidebarWrapper" className={this.props.hideSidebar}>
     <div className="columns">
@@ -25,7 +30,7 @@ class Sidebar extends React.Component {
       {
         this.props.tutorials.map(tutorial =>
         <li>
-       <Accordion title={tutorial.title} 
+       <Accordion title={tutorial.title} status={tutorial.status} divStyle = {divStyle}
        content={`<a href="?search_foss=${this.props.current_foss}&search_language=${this.props.current_language}&search_tutorial=${tutorial.title}">${tutorial.description}</a> `}
         videoLink={`${process.env.SERVER_API_URL}?search_foss=${this.props.current_foss}&search_language=${this.props.current_language}&search_tutorial=${tutorial.title}`}/>
        </li>

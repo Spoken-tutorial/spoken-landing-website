@@ -17,7 +17,9 @@ function Accordion(props){
   return (
     <div className="accordion_section">
       <button className={`accordion px-3 py-3 ${setActive}`} onClick={toggleAccordion}>
-        <p className="accordion_title">{props.title} <span className="chevron"><i class="fas fa-chevron-down"></i></span></p>
+        <p className="accordion_title">{props.title}
+        <span>{props.status ? <i style={props.divStyle} class="fas fa-check"></i> : ''}</span>
+        <span className="chevron"><i class="fas fa-chevron-down"></i></span></p>
       </button>
       <div ref={content} style={{maxHeight: `${setHeight}`}} className="accordion_content px-3 ">
       <div className="my-4">
