@@ -22,4 +22,8 @@ class TutorialProgressSerializer(serializers.ModelSerializer):
                     tut_prog.save()
             return tut_prog
         except TutorialProgress.DoesNotExist:
-            return TutorialProgress.objects.create(**validated_data)
+            tut_prog = TutorialProgress.objects.create(**validated_data)
+            if tut_prog.time_completed >= tut_prog.total_duration:
+                tut_prog.status =True
+                tut_prog.save()
+            return tut_prog
