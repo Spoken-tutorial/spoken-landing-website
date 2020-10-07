@@ -1,1 +1,1 @@
-# Create and configure the pymongo client
+default_app_config = 'logs.apps.LogsConfig'
