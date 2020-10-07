@@ -87,6 +87,12 @@ class Main extends React.Component {
               <i class="far fa-file-video mr-3 resIcon"></i> 
               <span>Watch Prerequisite Video</span></a>
             </div>
+            <div class="tags has-addons res">
+                <a href={this.state.resource ? this.state.resource.instruction_sheet : "#"} target="_blank">
+                <i class="fas fa-file-download resIcon"></i>
+                <span >Instruction Sheet</span>
+                </a>
+            </div>
              <div class="tags has-addons res">
                 <a href={this.state.resource ? this.state.resource.installation_sheet : "#"} target="_blank">
                 <i class="fas fa-file-download resIcon"></i>
