@@ -1,5 +1,6 @@
 from .models import CourseProgress
 from spoken.utils import get_tutorials
+from .utils import send_completion_data, get_payload
 
 def tutorial_progress_signal(sender, instance, created, **kwargs):
     if created or not created:
@@ -18,4 +19,6 @@ def tutorial_progress_signal(sender, instance, created, **kwargs):
 def course_completion_signal(sender, instance, created, **kwargs):
     if created or not created:
         if instance.status:
-            print("You have completd the course", instance.foss, instance.language)
+            data = get_payload(instance)
+            send_completion_data(data)
+            
