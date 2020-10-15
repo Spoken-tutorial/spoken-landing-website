@@ -16,6 +16,7 @@ class TutorialSearchAPI(APIView):
         search_foss = request.query_params.get('search_foss', None)
         search_language = request.query_params.get('search_language', None)
         search_tutorial = request.query_params.get('search_tutorial', None)
+        context["is_authenticated"] = request.user.is_authenticated
         if search_foss and search_language:
             context["foss"] = search_foss
             context["language"] = search_language

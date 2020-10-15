@@ -1,0 +1,50 @@
+body{
+	background: #EFF3F4;
+}
+
+.is-shady {
+animation: flyintoright .4s backwards;
+background: #fff;
+box-shadow: rgba(0, 0, 0, .1) 0 1px 0;
+border-radius: 4px;
+display: inline-block;
+/*margin: 10px;*/
+position: relative;
+transition: all .2s ease-in-out;
+padding: 25px;
+/*height: 250px;*/
+height: 100%;
+width: 100%;
+margin-top: 20px;
+}
+.is-shady:hover {
+box-shadow: 0 10px 16px rgba(0, 0, 0, .13), 0 6px 6px rgba(0, 0, 0, .19);
+}
+progress{
+	height: 5px!important;
+	width: 100%;
+}
+.last-view{
+	position: absolute;
+	bottom: 0;
+	margin-bottom: 16px;
+}
+#course-prg .spk-card{
+	margin-top: 16px;
+}
+#course-prg .fa-check-circle{
+	color: #28a745;
+	font-size: 1.2rem;
+}
+#course-prg .complete{
+	margin-top: 32px;
+}
+.back-link{
+	display: flex;
+	justify-content: flex-end;
+	padding: 16px;
+	
+}
+.back-link a{
+	color: #004E95!important;
+}

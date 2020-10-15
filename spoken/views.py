@@ -13,6 +13,8 @@ from django.contrib import messages
 import urllib, json
 from django.views.generic import TemplateView
 from .utils import *
+from logs.models import TutorialProgress,CourseProgress
+from logs.views import get_set_tutorial_progress
 
 today = datetime.today().strftime('%Y-%m-%d')
 
@@ -92,3 +94,9 @@ class TutorialSearch(TemplateView):
     """
     template_name = 'spoken/tutorial_search.html'
     
+def dashboard(request):
+    context = {}
+    courseProgress = CourseProgress.objects.all().filter(user=request.user)
+    context['courseProgress']=courseProgress
+    return render(request,'spoken/dashboard.html',context)
+

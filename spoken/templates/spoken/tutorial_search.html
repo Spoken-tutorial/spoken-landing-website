@@ -13,52 +13,12 @@
     <title>Spoken Tutorial</title>
    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
    <link rel="stylesheet" type="text/css" href="{% static '/spoken/bulma-pageloader.min.css' %}">
+   
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="spoken"></div>
-    <div id="loginStatus">
-      {% if user.is_authenticated %}
-      <div class="dropdown is-right is-hoverable">
-  <div class="dropdown-trigger">
-    <button class="button px-2" aria-haspopup="true" aria-controls="dropdown-menu4">
-      <span class="icon"><i class="fas fa-user"></i></span>
-      <span class="icon is-small">
-        <i class="fas fa-angle-down" aria-hidden="true"></i>
-      </span>
-    </button>
-  </div>
-  <div class="dropdown-menu" id="dropdown-menu4" role="menu">
-    <div class="dropdown-content">
-      <div class="dropdown-item">
-        <p>{{ user.get_username }}</p>
-      </div>
-      <div class="dropdown-item">
-        <p><a href="#">Logout</a></p>
-      </div>
-    </div>
-  </div>
-</div>
-        {% else %}
-         <div class="dropdown is-right is-hoverable">
-  <div class="dropdown-trigger">
-    <button class="button px-2" aria-haspopup="true" aria-controls="dropdown-menu4">
-      <span class="icon"><i class="fas fa-user"></i></span>
-      <span class="icon is-small">
-        <i class="fas fa-angle-down" aria-hidden="true"></i>
-      </span>
-    </button>
-  </div>
-  <div class="dropdown-menu" id="dropdown-menu4" role="menu">
-    <div class="dropdown-content">
-      <div class="dropdown-item">
-        <p><a href="#">Login</a></p>
-      </div>
-    </div>
-  </div>
-</div>
-      {% endif %}
-     </div>
+    
   <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <script type="text/javascript" src="{% static '/spoken/tutorial.js' %}"></script>
   </body>

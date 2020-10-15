@@ -1,0 +1,51 @@
+{%extends "base.html"%}
+{% load static %}
+{% load helper %}
+{% block css  %}
+<link rel="stylesheet" type="text/css" href="{% static '/spoken/dashboard.css' %}">
+{% endblock css %}
+
+{% block content %}
+<main>
+  <div class="has-text-right back-link">
+  	<a href="/spoken/tutorial-search/?search_foss=Advanced+Cpp&search_language=English"><i class="fas fa-book-open"></i> Back to Tutorials </a>
+  </div>
+	
+	<hr/>
+	<section class="container" id="course-prg">
+		<div class="row">
+		{% for course in courseProgress %}
+
+		<div class="col-md-6 col-lg-4 spk-card">
+		<div class="is-shady my-3">
+			<h5>{{course.foss}}</h5>
+			<hr>
+			{% if course.status %}
+			<p class="complete"><i class="far fa-check-circle"></i> Completed on 
+				{{ course.updated|date:"M d, Y" }}
+			</p>
+			{% else %}
+			<p>{% widthratio course.tutorials_completed course.total_tutorials 100 %}%</p>
+
+			<p><progress class="progress is-info" value="{% widthratio course.tutorials_completed course.total_tutorials 100 %}" max="100">45%</progress></p>
+			{% endif %}
+			
+			<small class="last-view">Last viewed : {{course.updated}}</small>
+		</div>
+
+
+		</div>
+		{% endfor %}
+	</div>
+	</section>
+	
+</main>
+
+
+{% endblock content %}
+
+{% block script %}
+<script type="text/javascript">
+
+</script>
+{% endblock script %}

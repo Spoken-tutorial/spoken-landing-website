@@ -3,8 +3,11 @@ import './App.css';
 import Watch from './watch';
 import axios from 'axios';
 
+
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
+
+
 
 class App extends Component {
   constructor(props) {
@@ -153,9 +156,9 @@ class App extends Component {
       <img src="/static/spoken/images/logo.png" /> 
       <p><span className="mr-1 title1">Spoken</span> <span className="title2">Tutorial</span></p>
       </div>
-          <div className="column is-9 is-centered">
-          <div className="columns">
-          <div  className="column is-5">
+          <div className="column is-10 is-centered">
+          <div className="columns search-bar">
+          <div  className="column is-4">
           <div class="field">
           <div class="control">
           <div className="select is-info is-fullwidth">
@@ -169,7 +172,7 @@ class App extends Component {
           </div>
           </div>
 
-          <div  className="column is-5">
+          <div  className="column is-4">
           <div class="field">
           <div class="control">
           <div className="select is-info is-fullwidth" >
@@ -188,6 +191,18 @@ class App extends Component {
             <button type="submit" class="button submitStyle">Search</button>
           </div>
         </div>
+        </div>
+        <div  className="column is-2">
+            <div class="dropdown">
+              <button class="button submitStyle dropbtn"><i class="fas fa-user"></i> <i class="fas fa-chevron-down"></i></button>
+              <div class="dropdown-content">
+              {is_authenticated ?  
+                <>
+                <a href="/dashboard">Dashboard</a> <a href="#">Logout</a>
+                </>
+                :  <a href="/?sso">Login</a>}
+              </div>
+          </div>
         </div>
         </div>
         </div>
