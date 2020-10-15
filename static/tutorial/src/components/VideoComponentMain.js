@@ -80,44 +80,56 @@ class Main extends React.Component {
            </div>
          </Tab>
          <Tab label="Resources">
-         <div>
+         {this.state.resource ? <div>
              <p className="has-text-weight-bold is-size-5 mb-3 highlight">Tutorial Resources : </p>
-             <div class="tags has-addons res">
-              <a href={this.state.resource ? this.state.resource.prerequisite : "#"} target="_blank">
+            {this.state.resource.prerequisite ?<div class="tags has-addons res">
+              <a href={this.state.resource.prerequisite} target="_blank">
               <i class="far fa-file-video mr-3 resIcon"></i> 
               <span>Watch Prerequisite Video</span></a>
-            </div>
+            </div>:""}
+            {this.state.resource.instruction_sheet ?
             <div class="tags has-addons res">
-                <a href={this.state.resource ? this.state.resource.instruction_sheet : "#"} target="_blank">
+                <a href={this.state.resource.instruction_sheet} target="_blank">
                 <i class="fas fa-file-download resIcon"></i>
                 <span >Instruction Sheet</span>
                 </a>
-            </div>
+            </div>:""}
+            {this.state.resource.installation_sheet ?
              <div class="tags has-addons res">
-                <a href={this.state.resource ? this.state.resource.installation_sheet : "#"} target="_blank">
+                <a href={this.state.resource.installation_sheet} target="_blank">
                 <i class="fas fa-file-download resIcon"></i>
                 <span >Installation Sheet</span>
                 </a>
-            </div>
+            </div>:""}
+            {this.state.resource.code_file ?
              <div class="tags has-addons res">
-                <a href={this.state.resource ? this.state.resource.code_file : "#"} target="_blank">
+                <a href={this.state.resource.code_file} target="_blank">
                 <i class="fas fa-file-download resIcon"></i>
                 <span >Code Files</span>
                 </a>
-            </div>
+            </div>:""}
+            {this.state.resource.assignment ?
              <div class="tags has-addons res">
-                <a href={this.state.resource ? this.state.resource.assignment : "#"} target="_blank">
+                <a href={this.state.resource.assignment} target="_blank">
                 <i class="fas fa-file-download resIcon"></i>
                 <span >Assignments</span>
                 </a>
-            </div>
+            </div>:""}
+            {this.state.resource.timed_script ?
              <div class="tags has-addons res">
-                <a href={this.state.resource ? this.state.resource.timed_script : ""} target="_blank">
+                <a href={this.state.resource.timed_script} target="_blank">
                 <i class="fas fa-external-link-alt resIcon"></i>
                 <span >Timed Script</span>
                 </a>
-            </div>
-          </div>
+            </div>:""}
+            {this.state.resource.additional_resource ?
+            <div class="tags has-addons res">
+                <a href={this.state.resource.additional_resource} target="_blank">
+                <i class="fas fa-file-download resIcon"></i>
+                <span >Additional Resource Material</span>
+                </a>
+            </div> :""}
+          </div>:"Loading Resources....."}
          </Tab>
          <Tab label="Forums">
          {this.state.resource ? this.state.resource.questions.map(item => (
