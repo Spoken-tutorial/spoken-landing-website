@@ -42,6 +42,11 @@ class Main extends React.Component {
     sources: [{
       src: this.props.tutorial.sources[0],
       type: 'video/ogg'
+    }],
+    tracks: [{
+      src: this.state.resource ? this.state.resource.srt_file:"",
+      label: this.props.current_language,
+      kind: "captions"
     }]
   }
 
