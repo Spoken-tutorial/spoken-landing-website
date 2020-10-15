@@ -26,6 +26,9 @@
   text-align: left;
   color: rgba(0,0,0,0.7);
 }
+.accordion_title span{ 
+  margin-left: 16px;
+}
 .accordion_title .chevron{
   float: right;
 }

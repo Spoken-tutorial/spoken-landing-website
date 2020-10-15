@@ -39,3 +39,12 @@ progress{
 #course-prg .complete{
 	margin-top: 32px;
 }
+.back-link{
+	display: flex;
+	justify-content: flex-end;
+	padding: 16px;
+	
+}
+.back-link a{
+	color: #004E95!important;
+}

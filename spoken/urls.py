@@ -8,5 +8,5 @@ urlpatterns = [
     path('jobfairs/<slug:jobfair_id>', views.jobfair_detail, name='jobfair_detail'),
     path('tutorial-search/', views.TutorialSearch.as_view(), name= "tutorial_search"),
     path('api/tutorial-search/', api.TutorialSearchAPI.as_view(), name= "tutorial_search_api"),
-    path('dashboard/', views.dashboard, name='dashboard'),   
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]

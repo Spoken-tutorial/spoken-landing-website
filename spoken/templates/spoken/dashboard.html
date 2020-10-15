@@ -7,46 +7,11 @@
 
 {% block content %}
 <main>
-	<section>
-		<div class="">
-			<form method='get' action="/spoken/tutorial-search/">
-				<div class="row">
-					<div class="col-md-2">
-						<img src="/static/spoken/images/logo.png" /> 
-						<p><span className="mr-1 title1">Spoken</span> <span className="title2">Tutorial</span></p>
-					</div>
-					<div class="col-md-3">
-						<div class="form-group">
-						    
-						    <select class="form-control" id="exampleFormControlSelect1">
-						      <option>1</option>
-						      <option>2</option>
-						      <option>3</option>
-						      <option>4</option>
-						      <option>5</option>
-						    </select>
-						  </div>
-					</div>
-					<div class="col-md-3">
-						<div class="form-group">
-						    
-						    <select class="form-control" id="exampleFormControlSelect1">
-						      <option>1</option>
-						      <option>2</option>
-						      <option>3</option>
-						      <option>4</option>
-						      <option>5</option>
-						    </select>
-						  </div>
-					</div>
-					<div class="col-md-2">
-						<button type="submit" class="btn btn-primary">Submit</button>
-					</div>
-					<div class="col-md-2">Menu</div>
-				</div>
-			</form>
-		</div>
-	</section>
+  <div class="has-text-right back-link">
+  	<a href="/spoken/tutorial-search/?search_foss=Advanced+Cpp&search_language=English"><i class="fas fa-book-open"></i> Back to Tutorials </a>
+  </div>
+	
+	<hr/>
 	<section class="container" id="course-prg">
 		<div class="row">
 		{% for course in courseProgress %}
