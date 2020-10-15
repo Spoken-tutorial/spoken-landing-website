@@ -198,9 +198,9 @@ class App extends Component {
               <div class="dropdown-content">
               {is_authenticated ?  
                 <>
-                <a href="/dashboard">Dashboard</a> <a href="#">Logout</a>
+                <a href="/dashboard">Dashboard</a> <a href="/logout">Logout</a>
                 </>
-                :  <a href="/?sso">Login</a>}
+                :  <a href="#">Login</a>}
               </div>
           </div>
         </div>
