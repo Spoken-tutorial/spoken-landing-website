@@ -173,3 +173,5 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer'
     ]
 }
+
+LOGOUT_REDIRECT_URL = 'home'

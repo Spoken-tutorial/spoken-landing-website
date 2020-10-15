@@ -19,6 +19,7 @@ from django.conf.urls import url
 from spoken import views as spoken_views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +28,6 @@ urlpatterns = [
     path('sso/', include('sso.urls', namespace='sso')),
     path('logs/', include('logs.urls', namespace='logs')),
     url(r'^$', spoken_views.home, name='home'),
-    path('logout/', spoken_views.logout_view, name='logout_view'), 
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('dashboard/', spoken_views.dashboard, name='dashboard'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
