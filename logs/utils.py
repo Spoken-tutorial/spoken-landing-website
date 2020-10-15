@@ -23,10 +23,10 @@ def get_payload(instance):
                 "id": "https://spoken-tutorial.in/spoken/tutorial-search/?search_foss={}&search_language={}".format(instance.foss, instance.language),
                 "definition": {
                 "name": {
-                    "en-US": instance.foss+"-"+instance.language
+                    "en-US": instance.foss.replace(' ', '-')+"-"+instance.language
                 },
                 "description": {
-                    "en-US": instance.foss
+                    "en-US": instance.foss+"-"+instance.language
                 },
                 "type": "http://adlnet.gov/expapi/activities/course"
                 },
