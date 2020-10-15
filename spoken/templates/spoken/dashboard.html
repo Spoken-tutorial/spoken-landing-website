@@ -21,15 +21,16 @@
 			<h5>{{course.foss}}</h5>
 			<hr>
 			{% if course.status %}
-			<p class="complete"><i class="far fa-check-circle"></i> You have completed a course on {{course.foss}} in {{course.language}}
+			<p class="complete"><i class="far fa-check-circle"></i> You have completed a course: {{course.foss}} in {{course.language}}
+				
 			</p>
+			<small class="last-view">Completed on: {{ course.updated|date:"M d, Y" }}</small>
 			{% else %}
 			<p>{% widthratio course.tutorials_completed course.total_tutorials 100 %}%</p>
 
 			<p><progress class="progress is-info" value="{% widthratio course.tutorials_completed course.total_tutorials 100 %}" max="100">45%</progress></p>
-			{% endif %}
-			
 			<small class="last-view">Last viewed : {{course.updated}}</small>
+			{% endif %}
 		</div>
 
 
