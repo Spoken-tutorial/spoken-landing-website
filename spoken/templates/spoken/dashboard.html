@@ -8,7 +8,7 @@
 {% block content %}
 <main>
   <div class="has-text-right back-link">
-  	<a href="/spoken/tutorial-search/?search_foss=Advanced+Cpp&search_language=English"><i class="fas fa-book-open"></i> Back to Tutorials </a>
+	<button onclick="history.go(-1);"><i class="fas fa-book-open"></i> Back to Tutorials </button>
   </div>
 	
 	<hr/>
@@ -21,8 +21,7 @@
 			<h5>{{course.foss}}</h5>
 			<hr>
 			{% if course.status %}
-			<p class="complete"><i class="far fa-check-circle"></i> Completed on 
-				{{ course.updated|date:"M d, Y" }}
+			<p class="complete"><i class="far fa-check-circle"></i> You have completed a course on {{course.foss}} in {{course.language}}
 			</p>
 			{% else %}
 			<p>{% widthratio course.tutorials_completed course.total_tutorials 100 %}%</p>
