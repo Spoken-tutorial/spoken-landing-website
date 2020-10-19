@@ -85,10 +85,8 @@ def jobfair_detail(request,jobfair_id):
     return render(request,'spoken/jobfair_detail.html',context)
 
 
-
 class TutorialSearch(TemplateView):
-    """
-    Search tutorial based on get url parameters. 
+    """Search tutorial based on get url parameters. 
     Parameters: (search_foss, search_language)
     Example pattern: localhost:8000/spoken/tutorial-search/?search_foss=Advance+C&search_language=English
     """
@@ -96,7 +94,8 @@ class TutorialSearch(TemplateView):
     
 def dashboard(request):
     context = {}
-    courseProgress = CourseProgress.objects.all().filter(user=request.user)
-    context['courseProgress']=courseProgress
+    if request.user.is_authenticated:
+        courseProgress = CourseProgress.objects.all().filter(user=request.user)
+        context['courseProgress']=courseProgress
     return render(request,'spoken/dashboard.html',context)
 
