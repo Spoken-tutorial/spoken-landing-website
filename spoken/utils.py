@@ -1,6 +1,6 @@
 from django.core.cache import cache
 import requests
-from logs.models import TutorialProgress
+from logs.models import TutorialProgress,CourseProgress
 
 def get_spokentutorials():
     spokentutorials = cache.get('spokentutorials')
@@ -65,4 +65,17 @@ def get_tutorials_completion_status(foss, lang, user):
             t['views'] = 0
         ts.append(t)
     return ts
+
+def get_course_progress(request):
+    cp = []
+    if request.user.is_authenticated:
+        courseProgress = CourseProgress.objects.all().filter(user=request.user)
+        for c in courseProgress:
+            a = {}
+            a["foss"] = c.foss
+            a["progress"] = (c.tutorials_completed/c.total_tutorials) * 100
+            cp.append(a)
+    return cp
+
+
 

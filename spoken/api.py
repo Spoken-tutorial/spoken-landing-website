@@ -2,7 +2,7 @@ from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .utils import *
-from logs.models import TutorialProgress
+from logs.models import TutorialProgress,CourseProgress
 
 class TutorialSearchAPI(APIView):
     """
@@ -22,7 +22,7 @@ class TutorialSearchAPI(APIView):
             context["language"] = search_language
             context["foss_languages"] = get_foss_languages(search_foss)
             context["tutorials"] = get_tutorials_completion_status(search_foss, search_language, request.user) if request.user.is_authenticated else get_tutorials(search_foss, search_language)
-            
+            context['courseProgress']=get_course_progress(request)
             if search_tutorial:
                 context["tutorial"] = get_tutorial_detail(search_foss, search_language, search_tutorial)
                 if request.user.is_authenticated:
@@ -41,6 +41,7 @@ class TutorialSearchAPI(APIView):
                             time_completed=tp.time_completed
                         context["time_completed"] = time_completed
                         context["video_status"] = tp.status
+                        
                     except:
                         context["time_completed"] = 0
                         context["video_status"] = False
