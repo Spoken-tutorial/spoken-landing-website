@@ -32,6 +32,9 @@ progress{
 #course-prg .spk-card{
 	margin-top: 16px;
 }
+#course-prg .spk-card h5{
+  font-weight: bold;
+}
 #course-prg .fa-check-circle{
 	color: #28a745;
 	font-size: 1.2rem;

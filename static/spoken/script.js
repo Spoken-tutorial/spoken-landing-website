@@ -54,7 +54,6 @@ $.ajax({url: "/spoken/api/tutorial-search/", success: function(result){
       $('#foss_select').append(s);
   }
     setLanguage();
-
   }});
 
 $( "#foss_select" ).change(function() {

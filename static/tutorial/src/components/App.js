@@ -7,8 +7,6 @@ import axios from 'axios';
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
 
-
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -31,7 +29,8 @@ class App extends Component {
       video_status:false,
       time_completed:0,
       total_duration:0,
-      is_authenticated:false
+      is_authenticated:false,
+      courseProgress:null
     };
     
   }
@@ -56,7 +55,8 @@ class App extends Component {
             time_completed:result['time_completed'],
             total_duration:result['total_duration'],
             isLoaded: true,
-            is_authenticated: result['is_authenticated'] ? result['is_authenticated'] : false
+            is_authenticated: result['is_authenticated'] ? result['is_authenticated'] : false,
+            courseProgress: result['courseProgress']
           });
         },
         // Note: it's important to handle errors here
@@ -116,6 +116,20 @@ class App extends Component {
     ))
     return count/total *100
   }
+    
+  getCourseProgress(){
+    var foss = this.state.current_foss;
+    var completed;
+    var dict = {}
+    var val = 0
+    if (this.state.is_authenticated) {
+      this.state.courseProgress.map(item => (
+      item.foss == foss? val = item.progress : null 
+    ))
+    }
+    
+    return val
+  }
   getProgress(completed,total_duration){
     if (total_duration) {
       return completed/total_duration *100;
@@ -134,7 +148,7 @@ class App extends Component {
       align: 'right'
     };
 
-    const { error, isLoaded, foss_lang_list, current_foss, current_language, search_foss, search_language, languages, tutorials , tutorial, video_status, time_completed,total_duration, is_authenticated} = this.state;
+    const { error, isLoaded, foss_lang_list, current_foss, current_language, search_foss, search_language, languages, tutorials , tutorial, video_status, time_completed,total_duration, is_authenticated,courseProgress} = this.state;
     if (error) {
       return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
@@ -222,7 +236,7 @@ class App extends Component {
     progressValue={this.getProgress(time_completed,total_duration)} is_authenticated={is_authenticated}/> : 
     <div className="container mt-4 "><div className="columns tutorialListWrapper">
         <div className="column is-8">
-            {            
+            {
             tutorials.map(item => (
             <>
             <div className="media media-border px-3">
@@ -263,9 +277,12 @@ class App extends Component {
         <p>Language : {current_language}</p>
         <hr/>
         <p className="has-text-weight-bold">Course Progress : </p>
-        <progress className="progress is-info " value={this.getTutorialProgress()} max={100} style={{width: "150px",height:"5px"}}>
-                    {this.getTutorialProgress()} Complete</progress>{parseInt(this.getTutorialProgress())}% Complete
+        <progress className="progress is-info " value={this.getCourseProgress()} max={100} style={{width: "150px",height:"5px"}}>
+                    {this.getCourseProgress()} Complete</progress>
+           {is_authenticated ? parseInt(this.getCourseProgress()) +"%" : <span><a href="#">Login</a> to view course progress</span>}         
+                    
       </div>
+     
       </div>
     </div>
   </div>}
