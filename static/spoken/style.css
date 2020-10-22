@@ -263,6 +263,7 @@ box-shadow: 0 10px 16px rgba(0, 0, 0, .13), 0 6px 6px rgba(0, 0, 0, .19);
     width: 50%;
     height: 60px;
     color: orange;
+    font-size: 1.2rem;
 }
 
 .btn-info-spk:hover .btn-info-spk a{
@@ -276,7 +277,6 @@ box-shadow: 0 10px 16px rgba(0, 0, 0, .13), 0 6px 6px rgba(0, 0, 0, .19);
 	font-weight: bold;
 }
 /*donate*//***************************************************************************/
-
 
 /*awards*//***************************************************************************/
 
@@ -1383,6 +1383,7 @@ nav #logo{
 @media (max-width: 768px) { 
 	.btn-info-spk{
 	width: 90%;
+	font-size: 1rem;
 }  
 		nav{
 			padding: 0;
