@@ -240,6 +240,44 @@ nav img{
 }
 /*about*//***************************************************************************/
 
+/*donate*//***************************************************************************/
+
+.is-shady {
+animation: flyintoright .4s backwards;
+background: #fff;
+box-shadow: rgba(0, 0, 0, .1) 0 1px 0;
+border-radius: 4px;
+display: inline-block;
+margin: 10px;
+position: relative;
+transition: all .2s ease-in-out;
+border: 1px solid #004E95;
+padding-top: 16px;
+}
+.is-shady:hover {
+box-shadow: 0 10px 16px rgba(0, 0, 0, .13), 0 6px 6px rgba(0, 0, 0, .19);
+}
+.btn-info-spk{
+	background: #002649;
+    color: #fff;
+    width: 50%;
+    height: 60px;
+    color: orange;
+    font-size: 1.2rem;
+}
+
+.btn-info-spk:hover .btn-info-spk a{
+	color: red!important;
+}
+.btn-info-spk a:hover {
+	color: black!important;
+}
+.btn-info-spk a{
+	color: orange;
+	font-weight: bold;
+}
+/*donate*//***************************************************************************/
+
 /*awards*//***************************************************************************/
 
 /**********/
@@ -1266,7 +1304,9 @@ nav #logo{
 
 /*Medium devices (tablets, less than 992px)*/
 @media (max-width: 991.98px) { 
-
+.btn-info-spk{
+	width: 90%;
+}  
 	
 	/*about*****************************************/
 	.about{
@@ -1341,6 +1381,10 @@ nav #logo{
 
  /*Small devices (landscape phones, less than 768px)*/
 @media (max-width: 768px) { 
+	.btn-info-spk{
+	width: 90%;
+	font-size: 1rem;
+}  
 		nav{
 			padding: 0;
 		}
@@ -1468,7 +1512,8 @@ nav #logo{
 }
 
 
-@media (max-width: 575.98px) {  
+@media (max-width: 575.98px) {
+
 	nav #logo{
 	font-size: 1rem;
 	color: var(--orange);
