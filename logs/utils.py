@@ -4,7 +4,10 @@ import os
 
 
 def send_completion_data(data):
-    requests.post(os.getenv("NASSCOM_XAPI_URL"), auth=HTTPBasicAuth(os.getenv("NASSCOM_XAPI_USERNAME"), os.getenv("NASSCOM_XAPI_PASSWORD")),data = data)
+    try:
+        return requests.post(os.getenv("NASSCOM_XAPI_URL"), auth=HTTPBasicAuth(os.getenv("NASSCOM_XAPI_USERNAME"), os.getenv("NASSCOM_XAPI_PASSWORD")),data = data)
+    except:
+        return False
 
 
 def get_payload(instance):
@@ -23,10 +26,10 @@ def get_payload(instance):
                 "id": "https://spoken-tutorial.in/spoken/tutorial-search/?search_foss={}&search_language={}".format(instance.foss, instance.language),
                 "definition": {
                 "name": {
-                    "en-US": instance.foss.replace(' ', '-')+"-"+instance.language
+                    "en-US": "Spoken-Tutorial-"+instance.foss.replace(' ', '-')+"-"+instance.language
                 },
                 "description": {
-                    "en-US": instance.foss+"-"+instance.language
+                    "en-US": instance.foss
                 },
                 "type": "http://adlnet.gov/expapi/activities/course"
                 },

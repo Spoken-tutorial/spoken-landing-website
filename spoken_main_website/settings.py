@@ -175,3 +175,5 @@ REST_FRAMEWORK = {
 }
 
 LOGOUT_REDIRECT_URL = 'home'
+
+PARTNER_COURSES = os.getenv("NASSCOM_COURSES").split(",")
