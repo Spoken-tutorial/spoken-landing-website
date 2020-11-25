@@ -1,0 +1,51 @@
+.tabsWrapper{
+  font-family:arial;
+  margin:0 auto;
+  text-align:center;
+  margin-top:20px;
+  border-right: 1px solid rgba(0,0,0,0.2);
+}
+
+img{
+  width:300px;
+}
+.tab-buttons{
+  margin-bottom:20px;
+}
+.tab-buttons button{
+  margin-right:15px;
+  font-size:1rem;
+  background:transparent;
+  border:none;
+  outline:none;
+  padding:10px 20px ;
+  cursor:pointer;
+  color:rgba(0,0,0,.4);
+  transition:all ease-in-out .2s;
+  border-bottom:2px solid transparent;
+}
+.active{
+  border-bottom:2px solid #42b3f4;
+  color:black;
+  background: #fff;
+  border-bottom: 2px solid #1D88E5!important;
+  color: #004E95;
+  font-weight: bold;
+}
+.tab-content{
+  border-top: 1px solid #004E95;
+  text-align: left;
+  padding-left: 150px;
+  padding-right: 150px;
+}
+.highlight{
+  border-left: 5px solid orange;
+    padding-left: 10px;
+}
+
+@media only screen and (max-width: 768px) {
+  .tab-content{
+  padding-left: 20px;
+  padding-right: 20px;
+}
+}

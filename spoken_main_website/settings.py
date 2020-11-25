@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'spoken',
     'rest_framework',
     'import_export',
+    'sso',
+    'logs',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'sso.middleware.SSO',
 ]
 
 ROOT_URLCONF = 'spoken_main_website.urls'
@@ -129,9 +132,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 STATIC_URL = '/static/'
 
@@ -145,3 +146,34 @@ IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 GOOGLE_RECAPTCHA_SECRET_KEY = os.getenv("GOOGLE_RECAPTCHA_SECRET_KEY")
 GOOGLE_RECAPTCHA_SITE_KEY = os.getenv("GOOGLE_RECAPTCHA_SITE_KEY")
+
+SAML_FOLDER = os.path.join(BASE_DIR, 'saml')
+
+AUTHENTICATION_BACKENDS = [
+    'sso.backends.SSOBackend',
+    'django.contrib.auth.backends.ModelBackend'
+    ]
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/var/tmp/django_cache',
+        'TIMEOUT': 3600 * 24 * 7,
+    }
+}
+
+if DEBUG:
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer'
+    ]
+}
+
+LOGOUT_REDIRECT_URL = 'home'
+
+NASSCOM_COURSES = os.getenv("NASSCOM_COURSES").split(",")

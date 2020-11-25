@@ -1,11 +1,25 @@
 // for smooth scroll effect on nav menu click
+var FOSS_RESULT;
 function scrollTopAnimated(clicked_link) { 
     elem_class = clicked_link.attr('href');
     scroll_length = $(elem_class).offset().top - document.getElementById("logo").offsetHeight-70;
     $("html, body").animate({ scrollTop: scroll_length },800); 
-        } 
+        }
+
+function setLanguage(){
+  foss = $( "#foss_select option:selected" ).text();
+
+  foss_obj = FOSS_RESULT.find(x => x.foss === foss);
+  languages = foss_obj["languages"];
+  $('#lang_select').html('');
+  for (i = 0; i < languages.length; i++) {
+  s = "<option value="+languages[i]+">"+languages[i]+"</option>";
+  $('#lang_select').append(s);
+  }
+} 
 
 $(document).ready(function(){
+  
   var $container = $('.activities-container');
   window.sr = ScrollReveal();
   // default view - workshops
@@ -32,6 +46,19 @@ $('.navbar-nav>li>a').on('click', function(){
     $('.navbar-collapse').collapse('hide');
 });
 
+$.ajax({url: "/spoken/api/tutorial-search/", success: function(result){
+    FOSS_RESULT = result["foss_lang_list"];
+    for (i = 0; i < FOSS_RESULT.length; i++) {
+      f = FOSS_RESULT[i].foss;
+      s = '<option value="'+f+'">'+f+'</option>';
+      $('#foss_select').append(s);
+  }
+    setLanguage();
+  }});
+
+$( "#foss_select" ).change(function() {
+    setLanguage();
+});
 // scroll effects
   sr.reveal('.navbar', {
           duration: 2000,
