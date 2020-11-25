@@ -2,6 +2,7 @@ from .models import CourseProgress
 from spoken.utils import get_tutorials
 from .utils import send_completion_data, get_payload
 from django.conf import settings
+from sso.models import NasscomUser
 
 def tutorial_progress_signal(sender, instance, created, **kwargs):
     if created or not created:
@@ -19,13 +20,17 @@ def tutorial_progress_signal(sender, instance, created, **kwargs):
 
 def course_completion_signal(sender, instance, created, **kwargs):
     if created or not created:
-        if instance.foss in settings.NASSCOM_COURSES and instance.language == "English":
-            if not instance.completion_status_sent:
-                if instance.status:
-                    data = get_payload(instance)
-                    r = send_completion_data(data)
-                    if r:
-                        if r.status_code == 200:
-                            instance.completion_status_sent = True
-                            instance.save()
+        try:
+            NasscomUser.objects.get(user=instance.user)
+            if instance.foss in settings.NASSCOM_COURSES and instance.language == "English":
+                if not instance.completion_status_sent:
+                    if instance.status:
+                        data = get_payload(instance)
+                        r = send_completion_data(data)
+                        if r:
+                            if r.status_code == 200:
+                                instance.completion_status_sent = True
+                                instance.save()
+        except NasscomUser.DoesNotExist:
+            pass
             
