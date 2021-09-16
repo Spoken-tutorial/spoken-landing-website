@@ -1,0 +1,117 @@
+{%extends "base.html"%}
+{% load static %}
+{% load helper %}
+{% block css  %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+<link rel="stylesheet" type="text/css" href="{% static '/spoken/dashboard.css' %}">
+{% endblock css %}
+
+{% block content %}
+<main class="py-6 " id="dashboard">
+		<div class="container">
+<div>
+    <form method='get' action="/spoken/tutorial-search/"> 
+      <div class="columns">
+      <div class="column is-2 logoST">
+      <img src="/static/spoken/images/logo.png" /> 
+      <p><span class="mr-1 title1">Spoken</span> <span class="title2">Tutorial</span></p>
+      </div>
+          <div class="column is-10 is-centered">
+          <div class="columns search-bar">
+          <div  class="column is-4">
+          <div class="field">
+          <div class="control">
+          <div class="select is-info is-fullwidth">
+            <select name="search_foss" value="foss" class="selectStyle" id="foss_select">
+            </select>
+          </div>
+          </div>
+          </div>
+          </div>
+
+          <div  class="column is-4">
+          <div class="field">
+          <div class="control">
+          <div class="select is-info is-fullwidth" >
+          <select name="search_language" value="lan" class="selectStyle" id="lang_select">
+          </select>
+        </div>
+        </div>
+        </div>
+        </div>
+        <div  class="column is-2">
+        <div class="field">
+          <div class="control">
+            <button type="submit" class="button submitStyle">Search</button>
+          </div>
+        </div>
+        </div>
+        <div  class="column is-2">
+            <div class="dropdown">
+              <button class="button submitStyle dropbtn"><i class="fas fa-user"></i> <i class="fas fa-chevron-down"></i></button>
+              <div class="dropdown-content">
+              	{% if user.is_authenticated %}
+                <a href="/dashboard">Tutorials</a> 
+                <a href="/logout">Logout</a>
+                {% else %}
+                <a href="/login">Login</a>
+              	{% endif %}
+              </div>
+          </div>
+        </div>
+        </div>
+        </div>
+        
+      </div>
+
+    </form>
+    </div>	
+    </div>
+	
+	<hr/>
+
+	{% if user.is_authenticated %}
+		<section class="container" id="course-prg">
+		<div class="row">
+		{% for course in courseProgress %}
+
+		<div class="col-md-6 col-lg-4 spk-card">
+		<div class="is-shady my-3">
+			<h5>{{course.foss}}</h5>
+			<hr>
+			{% if course.status %}
+			<p class="complete"><i class="far fa-check-circle"></i> You have completed a course: {{course.foss}} in {{course.language}}
+				
+			</p>
+			<small class="last-view">Completed on: {{ course.updated|date:"M d, Y" }}</small>
+			{% else %}
+			<p>{% widthratio course.tutorials_completed course.total_tutorials 100 %}%</p>
+			<p><progress class="progress is-info" value="{% widthratio course.tutorials_completed course.total_tutorials 100 %}" max="100">45%</progress></p>
+			<small class="last-view">Last viewed : {{course.updated}}</small>
+			{% endif %}
+		</div>
+
+
+		</div>
+		{% empty %}
+		<p>No Course data available</p>
+		{% endfor %}
+	</div>
+	</section>
+	{% else %}
+	<div class="session-info has-text-centered">
+	<p>The user session has expired. Please <a href="#">Login</a> to continue.</p>	
+	</div>
+	
+	{% endif %}
+
+</main>
+
+
+{% endblock content %}
+
+{% block script %}
+<script type="text/javascript">
+
+</script>
+{% endblock script %}

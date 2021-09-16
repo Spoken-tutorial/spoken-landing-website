@@ -26,6 +26,11 @@
           </li>
           {% endfor %}
           {% endif %}
+      {% if user.is_authenticated %}
+       <li class="nav-item">
+        {{user.username}}
+      </li>
+      {% endif %}
     </ul>
   </div>
 </nav><!--/bootstrap navbar--->

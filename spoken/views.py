@@ -11,6 +11,10 @@ from rest_framework.response import Response
 from .serializers import JobFairSerializer
 from django.contrib import messages
 import urllib, json
+from django.views.generic import TemplateView
+from .utils import *
+from logs.models import TutorialProgress,CourseProgress
+from logs.views import get_set_tutorial_progress
 
 today = datetime.today().strftime('%Y-%m-%d')
 
@@ -79,3 +83,19 @@ def jobfair_detail(request,jobfair_id):
     jobfair_obj = Jobfair.objects.filter(jobfair_id=jobfair_id)[0]
     context = {'jobfair_id':jobfair_id,'jobfair':jobfair_obj}
     return render(request,'spoken/jobfair_detail.html',context)
+
+
+class TutorialSearch(TemplateView):
+    """Search tutorial based on get url parameters. 
+    Parameters: (search_foss, search_language)
+    Example pattern: localhost:8000/spoken/tutorial-search/?search_foss=Advance+C&search_language=English
+    """
+    template_name = 'spoken/tutorial_search.html'
+    
+def dashboard(request):
+    context = {}
+    if request.user.is_authenticated:
+        courseProgress = CourseProgress.objects.all().filter(user=request.user)
+        context['courseProgress']=courseProgress
+    return render(request,'spoken/dashboard.html',context)
+
