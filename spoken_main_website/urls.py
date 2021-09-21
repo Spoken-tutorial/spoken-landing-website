@@ -30,4 +30,5 @@ urlpatterns = [
     url(r'^$', spoken_views.home, name='home'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('dashboard/', spoken_views.dashboard, name='dashboard'),
+    path('login/', auth_views.LoginView.as_view(template_name='spokenlogin/login.html'), name='login'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

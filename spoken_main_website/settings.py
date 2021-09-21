@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'import_export',
     'sso',
     'logs',
+    'spokenlogin',
 ]
 
 MIDDLEWARE = [
@@ -92,9 +93,17 @@ DATABASES = {
         'PASSWORD': os.getenv("DB_PASSWORD"),
         'HOST': '',  # Empty for localhost through domain sockets.          'HOST': '',  # Empty for localhost through domain sockets.
         'PORT': '',  # Set to empty string for default.         'PORT': '',  # Set to empty string for default.
-    }
-}
+    },
 
+    'spk': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv("SPOKEN_DB"),
+        'USER': os.getenv("SPOKEN_DB_USER"),
+        'PASSWORD': os.getenv("SPOKEN_DB_PASS"),
+        'HOST': os.getenv("SPOKEN_DB_HOST"),
+        'PORT':'',
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -150,6 +159,7 @@ GOOGLE_RECAPTCHA_SITE_KEY = os.getenv("GOOGLE_RECAPTCHA_SITE_KEY")
 SAML_FOLDER = os.path.join(BASE_DIR, 'saml')
 
 AUTHENTICATION_BACKENDS = [
+    'spokenlogin.backends.SpokenBackend',
     'sso.backends.SSOBackend',
     'django.contrib.auth.backends.ModelBackend'
     ]
@@ -174,6 +184,23 @@ REST_FRAMEWORK = {
     ]
 }
 
+LOGIN_URL='/login/'
 LOGOUT_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'home'
 
 NASSCOM_COURSES = os.getenv("NASSCOM_COURSES").split(",")
+
+DATABASE_ROUTERS = [
+    'spokenlogin.router.SpokenRouter',
+]
+
+PASSWORD_HASHERS = (
+    'django.contrib.auth.hashers.UnsaltedMD5PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.BCryptPasswordHasher',
+    'django.contrib.auth.hashers.SHA1PasswordHasher',
+    'django.contrib.auth.hashers.MD5PasswordHasher',
+    'django.contrib.auth.hashers.CryptPasswordHasher',
+)
