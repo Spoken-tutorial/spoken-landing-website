@@ -27,8 +27,12 @@
           {% endfor %}
           {% endif %}
       {% if user.is_authenticated %}
-       <li class="nav-item">
+       <li class="nav-item active">
         {{user.username}}
+      </li>
+      {% else %}
+      <li class="nav-item active">
+        <a class="nav-link scroll_link " href="{% url 'login' %}">Login</a>
       </li>
       {% endif %}
     </ul>
