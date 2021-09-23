@@ -42,7 +42,7 @@
 		  <a class="nav-link scroll_link " href="{% url 'home'%}#contact">Contact</a>
 		</li>
 		<li class="nav-item">
-		  <a class="nav-link scroll_link " href="{{spk_tutorials}}" target="_blank">Tutorials</a>
+		  <a class="nav-link scroll_link " href="{% url 'tutorial_search'%}?search_foss=Advanced+Cpp&search_language=English" target="_blank">Tutorials</a>
 		</li>
 		{% if user.is_authenticated %}
 		<div class="dropdown">
