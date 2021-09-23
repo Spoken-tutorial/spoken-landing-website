@@ -59,6 +59,7 @@ def home(request):
     'awards':awards,}
 
     context['SITE_KEY'] = settings.GOOGLE_RECAPTCHA_SITE_KEY
+    context['spk_tutorials'] = settings.SPK_TUTORIALS
 
     return render(request,'spoken/home.html',context)
 

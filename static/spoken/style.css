@@ -5,7 +5,7 @@
 			--light :#F5F8FD ; 
 			--dark :#02073F ;
 			--main-font-color :#413e66 ;
-			--shadow : 0 1px 10px rgb(104,104,104,0.5);
+			--shadow : 0 1px 5px rgb(104,104,104,0.5);
 			--btn-color:#18B1DC;  /*rgb(24,177,220)*/
 			--line-color:#C9D4F6;
 			--font:"Open Sans", sans-serif;
@@ -41,10 +41,8 @@ h2{
 }
 .btn:hover{
 	background:#fff;
-	border:2px solid #b71c1c;
-	font-weight: bold;
-	border-radius: 5px;
-	/*color: rgb(0,0,0);*/
+	border:1px solid #b71c1c;
+	color: rgb(0,0,0);
 }
 .btn1{
 	color: var(--btn-color);
@@ -56,6 +54,8 @@ h2{
 	color:var(--orange);
 	color:var(--btn-color);
 	font-weight: bold;
+	color:var(--dark);
+	font-size:0.8rem;
 }
 .btn1:hover{
 	color:var(--btn-color);
@@ -70,7 +70,9 @@ h2{
 	background:#ffffff;
 	position: relative;
 }
-
+.dropdown-item{
+	color:rgba(0,0,0,1)!important;
+}
 
 /*google fonts***************************/
 /* open-sans-300italic - latin */
@@ -136,7 +138,7 @@ h2{
 .navbar-nav a{
 	font-family: "Open Sans", sans-serif;
 	text-transform: uppercase;
-	font-size: 1rem;
+	font-size: 0.8rem;
 	color: #fff;
 }
 .brand-custom{
@@ -351,6 +353,7 @@ box-shadow: 0 10px 16px rgba(0, 0, 0, .13), 0 6px 6px rgba(0, 0, 0, .19);
 	border-radius: 10px;
 	padding: 5%;
 	box-shadow: var(--shadow);
+	box-shadow : 0 1px 5px rgb(104,104,104,0.5);
 	position: relative;
 	/*background-color:rgba(0, 38, 73,1);*/
 	opacity: 1;
@@ -381,14 +384,16 @@ box-shadow: 0 10px 16px rgba(0, 0, 0, .13), 0 6px 6px rgba(0, 0, 0, .19);
 	font-weight: bold;
 	border-bottom: 2px solid var(--dark);
 	padding-bottom: 1%;
+	font-size: 1.2rem;
 	/*color: #fff;*/
 }
 #applications p{
-	color:rgb(0,0,0);
+	color:rgba(0,0,0,0.8);
 	font-family: "Open Sans", sans-serif;
-	font-size: 1rem;
-	line-height: 2rem;
+	font-size: 0.9rem;
+	line-height: 1.2rem;
 	margin-bottom: 10%;
+	text-align: justify;
 	/*color: #fff;*/
 }
 #applications .app-link{
@@ -404,7 +409,7 @@ box-shadow: 0 10px 16px rgba(0, 0, 0, .13), 0 6px 6px rgba(0, 0, 0, .19);
 
 #applications #products{
 	display: grid;
-	grid-template-columns: repeat(auto-fit,minmax(360px,1fr));
+	grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
 	grid-gap: 2rem;
 	min-height: 200px;
 }
@@ -891,10 +896,10 @@ box-shadow: 0 10px 16px rgba(0, 0, 0, .13), 0 6px 6px rgba(0, 0, 0, .19);
 #applications2 .app
 {
 	background-color: #fff;
-	border-radius: 10px;
-	padding: 5%;
+	/* border-radius: 10px;
+	padding: 5%; */
 	box-shadow: var(--shadow);
-	position: relative;
+	/* position: relative; */
 }
 
 #applications2 source{
@@ -1673,7 +1678,13 @@ nav #logo{
 
 @media (min-width: 1199.98px) { 
 .navbar-nav a{
-		font-size: 1rem;
+		font-size: 0.8rem;
 	}
 	 }
 /*media queries*/
+
+/* login page */
+.login-help{
+	color: var(--dark);
+	text-decoration: underline;
+}

@@ -214,7 +214,7 @@ class App extends Component {
                 <>
                 <a href="/dashboard">Dashboard</a> <a href="/logout">Logout</a>
                 </>
-                :  <a href="#">Login</a>}
+                :  <a href={`${process.env.SERVER_API_URL}`+"login"}>Login</a>}
               </div>
           </div>
         </div>
@@ -279,7 +279,7 @@ class App extends Component {
         <p className="has-text-weight-bold">Course Progress : </p>
         <progress className="progress is-info " value={this.getCourseProgress()} max={100} style={{width: "150px",height:"5px"}}>
                     {this.getCourseProgress()} Complete</progress>
-           {is_authenticated ? parseInt(this.getCourseProgress()) +"%" : <span><a href="#">Login</a> to view course progress</span>}         
+           {is_authenticated ? parseInt(this.getCourseProgress()) +"%" : <span><a href={`${process.env.SERVER_API_URL}`+"login"}>Login</a> to view course progress</span>}         
                     
       </div>
      
