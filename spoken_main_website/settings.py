@@ -204,3 +204,4 @@ PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.MD5PasswordHasher',
     'django.contrib.auth.hashers.CryptPasswordHasher',
 )
+CONTACT_MAIL = os.getenv("CONTACT_MAIL")
