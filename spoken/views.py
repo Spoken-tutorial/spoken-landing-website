@@ -15,6 +15,7 @@ from django.views.generic import TemplateView
 from .utils import *
 from logs.models import TutorialProgress,CourseProgress
 from logs.views import get_set_tutorial_progress
+from django.core.mail import send_mail
 
 today = datetime.today().strftime('%Y-%m-%d')
 
@@ -36,7 +37,21 @@ def home(request):
 
             if result['success']:
                 c.save()
-                messages.add_message(request,messages.INFO,'Message submitted!')
+                try:
+                    from_mail = settings.CONTACT_MAIL
+                    to_mail = [settings.CONTACT_MAIL]
+                    sub = 'spoken-tutorial.in feedback form'
+                    name = c.cleaned_data['name']
+                    email = c.cleaned_data['email']
+                    subject = c.cleaned_data['subject']
+                    message = c.cleaned_data['message']
+                    mail_body = 'Name : ' + name +'\n' + 'Email : ' + email + '\n' + 'subject : '+ subject+ '\n'+'message : ' + message
+                    send_mail(sub,mail_body,from_mail,to_mail,fail_silently=False,)
+                    messages.add_message(request,messages.INFO,'Message submitted!')
+                except Exception as e:
+                    print(e)
+                    messages.error(request, 'Some error occured.Please try again.')
+                
             else:
                 messages.error(request, 'Invalid reCAPTCHA. Please try again.')
             return redirect('/spoken#contact')
