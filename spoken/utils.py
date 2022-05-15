@@ -30,6 +30,12 @@ def get_tutorials(foss, lang):
                 if i['language'] == lang:
                     return i['videos']
 
+def get_supercategory(foss):
+    spokentutorials = get_spokentutorials()
+    for f in spokentutorials:
+        if f['category'] == foss:
+            return f['supercategory']
+
 def get_tutorial_detail(foss, lang, tutorial):
     tutorials = get_tutorials(foss, lang)
     for t in tutorials:
@@ -38,7 +44,8 @@ def get_tutorial_detail(foss, lang, tutorial):
 
 def get_all_foss_lang():
     foss = get_foss_lists()
-    return [{'foss': f, 'languages': get_foss_languages(f)} for f in foss]
+    return [{'foss': f, 'languages': get_foss_languages(f),
+    'supercategory': get_supercategory(f)} for f in foss]
 
 def get_tutorials_completion_status(foss, lang, user):
     tutorials = get_tutorials(foss, lang)
