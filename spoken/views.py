@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 # Create your views here.
 from django.http import HttpResponse
-from .models import Products, Nav, Blended_workshops, Jobfair, Internship, Testimonials, MediaTestimonials, Award
+from .models import ContactMsg, Products, Nav, Blended_workshops, Jobfair, Internship, Testimonials, MediaTestimonials, Award
 from datetime import datetime
 from django.utils import timezone
 from .forms import ContactForm
@@ -16,6 +16,7 @@ from .utils import *
 from logs.models import TutorialProgress,CourseProgress
 from logs.views import get_set_tutorial_progress
 from django.core.mail import send_mail
+from django.conf import settings
 
 today = datetime.today().strftime('%Y-%m-%d')
 
@@ -23,7 +24,6 @@ def home(request):
     if request.method == 'POST':
         c = ContactForm(request.POST)
         if c.is_valid():
-
             recaptcha_response = request.POST.get('g-recaptcha-response')
             url = 'https://www.google.com/recaptcha/api/siteverify'
             values ={
@@ -34,8 +34,11 @@ def home(request):
             req =  urllib.request.Request(url, data=data)
             response = urllib.request.urlopen(req)
             result = json.loads(response.read().decode())
-
-            if result['success']:
+            is_spam = False
+            emails = ContactMsg.objects.filter(email=c.cleaned_data['email'])
+            if len(emails) > int(getattr(settings, "SPAM_EMAIL", 4)):
+                is_spam = True 
+            if result['success'] and not is_spam:
                 c.save()
                 try:
                     from_mail = settings.CONTACT_MAIL
