@@ -3,6 +3,7 @@ from django.conf import settings
 # Create your views here.
 from django.http import HttpResponse
 from .models import ContactMsg, Products, Nav, Blended_workshops, Jobfair, Internship, Testimonials, MediaTestimonials, Award
+from django_ers.models import *
 from datetime import datetime
 from django.utils import timezone
 from .forms import ContactForm
@@ -66,8 +67,10 @@ def home(request):
     navs = Nav.objects.filter(status=1)
     products = Products.objects.all().order_by('order')
     now = timezone.now()
-    jobfairs = Jobfair.objects.all().order_by('-jobfair_start_date')[:3]
-    internships = Internship.objects.all().order_by('-internship_start_date')[:3]
+    # jobfairs = Jobfair.objects.all().order_by('-jobfair_start_date')[:3]
+    jobfairs = Event.objects.filter(type='JOB').order_by('-start_date')[:3]
+    print('*************************', jobfairs)
+    internships = Event.objects.filter(type='INTERN').order_by('-start_date')[:3]
     workshops = Blended_workshops.objects.all().order_by('-workshop_start_date')[:3]
     testimonials = Testimonials.objects.all()[:9]
     media_testimonials = MediaTestimonials.objects.all()[:3]
@@ -82,7 +85,8 @@ def home(request):
 #api/jobfairs/
 class JobFairList(APIView):
     def get(self,request):
-        jobfairs = Jobfair.objects.all()
+        # jobfairs = Jobfair.objects.all()
+        jobfairs = Event.objects.filter(type='JOB')
         serializer = JobFairSerializer(jobfairs,many=True)
         return Response(serializer.data)
 

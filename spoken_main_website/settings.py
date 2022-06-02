@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'sso',
     'logs',
     'spokenlogin',
+    'django_ers',
 ]
 
 MIDDLEWARE = [
@@ -101,6 +102,14 @@ DATABASES = {
         'USER': os.getenv("SPOKEN_DB_USER"),
         'PASSWORD': os.getenv("SPOKEN_DB_PASS"),
         'HOST': os.getenv("SPOKEN_DB_HOST"),
+        'PORT':'',
+    },
+    'ers': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv("ERS_DB"),
+        'USER': os.getenv("ERS_DB_USER"),
+        'PASSWORD': os.getenv("ERS_DB_PASS"),
+        'HOST': os.getenv("ERS_DB_HOST"),
         'PORT':'',
     },
 }
@@ -192,6 +201,7 @@ NASSCOM_COURSES = os.getenv("NASSCOM_COURSES").split(",")
 
 DATABASE_ROUTERS = [
     'spokenlogin.router.SpokenRouter',
+    'django_ers.router.ERSRouter'
 ]
 
 PASSWORD_HASHERS = (
