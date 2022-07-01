@@ -31,4 +31,6 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('dashboard/', spoken_views.dashboard, name='dashboard'),
     path('login/', auth_views.LoginView.as_view(template_name='spokenlogin/login.html',redirect_authenticated_user=True), name='login'),
+    # path('csc/', include('csc.vle_urls')),
+    path('csc/', include('csc.vle_urls', namespace='csc')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

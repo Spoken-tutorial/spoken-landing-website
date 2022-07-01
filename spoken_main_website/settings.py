@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'sso',
     'logs',
     'spokenlogin',
+    'csc',
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -205,3 +207,11 @@ PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.CryptPasswordHasher',
 )
 CONTACT_MAIL = os.getenv("CONTACT_MAIL")
+SPAM_EMAIL = os.getenv("SPAM_EMAIL")
+CONTACT_MAIL = os.getenv("ADMIN_MAIL")
+
+URL_FETCH_VLE = os.getenv("URL_FETCH_VLE")
+
+CRONJOBS = [
+    ('8 13 * * *', 'csc.cron.update_vle_data')
+]
