@@ -26,8 +26,11 @@ class Main extends React.Component {
             this.setState({
               resource: res.data
             });
-          })
-        }
+        console.log("************************************************")
+        console.log(this.state.resource)
+        console.log("************************************************")
+        })
+}
   }
   
   
@@ -117,7 +120,7 @@ class Main extends React.Component {
              <div class="tags has-addons res">
                 <a href={this.state.resource.assignment} target="_blank">
                 <i class="fas fa-file-download resIcon"></i>
-                <span >Assignments</span>
+                <span >Assignments {this.state.resource.hello}</span>
                 </a>
             </div>:""}
             {this.state.resource.timed_script ?
@@ -164,6 +167,17 @@ class Main extends React.Component {
           </article>
          )): ""}
          </Tab>
+
+         <Tab label="Additional learning Resources">
+            {this.state.resource ? this.state.resource.additional_learning.map(item => (
+            <div class="tags has-addons res">
+              <a href={item.data[3]} target="_blank">
+                <i class="fas fa-external-link-alt resIcon"></i>
+                <span >{item.head}</span>
+                </a>
+            </div>)):""}
+         </Tab>
+
        </Tabs>
       </div>
         </div>

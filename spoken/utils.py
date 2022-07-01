@@ -1,6 +1,7 @@
 from django.core.cache import cache
 import requests
 from logs.models import TutorialProgress,CourseProgress
+from collections import defaultdict
 
 def get_spokentutorials():
     spokentutorials = cache.get('spokentutorials')
@@ -11,6 +12,13 @@ def get_spokentutorials():
         spokentutorials = spokentutorials.json()['spokentutorials']
         cache.set('spokentutorials', spokentutorials)
         return spokentutorials
+
+def get_jobs(request):
+    job_dict = {}
+    jobs = requests.get('https://jrs.spoken-tutorial.org/api/jobs/'+str(request.user.email))
+    if jobs:
+        jobs = jobs.json()
+    return jobs
 
 def get_foss_lists():
     spokentutorials = get_spokentutorials()
@@ -30,11 +38,35 @@ def get_tutorials(foss, lang):
                 if i['language'] == lang:
                     return i['videos']
 
-def get_supercategory(foss):
+def get_supercategory(cpobj, jobs):
     spokentutorials = get_spokentutorials()
+    supercategories = set()
+    supcat = {}
+    course = {}
+    sc_foss = []
     for f in spokentutorials:
-        if f['category'] == foss:
-            return f['supercategory']
+        for cp in cpobj:
+            if f['category'] == cp.foss:
+                supercategories.add(f['supercategory'])
+                course = {
+                'hitcount'  : f['hitcount'], 'courseprog' : cp}
+                if cp.foss in jobs:
+                    course['jobs'] = jobs[cp.foss]
+                if f['supercategory'] in supcat:
+                    supcat[f['supercategory']].append({cp.foss :course})
+                else:
+                    supcat[f['supercategory']] = [{cp.foss :course}]
+    for sc in supercategories:
+        for f in spokentutorials:
+            if sc == f['supercategory']:
+                if f['category'] not in supcat[sc][0]:
+                    if f['category'] in jobs:
+                        course = {
+                            'hitcount':f['hitcount'], 'jobs' : jobs[f['category']]}
+                    else:
+                        course = {'hitcount':f['hitcount']}
+                    supcat[f['supercategory']].append({f['category']:course})
+    return supcat
 
 def get_tutorial_detail(foss, lang, tutorial):
     tutorials = get_tutorials(foss, lang)
@@ -44,8 +76,7 @@ def get_tutorial_detail(foss, lang, tutorial):
 
 def get_all_foss_lang():
     foss = get_foss_lists()
-    return [{'foss': f, 'languages': get_foss_languages(f),
-    'supercategory': get_supercategory(f)} for f in foss]
+    return [{'foss': f, 'languages': get_foss_languages(f)} for f in foss]
 
 def get_tutorials_completion_status(foss, lang, user):
     tutorials = get_tutorials(foss, lang)
