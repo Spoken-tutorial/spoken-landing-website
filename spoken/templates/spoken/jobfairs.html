@@ -7,13 +7,13 @@
 {% endblock css %}
 
 {% block content %}
-<div>	
+<div class="container-fluid scroll">	
 	<section id="schedule" class="section-with-bg">
       <div>
         <div class="section-header">
           <h2>Job Fair Information</h2>
           <br>
-          <h5>Here is the schedule of upcoming and past Jobfair events.</h5>
+          <h5>Here is the schedule of upcoming and past Jobfair events..........</h5>
             <br>
         </div>
          <ul class="nav nav-tabs" role="tablist">
@@ -70,9 +70,10 @@ $(function() {
          
         
         $.each(data,function(i, jobfair){
-          event_date = jobfair.jobfair_start_date;
+          event_date = jobfair.start_date;
+          //2021-11-17
           if (event_date) {
-            key = event_date.slice(0,4);  
+            key = event_date.slice(0,4);
             
           if (key in dict ) {
             dict[key].push(jobfair);
@@ -82,6 +83,7 @@ $(function() {
           };
           }
           all_jobfairs_list.push(jobfair);
+
         });
         getFilteredJobFairs('all');
      }
@@ -103,7 +105,7 @@ function getFilteredJobFairs(id){
   var temp_list = all_jobfairs_list;
   for (var i = temp_list.length - 1; i >= 0; i--) {
   	var d = new Date(temp_list[i].event_date);
-    if (new Date(temp_list[i].jobfair_start_date) > today) {
+    if (new Date(temp_list[i].start_date) > today) {
       jobfair_list.push(temp_list[i]);
     }
   }
@@ -115,13 +117,14 @@ function getFilteredJobFairs(id){
   //check if list is empty
   if (typeof jobfair_list !== 'undefined' && jobfair_list.length > 0) {
     for (var i = jobfair_list.length - 1; i >= 0; i--) {
+      console.log(jobfair_list[i]);
       //format date --------------------------------------------------
-      var d_start = new Date(jobfair_list[i].jobfair_start_date);
+      var d_start = new Date(jobfair_list[i].start_date);
       var date_start = d_start.getDate();
       var month_start = d_start.getMonth() + 1; 
       month_start = d_start.toLocaleString('en-us', { month: 'short' });
       var year_start = d_start.getFullYear();
-      var d_end = new Date(jobfair_list[i].jobfair_end_date);
+      var d_end = new Date(jobfair_list[i].end_date);
       var date_end = d_end.getDate();
       var month_end = d_end.getMonth() + 1;
       month_end = d_start.toLocaleString('en-us', { month: 'short' });
@@ -150,16 +153,10 @@ function getFilteredJobFairs(id){
               `</div>`+ 
               `</div>
               <div class=\" content\">
-              	<h4 class=\"title\">`+jobfair_list[i].jobfair_title+`</h4>
+              	<h4 class=\"title\">`+jobfair_list[i]['name']+`</h4>
                 <hr>
-                <p>`+jobfair_list[i].jobfair_desc+`</p>
-                <h6 id=\"companies\">Companies</h6>
-                <p>`+getCompanyNames(jobfair_list[i].companies)+`</p>
+                <p>`+jobfair_list[i]['description']+`</p>
                 
-                <div class=\"students-num\">
-                <p id=\"student_participated`+i+`\"> </p>
-                <p id=\"student_placed`+i+`\"></p>
-                </div>
                 
               </div>
 
@@ -171,50 +168,20 @@ function getFilteredJobFairs(id){
     s = `<h6>Currently no Information is available for selected criteria. </h6>`;
     document.getElementById("job_info_pane").innerHTML = s;
   }
-  set_student_num(jobfair_list);
 };
 
 // additional code to add for know more link on each jobfair, to redirect to individual jobfair detail page
 // <div class=\"details\"><a href=\" /spoken/jobfairs/`+jobfair_list[i].jobfair_id+`\"> <i class=\"far fa-file-alt\"></i> Know more</a></div>
 
-function getCompanyNames(lst_company){
-    var s = ''
-    for (var i = lst_company.length - 1; i >= 0; i--) {
-       s +=lst_company[i].name ;
-
-       if (i!=0) {
-        s+='&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
-       } 
-     } 
-     return s;
-};
 
 function all_jobfairs_sorted(jobfairs_list){
   var sorted = jobfairs_list;
       sorted.sort(function(a,b){
-      return new Date(a.jobfair_start_date) - new Date(b.jobfair_start_date);
+      return new Date(a.start_date) - new Date(b.start_date);
     });
     return sorted;
 };
 
-function set_student_num(jobfair_list){
-  if (typeof jobfair_list !== 'undefined' && jobfair_list.length > 0) {
-    for (var i = jobfair_list.length - 1; i >= 0; i--) {
-      var r = jobfair_list[i].num_students_registered;
-            var p = jobfair_list[i].num_students_placed;
-              if (r!=0) { 
-              var registered = `<i class=\"fas fa-users\"></i> Students Participated :`+r;
-              var r_id_name = 'student_participated'+i;
-              document.getElementById(r_id_name).innerHTML = registered; 
-              }
-            if (p!=0) {
-              var placed = `<i class=\"fas fa-users\"></i> Students Placed :`+p.toString();
-              var p_id_name = 'student_placed'+i;
-              document.getElementById(p_id_name).innerHTML = placed;
-            }
-  }
-  }
 
-}
 </script>
 {% endblock script %}
