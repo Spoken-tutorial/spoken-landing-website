@@ -1,5 +1,3 @@
-import datetime
-from pydoc import ttypager
 from django.db import IntegrityError
 import requests
 from django.conf import settings
@@ -28,7 +26,7 @@ def update_vle_data(): #CRON TASK
         # csc = [ csc[0] for csc in CSC.objects.values_list('id')]
         if data:
             data = data['req_data']
-            for item in data and count < 5:
+            for item in data :
                 count+=1
                 print(f"{item.get('email')}")
                 update_flag = 0 
@@ -77,9 +75,9 @@ def update_vle_data(): #CRON TASK
         csc_created_str = ', '.join(csc_created)
         message = f"""
             CSC Data Updated : 
-            Updated VLE Data : {updated_str}
-            New VLEs created : {vle_created_str}
-            New CSC created : {csc_created_str}
+            Updated VLE Data : {len(updated)} - {updated_str}
+            New VLEs created : {len(vle_created)} - {vle_created_str}
+            New CSC created : {len(csc_created)} - {csc_created_str}
         """      
         send_log_mail(message)
 
@@ -129,6 +127,7 @@ def getLastName(name):
     return ''
 
 def add_vle(item,csc):
+    print(f"add_vle".ljust(40,'-'))
     try:
         user = User.objects.get(Q(email=item.get('email')) | Q(username=item.get('email')))
         print(f"user for vle {item.get('email')} exists")

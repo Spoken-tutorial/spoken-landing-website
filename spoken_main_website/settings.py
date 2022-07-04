@@ -105,6 +105,17 @@ DATABASES = {
         'HOST': os.getenv("SPOKEN_DB_HOST"),
         'PORT':'',
     },
+
+
+    # 'ers': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': os.getenv("ERS_DB"),
+    #     'USER': os.getenv("ERS_DB_USER"),
+    #     'PASSWORD': os.getenv("ERS_DB_PASS"),
+    #     'HOST': os.getenv("ERS_DB_HOST"),
+    #     'PORT':'',
+    # },
+
 }
 
 # Password validation
