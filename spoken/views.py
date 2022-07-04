@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 # Create your views here.
 from django.http import HttpResponse
-from .models import Products, Nav, Blended_workshops, Jobfair, Internship, Testimonials, MediaTestimonials, Award
+from .models import ContactMsg, Products, Nav, Blended_workshops, Jobfair, Internship, Testimonials, MediaTestimonials, Award
+from django_ers.models import *
 from datetime import datetime
 from django.utils import timezone
 from .forms import ContactForm
@@ -16,6 +17,7 @@ from .utils import *
 from logs.models import TutorialProgress,CourseProgress
 from logs.views import get_set_tutorial_progress
 from django.core.mail import send_mail
+from django.conf import settings
 
 today = datetime.today().strftime('%Y-%m-%d')
 
@@ -23,7 +25,6 @@ def home(request):
     if request.method == 'POST':
         c = ContactForm(request.POST)
         if c.is_valid():
-
             recaptcha_response = request.POST.get('g-recaptcha-response')
             url = 'https://www.google.com/recaptcha/api/siteverify'
             values ={
@@ -34,8 +35,11 @@ def home(request):
             req =  urllib.request.Request(url, data=data)
             response = urllib.request.urlopen(req)
             result = json.loads(response.read().decode())
-
-            if result['success']:
+            is_spam = False
+            emails = ContactMsg.objects.filter(email=c.cleaned_data['email'])
+            if len(emails) > int(getattr(settings, "SPAM_EMAIL", 4)):
+                is_spam = True 
+            if result['success'] and not is_spam:
                 c.save()
                 try:
                     from_mail = settings.CONTACT_MAIL
@@ -63,8 +67,10 @@ def home(request):
     navs = Nav.objects.filter(status=1)
     products = Products.objects.all().order_by('order')
     now = timezone.now()
-    jobfairs = Jobfair.objects.all().order_by('-jobfair_start_date')[:3]
-    internships = Internship.objects.all().order_by('-internship_start_date')[:3]
+    # jobfairs = Jobfair.objects.all().order_by('-jobfair_start_date')[:3]
+    jobfairs = Event.objects.filter(type='JOB').order_by('-start_date')[:3]
+    print('*************************', jobfairs)
+    internships = Event.objects.filter(type='INTERN').order_by('-start_date')[:3]
     workshops = Blended_workshops.objects.all().order_by('-workshop_start_date')[:3]
     testimonials = Testimonials.objects.all()[:9]
     media_testimonials = MediaTestimonials.objects.all()[:3]
@@ -79,7 +85,8 @@ def home(request):
 #api/jobfairs/
 class JobFairList(APIView):
     def get(self,request):
-        jobfairs = Jobfair.objects.all()
+        # jobfairs = Jobfair.objects.all()
+        jobfairs = Event.objects.filter(type='JOB')
         serializer = JobFairSerializer(jobfairs,many=True)
         return Response(serializer.data)
 

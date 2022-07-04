@@ -22,9 +22,9 @@ $(document).ready(function(){
   
   var $container = $('.activities-container');
   window.sr = ScrollReveal();
-  // default view - workshops
-  $container.isotope({ filter: '.filter-workshop' });
-  $('#filter-workshop').css('background-color','#EC6C06');
+  // default view - jobfair
+  $container.isotope({ filter: '.filter-jobfair' });
+  $('#filter-jobfair').css('background-color','#EC6C06');
   // for smooth scroll
   $('.scroll_link').on('click',function(e){
   scrollTopAnimated($(this));

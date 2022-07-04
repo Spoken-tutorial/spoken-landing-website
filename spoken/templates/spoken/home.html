@@ -117,12 +117,13 @@
           <div class="activities-event ">
             <div class="date">
               <p><i class="fas fa-calendar-alt"></i></p>
-            <p>{% get_formatted_year jobfair.jobfair_start_date jobfair.jobfair_end_date as date %}
-        {{date}}</p>
+            <p>{% get_formatted_year jobfair.start_date jobfair.end_date as date %}
+            {{date}}</p>
             </div>
             <div class="content">
-            <h6>{{jobfair.jobfair_title}}</h6>
-            <p>Participating Companies :  </p>
+            <h6>{{jobfair.name}}</h6>
+            <p>{{jobfair.description}}</p>
+            <!-- <p>Participating Companies :  </p>
             <p>
               {% for company in jobfair.companies.all%}
               <span>{{company}}</span>
@@ -130,12 +131,14 @@
               <span style="padding-right: 1rem;">,</span>
               {% endif %}
               {% endfor %}
-            </p>
+            </p> -->
             </div>
             </div> 
           {% endfor %}
           <div> <i class="fas fa-angle-double-right"></i><a href="{% url 'jobfairs' %}" class="link-explore" target="_blank">Explore more Job Fairs </a></div>
         </div>
+
+
         <div class="filter-workshop box-activities">
           {% for workshop in workshops reversed%}
           <div class="activities-event">
@@ -154,16 +157,19 @@
           {% endfor %}
           <!-- <div> <i class="fas fa-angle-double-right"></i><a href="#" class="link-explore" target="_blank">Explore more Workshops </a></div> -->
         </div>
+
+
+
         <div class="filter-internship box-activities">
            {% for internship in internships reversed%}
           <div class="activities-event">
             <div class="icon date"><p><i class="fas fa-calendar-alt"></i></p>
-            <p>{% get_formatted_year internship.internship_start_date internship.internship_end_date as date %}
+            <p>{% get_formatted_year internship.start_date internship.end_date as date %}
         {{date}}</p>
             </div>
             <div class="content">
-             <h6>{{internship.internship_title}}</h6>
-             <p>{{internship.internship_desc}}</p>
+             <h6>{{internship.name}}</h6>
+             <p>{{internship.description}}</p>
             </div>
             </div> 
           {% endfor %}

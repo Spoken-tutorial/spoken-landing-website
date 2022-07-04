@@ -1,11 +1,10 @@
 from rest_framework import serializers
-from .models import Jobfair
+from django_ers.models import *
 
 
 class JobFairSerializer(serializers.ModelSerializer):
 
 	class Meta:
-		model = Jobfair
-		#fields = ('name','event_date')
+		model = Event
 		fields = '__all__'
 		depth = 1
