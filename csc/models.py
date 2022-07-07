@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 from django.forms import ChoiceField
+from spokenlogin.models import *
+from model_utils import Choices
 
 class CSC(models.Model):
     CSC_PLAN = [('College Level Subscription','College Level Subscription'),
@@ -41,6 +43,18 @@ class Transaction(models.Model):
 
     class Meta:
         unique_together = ('vle','csc','transcdate')
+
+class Vle_csc_foss(models.Model):
+  PROGRAMME_TYPE_CHOICES = Choices(
+    ('dca', ('DCA Programme')), ('individual', ('Individual Course'))
+    )
+  programme_type = models.CharField(choices=PROGRAMME_TYPE_CHOICES, default=PROGRAMME_TYPE_CHOICES.dca, max_length=100)
+  spoken_foss = models.ForeignKey(SpokenFoss, on_delete=models.PROTECT)
+  
+  created = models.DateField(blank=True,null=True)
+  updated = models.DateField(auto_now = True, null=True)
+  # show = models.BooleanField(default=1)
+
 
 
     
