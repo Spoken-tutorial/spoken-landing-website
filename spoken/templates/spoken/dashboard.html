@@ -82,7 +82,7 @@
 	{% if user.is_authenticated %}
 		<section class="container" id="course-prg">
 		<div class="row">
-      <div class="col-md-9 accordion">
+      <div class="col-md-9 accordion" id="accordionExample">
         {% for sc , values in supercategory.items %}
     <div class="accordion-item">
       <h2 class="accordion-header" id="heading{{sc.split|join:'_'}}">
@@ -91,7 +91,7 @@
       </button>
     </h2>
 
-    <div id="{{sc.split|join:'_'}}" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+    <div id="{{sc.split|join:'_'}}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
       {% for foss_data in values %}
         {% for sub_key, sub_value in foss_data.items %}
       <div class="accordion-body">
@@ -122,7 +122,7 @@
                             </div>
                         </div>
             {% else %}
-            <a class="row">
+            <a class="col">
                         <div class="is-shady my-3 d-flex justify-content-between">{{sub_key}}
                         <div class="col">
                           <span class="progress ">

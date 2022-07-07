@@ -250,16 +250,19 @@ def matrix_factorization(request):
     try:
         model = pickle.load(open('good_model.pkl', 'rb'))
     except FileNotFoundError:
-        model = TutorialRecommender()
-        model.fit(tutorial_matrix,ltm_normalized,len(tuts))
-        with open('good_model.pkl', 'wb') as f:
-            pickle.dump(model, f)
+        model = train(tutorial_matrix,ltm_normalized,len(tuts))
 
     d = json.loads(requests.get('https://spoken-tutorial.org/api/get_top_tuts_foss/').json())
     context['top_tutorials'] = d['top_tutorials'][:5]
     context['top_fosses'] = d['top_foss'][:5]
     if request.user.id in user_tut_dict:
-        pred = model.predict_user(user_tut_dict[request.user.id])
+        try:
+            pred = model.predict_user(user_tut_dict[request.user.id])
+        except:
+            model = train(tutorial_matrix,ltm_normalized,len(tuts))
+            print('new pred')
+            pred = model.predict_user(user_tut_dict[request.user.id])
+
         list_pred = list(pred)
         pred_index = list_pred.index(max(list_pred))
         user_at_that_index = user_tut_dict[request.user.id][pred_index]
@@ -273,6 +276,13 @@ def matrix_factorization(request):
         context['watch_next'] = d['top_tutorials'][0]
 
     return context
+
+def train(tutorial_matrix,ltm_normalized, len_tuts):
+    model = TutorialRecommender()
+    model.fit(tutorial_matrix,ltm_normalized,len_tuts)
+    with open('good_model.pkl', 'wb') as f:
+        pickle.dump(model, f)
+    return model
 
 def softmax(x):
     e_x = np.exp(x)
