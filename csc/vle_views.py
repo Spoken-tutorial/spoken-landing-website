@@ -9,6 +9,9 @@ from spokenlogin.models import *
 from django.http import JsonResponse
 from .vle_forms import *
 
+from django.template.context_processors import csrf
+
+
 class JSONResponseMixin(object):
   """
   A mixin that can be used to render a JSON response.
@@ -43,29 +46,27 @@ class CSCLogin(LoginView):
 
 def vle_dashboard(request):
     context = {}
-    foss_form = FossForm()
-    context['form']=foss_form
-    return render(request, 'csc/vle.html',context)
+    user = request.user
 
+    if request.method == 'POST':
+        form = FossForm(user, request.POST)
+        if form.is_valid():
+            form_data = form.save(commit=False)
+            
 
-# @csrf_exempt
-# def ajax_get_spoken_foss(request):
-#     """Ajax: Get foss according to programme type"""
+            programme_type = form.cleaned_data['programme_type']
+            spoken_foss = form.cleaned_data['spoken_foss']
+            form_data.save()
+            messages.success(request, form_data.spoken_foss+" has been added")
+            return HttpResponseRedirect("/vle/")
 
-#     if request.method == 'POST':
-#         programme_type = request.POST.get('programme_type')
-#         if programme_type == 'dca':
-#             foss = SpokenFoss.objects.filter(csc_dca_programme=True, available_for_jio=True).order_by('foss')
-#         else:
-#             foss = SpokenFoss.objects.filter(csc_dca_programme=False, available_for_jio=True).order_by('foss')
-#         html = '<option value=None> --------- </option>'
-#         if foss:
-#             for fs in foss:
-#                 html += '<option value={0}>{1}</option>'.format(fs.id,
-#                         fs.foss)
-#     return HttpResponse(json.dumps(html),
-#                         content_type='application/json')
-
+        context = {'form':form}
+        return render(request, 'csc/vle.html', context)
+    else:
+        context.update(csrf(request))
+        foss_form = FossForm()
+        context['form']=foss_form
+        return render(request, 'csc/vle.html',context)
 
 
 class GetFossOptionView(JSONResponseMixin, View):

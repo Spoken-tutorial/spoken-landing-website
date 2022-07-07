@@ -27,6 +27,7 @@ class SpFossSuperCategory(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     class Meta(object):
+        db_table = 'creation_fosssupercategory'
         verbose_name = 'FOSS Category'
         verbose_name_plural = 'FOSS Categories'
         ordering = ('name',)
@@ -50,6 +51,7 @@ class SpokenFoss(models.Model):
     csc_dca_programme = models.BooleanField(default=True, help_text ='If unchecked, this foss will not be available for csc-dca programme' )
 
     class Meta(object):
+        db_table = 'creation_fosscategory'
         verbose_name = 'FOSS'
         verbose_name_plural = 'FOSSes'
         ordering = ('foss', )

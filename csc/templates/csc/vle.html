@@ -1,6 +1,6 @@
 {% extends "csc_base.html" %}
 {% load static %}
-{% load crispy_forms_tags %}
+{% load crispy_forms_tags%}
 {% block title%} CSC - VLE Dashboard {% endblock title%}
 
 
@@ -12,17 +12,13 @@ hello
         <form action="" method="post">
             <div class='form-row'>
                 <div class='col-xs-12 form-group required'>
-                <label class='control-label'>Programme Type</label>
-                {% render_field form.programme_type class+="form-control programme_type" tabindex="1" %}
-                {{ form.programme_type.errors }}
+                 {{ form.programme_type | as_crispy_field }}
                 </div>
             </div>
 
             <div class='form-row'>
                 <div class='col-xs-12 form-group required'>
-                <label class='control-label'>Foss</label>
-                {% render_field form.spoken_foss class+="form-control spoken_foss" tabindex="1" %}
-                {{ form.spoken_foss.errors }}
+                 {{ form.spoken_foss | as_crispy_field }}
                 </div>
             </div>
 
@@ -31,13 +27,13 @@ hello
     </div>
 
  </div>
-{% endblock content%}
+{% endblock %}
 
 {% block jsblock %}
 <script>
     
     $(document).ready(function(){
-
+      alert("helo");
 
       if($('.programme_type').val() == '') {
         $('.spoken_foss').val('');
@@ -47,9 +43,8 @@ hello
       }
 
 
-
-
     $('.programme_type').on('change', function(){
+        alert('pg tp');
         programme_type = $(this).val();
         programme_type_name = $(this).children("option").filter(":selected").text()
 

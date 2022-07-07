@@ -6,7 +6,7 @@ from spokenlogin.models import *
 
 
 class FossForm(forms.ModelForm):
-	programme_type = forms.ChoiceField(required=True)
+	programme_type = forms.ChoiceField(required=True, choices=PROGRAMME_TYPE_CHOICES)
 	spoken_foss = forms.ModelMultipleChoiceField(queryset=SpokenFoss.objects.filter(available_for_jio=True))
 
 	class Meta(object):
@@ -15,12 +15,18 @@ class FossForm(forms.ModelForm):
 
 	def __init__(self, *args, **kwargs):
 		print(kwargs,"***")
-		programme_type = kwargs.get('programme_type')
+		initial = ''
+		if 'instance' in kwargs:
+			initial = kwargs["instance"]
+
+		if 'user' in kwargs:
+			user = kwargs["user"]
+			del kwargs["user"]		
+
 
 		super(FossForm, self).__init__(*args, **kwargs)
-		print(programme_type,"@@@@@@@@@@@@@@@@@@")
 
-		self.fields['programme_type'].choices = programme_type
+		self.fields['programme_type'].choices = PROGRAMME_TYPE_CHOICES
 
 		if kwargs and 'data' in kwargs:  
 			if kwargs['data']['programme_type'] != '':
