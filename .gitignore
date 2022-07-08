@@ -14,3 +14,10 @@ static/spoken/images/app*.jpg
 static/spoken/images/nasscom.webp
 venv/
 saml/
+good_model.pkl
+*tutorial.js
+static/spoken/tutorial.js
+*.DS_Store
+node_modules/*
+package-lock.json
+package.json

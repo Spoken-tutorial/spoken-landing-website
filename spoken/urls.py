@@ -9,4 +9,5 @@ urlpatterns = [
     path('tutorial-search/', views.TutorialSearch.as_view(), name= "tutorial_search"),
     path('api/tutorial-search/', api.TutorialSearchAPI.as_view(), name= "tutorial_search_api"),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('update_progress/', views.update_progress, name='update_progress'),
 ]
