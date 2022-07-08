@@ -21,7 +21,7 @@ class Main extends React.Component {
 
   componentDidMount(){
     if (this.props.current_foss && this.props.tutorial && this.props.current_language) {
-    axios.get("http://beta.spoken-tutorial.org/api/st_video_resource/"+window.location.search)
+    axios.get("https://spoken-tutorial.org/api/st_video_resource/"+window.location.search)
           .then(res => {
             this.setState({
               resource: res.data
