@@ -21,14 +21,11 @@ class Main extends React.Component {
 
   componentDidMount(){
     if (this.props.current_foss && this.props.tutorial && this.props.current_language) {
-    axios.get("https://spoken-tutorial.org/api/st_video_resource/"+window.location.search)
+    axios.get("http://beta.spoken-tutorial.org/api/st_video_resource/"+window.location.search)
           .then(res => {
             this.setState({
               resource: res.data
             });
-        console.log("************************************************")
-        console.log(this.state.resource)
-        console.log("************************************************")
         })
 }
   }
@@ -120,7 +117,7 @@ class Main extends React.Component {
              <div class="tags has-addons res">
                 <a href={this.state.resource.assignment} target="_blank">
                 <i class="fas fa-file-download resIcon"></i>
-                <span >Assignments {this.state.resource.hello}</span>
+                <span >Assignments</span>
                 </a>
             </div>:""}
             {this.state.resource.timed_script ?
