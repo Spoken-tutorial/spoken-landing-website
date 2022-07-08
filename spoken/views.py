@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.conf import settings
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import ContactMsg, Products, Nav, Blended_workshops, Jobfair, Internship, Testimonials, MediaTestimonials, Award
 from django_ers.models import *
 from datetime import datetime
@@ -201,7 +201,8 @@ def update_progress(request):
                 print("Uknown user",e)
     except:
         print('improper JSON - skipping to next')
-    return render(request,'spoken/dashboard.html',context)
+    print('Updated')
+    return HttpResponseRedirect('/')
 
 # importing copy module
 import copy
