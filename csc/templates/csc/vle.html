@@ -8,8 +8,30 @@
 {% block content%}
 <div  class="row" style="padding-top:9%; " >
 
-   <section class="col-8 d-flex justify-content-center" >
-       list
+   <section class="col-8 d-flex justify-content-center" >  
+
+        <section  id="fosslist" style="background-color:orangered;">
+        <h2 class="text-center header-m">List Of Fosses Added</h2>
+        <hr>
+        <div id="products" class="row">
+          {% for foss in added_foss%}
+            <div style="">
+                <div>                  
+                    <h4>{{foss.programme_type}}</h4>
+                </div>
+               <!-- <br> -->
+                <p style="text-decoration: none;">{{foss.spoken_foss}}</p>
+
+                <div>
+                  <a href="" class="btn1" target="_blank">Download CD content  <span class="app-i"><i class="fas fa-angle-double-right"></i></span></a>
+                </div>
+
+            </div>
+              {% endfor%}
+        </div>
+        </section>
+
+
    </section>
 
 

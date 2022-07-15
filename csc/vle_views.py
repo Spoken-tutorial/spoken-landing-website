@@ -85,8 +85,11 @@ def vle_dashboard(request):
         return render(request, 'csc/vle.html', context)
     else:
         context.update(csrf(request))
+        added_foss = Vle_csc_foss.objects.all()
+        
         foss_form = FossForm()
         context['form']=foss_form
+        context['added_foss']=added_foss
         return render(request, 'csc/vle.html',context)
 
 @method_decorator(csrf_exempt, name='dispatch')
