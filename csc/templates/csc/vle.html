@@ -6,11 +6,30 @@
 
 
 {% block content%}
- <div style="margin-top: 6.5%; background-color: #FDF5E6;">
-hello
-    <div>
-        <form action="" method="post">
-            <div class='form-row'>
+<div  class="row" style="padding-top:9%; " >
+
+   <section class="col-8 d-flex justify-content-center" >
+       list
+   </section>
+
+
+
+
+
+    <section class="col-4 d-flex justify-content-center" style=" background-color: darkred;">
+
+        {% for message in messages %}
+        <div class="text-center alert {{ message.tags }}" role="alert" style="background-color: yellow;">
+                    {{ message|safe }}
+        </div>
+        {% endfor %}
+
+        <div class="col-lg-8 offset-lg-2">
+            <h1 class="text-left pb-2" style="font-size: 1.5rem;color: #0D47A1;width: 100%;border-bottom: 2px solid #0D47A1;">Add Foss</h1>
+            <form action="{{action}}" method="post" style="width: 100%;">
+              {% csrf_token %}
+
+              <div class='form-row'>
                 <div class='col-xs-12 form-group required'>
                  {{ form.programme_type | as_crispy_field }}
                 </div>
@@ -22,36 +41,45 @@ hello
                 </div>
             </div>
 
-        <button type="submit" class="btn form-btn">Submit</button>       
-        </form> 
-    </div>
+            <button type="submit" id="submit" class="btn " style="background: #0D47A1;color: #fff; font-weight: bold;width: 100%;">Add</button>
+            </form>
 
- </div>
+
+            <hr>
+
+        </div>
+    </section>
+
+</div>
+
+
+ 
 {% endblock %}
 
-{% block jsblock %}
+{% block script %}
 <script>
     
     $(document).ready(function(){
-      alert("helo");
 
-      if($('.programme_type').val() == '') {
-        $('.spoken_foss').val('');
-        $('.spoken_foss').prop('disabled', 'disabled');
+      if($('#id_programme_type').val() == '') {
+        $('#id_spoken_foss').val('');
+        $('#id_spoken_foss').prop('disabled', 'disabled');
         // $('.course').html('<option>---------</option>');
         // $('.course').prop('disabled', 'disabled');
       }
 
 
-    $('.programme_type').on('change', function(){
-        alert('pg tp');
+    $('#id_programme_type').on('change', function(){
         programme_type = $(this).val();
         programme_type_name = $(this).children("option").filter(":selected").text()
 
-        $('.spoken_foss').html('<option>---------</option>');
+                alert(programme_type);
+
+
+        $('#id_spoken_foss').html('<option>---------</option>');
         if(programme_type != ''){
             $.ajax({
-                url: "/get-foss-option/",
+                url: "/csc/get-foss-option/",
                 type: "POST",
                 data: {
                     programme_type: programme_type,
@@ -61,7 +89,9 @@ hello
                 success: function(data) {
                     // loading languages
                     if(data && data['spoken_foss_option']) {
-                    $('.spoken_foss').html(data['spoken_foss_option']);
+                        $('#id_spoken_foss').prop('disabled', false);
+                    $('#id_spoken_foss').html(data['spoken_foss_option']);
+                    
                     }
                  
                 }

@@ -7,7 +7,7 @@ from spokenlogin.models import *
 from model_utils import Choices
 
 PROGRAMME_TYPE_CHOICES = Choices(
-    ('dca', ('DCA Programme')), ('individual', ('Individual Course'))
+    ('', ('-- None --')),('dca', ('DCA Programme')), ('individual', ('Individual Course'))
     )
 
 class CSC(models.Model):
@@ -50,13 +50,15 @@ class Transaction(models.Model):
 
 class Vle_csc_foss(models.Model):
   
-  programme_type = models.CharField(choices=PROGRAMME_TYPE_CHOICES, default=PROGRAMME_TYPE_CHOICES.dca, max_length=100)
-  spoken_foss = models.ForeignKey(SpokenFoss, on_delete=models.PROTECT)
+  programme_type = models.CharField(choices=PROGRAMME_TYPE_CHOICES,  max_length=100)
+  spoken_foss = models.IntegerField()
   
   created = models.DateField(blank=True,null=True)
   updated = models.DateField(auto_now = True, null=True)
-  #vle mapping
-  # show = models.BooleanField(default=1)
+  
+  #unique together
+  class Meta(object):
+    unique_together = (("spoken_foss","programme_type"),)
 
 
 

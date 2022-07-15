@@ -10,6 +10,11 @@ from django.http import JsonResponse
 from .vle_forms import *
 
 from django.template.context_processors import csrf
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from django.contrib import messages
+from django.http import HttpResponse, HttpResponseRedirect
+
 
 
 class JSONResponseMixin(object):
@@ -43,22 +48,38 @@ class CSCLogin(LoginView):
         if is_user_vle(self.request.user): return reverse('csc:vle_dashboard')
         # ToDo if student ; redirect to student dashboard
 
-
+@csrf_exempt
 def vle_dashboard(request):
     context = {}
     user = request.user
 
     if request.method == 'POST':
-        form = FossForm(user, request.POST)
+        form = form = FossForm(request.POST)
+
+        print(form)
+
         if form.is_valid():
-            form_data = form.save(commit=False)
-            
+            print('EEEEEEEEEEEEEEEEEE')
+            # form_data = form.save(commit=False)            
 
             programme_type = form.cleaned_data['programme_type']
+            print(programme_type, "!!!!!!!!!")
+
             spoken_foss = form.cleaned_data['spoken_foss']
-            form_data.save()
-            messages.success(request, form_data.spoken_foss+" has been added")
-            return HttpResponseRedirect("/vle/")
+            for sf in spoken_foss:
+                print(sf.id,"$$$$$$$$$$$$$$$")
+                #check if fossid already exist
+                vfoss=Vle_csc_foss()
+
+                vfoss.programme_type=programme_type
+                vfoss.spoken_foss=sf.id
+                try:
+                    vfoss.save()
+                    messages.success(request, form_data.spoken_foss+" has been added")
+                except:
+                    messages.success(request, "Records already present")
+            
+            return HttpResponseRedirect("/csc/vle/")
 
         context = {'form':form}
         return render(request, 'csc/vle.html', context)
@@ -68,13 +89,14 @@ def vle_dashboard(request):
         context['form']=foss_form
         return render(request, 'csc/vle.html',context)
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class GetFossOptionView(JSONResponseMixin, View):
   def dispatch(self, *args, **kwargs):
     return super(GetFossOptionView, self).dispatch(*args, **kwargs)
 
   def post(self, request, *args, **kwargs):
     programme_type = self.request.POST.get('programme_type')
+    print(programme_type,"*****************")
     context = {}
 
     foss_option = "<option value=''>---------</option>"
@@ -87,6 +109,8 @@ class GetFossOptionView(JSONResponseMixin, View):
 
     for foss in fosses:
       foss_option += "<option value=" + str(foss.id) + ">" + str(foss.foss) + "</option>"
+
+    print(foss_option)
     context = {
       'spoken_foss_option' : foss_option,
     }

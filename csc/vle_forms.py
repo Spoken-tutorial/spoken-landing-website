@@ -1,20 +1,19 @@
-from django.forms import ModelForm, Textarea, TextInput
+from django.forms import Form, ModelForm, Textarea, TextInput
 from django import forms
 
 from csc.models import *
 from spokenlogin.models import *
 
 
-class FossForm(forms.ModelForm):
+class FossForm(forms.Form):
 	programme_type = forms.ChoiceField(required=True, choices=PROGRAMME_TYPE_CHOICES)
 	spoken_foss = forms.ModelMultipleChoiceField(queryset=SpokenFoss.objects.filter(available_for_jio=True))
 
-	class Meta(object):
-		model = Vle_csc_foss
-		exclude = ['created','updated']
+	# class Meta(object):
+	# 	model = Vle_csc_foss
+	# 	exclude = ['created','updated']
 
 	def __init__(self, *args, **kwargs):
-		print(kwargs,"***")
 		initial = ''
 		if 'instance' in kwargs:
 			initial = kwargs["instance"]
@@ -37,5 +36,5 @@ class FossForm(forms.ModelForm):
 			else:
 				fosses = SpokenFoss.objects.filter(csc_dca_programme=False, available_for_jio=True).order_by('foss')
 
-			self.fields['spoken_foss'].queryset = fosses
+			# self.fields['spoken_foss'].queryset = fosses
 			self.fields['spoken_foss'].initial =  kwargs['data']['spoken_foss']
