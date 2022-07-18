@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'csc',
     'django_crontab',
     'django_ers',
+    'cms',
 
 ]
 
