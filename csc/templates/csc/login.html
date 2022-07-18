@@ -1,6 +1,89 @@
-<h2>Log In</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Log In</button>
-</form>
+{% extends 'csc_base.html'%}
+{% block css %}
+<style>
+  .form-signin{
+    width: 100%;
+    max-width:330px;
+    padding: 15px;
+    margin: auto;
+    height: 80vh;
+
+}
+
+.form-floating>label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    padding: 1rem .75rem;
+    pointer-events: none;
+    border: 1px solid transparent;
+    transform-origin: 0 0;
+    transition: opacity .1s ease-in-out,transform .1s ease-in-out;
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="mt-5">
+<main class="form-signin mt-5 py-5" >
+  <div class="mt-5">
+    
+    {% if messages %}
+    <ul style="list-style: none;">
+        {% for message in messages %}
+        <li>
+            <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">
+                {{ message }}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+<div class="mt-5">
+ 
+  {% if form.non_field_errors %}
+  <ul style="list-style: none;" class="px-0">
+      {% for message in form.non_field_errors %}
+      <li>
+          <div class="alert alert-danger" role="alert">
+              {{ message }}
+          </div>
+      </li>
+      {% endfor %}
+  </ul>
+  {% endif %}
+</div>
+  <form method="post" class="mt-5">
+    {% csrf_token %}
+    <!-- <img class="mb-4" src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> -->
+    <h1 class="h3 mb-3 fw-normal text-center">CSC Login</h1>
+
+    <div class="form-floating mb-3">
+      <!-- <input type="email" class="form-control" id="floatingInput" placeholder="Email">
+      <label for="floatingInput">Email address</label> -->
+      {{form.username.errors}}
+      <input placeholder="Emails" type="text" class="form-control" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username">
+      <label for="id_username">Usernames:</label>
+    </div>
+    <div class="form-floating mb-3">
+      <!-- <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+      <label for="floatingPassword">Password</label> -->
+
+      {{form.password.errors}}
+      <input type="password" name="password" autocomplete="current-password" required="" id="id_password" class="form-control" placeholder="Password">
+      <label for="id_password">Password:</label>
+    </div>
+
+  
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+    
+  </form>
+  <div class="mt-5">
+    <a href="{% url 'password_reset' %}" style="color: rgba(00,00,0,0.8);">Forgot Password ?</a>
+  </div>
+  
+</main>
+
+</div>
+{% endblock %}

@@ -38,3 +38,17 @@ class FossForm(forms.Form):
 
 			# self.fields['spoken_foss'].queryset = fosses
 			self.fields['spoken_foss'].initial =  kwargs['data']['spoken_foss']
+
+
+class StudentForm(forms.ModelForm):
+	GENDER = (('f','female'),('m','male'))
+	fname = forms.CharField(max_length=120,label='First Name')
+	lname = forms.CharField(max_length=120,label='Last Name')
+	gender = forms.ChoiceField(choices = GENDER)
+
+	class Meta:
+		model = Student
+		fields = ['gender','dob','phone','edu_qualification','state','city','district','pincode','address']
+		labels = {
+			'fname' :'First Nameing'
+		}

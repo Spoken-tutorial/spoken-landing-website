@@ -30,7 +30,8 @@ urlpatterns = [
     url(r'^$', spoken_views.home, name='home'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('dashboard/', spoken_views.dashboard, name='dashboard'),
-    path('login/', auth_views.LoginView.as_view(template_name='spokenlogin/login.html',redirect_authenticated_user=True), name='login'),
+    path('login/', auth_views.LoginView.as_view(template_name='spokenlogin/login.html',redirect_authenticated_user=True), name='login_other'),
     # path('csc/', include('csc.vle_urls')),
     path('csc/', include('csc.vle_urls', namespace='csc')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

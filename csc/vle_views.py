@@ -1,3 +1,5 @@
+import email
+from django.template import context
 from django.urls import reverse
 from re import template
 from django.contrib.auth.views import LoginView
@@ -14,6 +16,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
+from .decorators import *
+
+from django.views.generic.edit import CreateView
 
 
 
@@ -46,6 +55,7 @@ class CSCLogin(LoginView):
 
     def get_redirect_url(self):
         if is_user_vle(self.request.user): return reverse('csc:vle_dashboard')
+        if is_user_student(self.request.user): return reverse('csc:vle_dashboard')
         # ToDo if student ; redirect to student dashboard
 
 @csrf_exempt
@@ -120,3 +130,112 @@ class GetFossOptionView(JSONResponseMixin, View):
     return self.render_to_json_response(context)
 
 
+@is_vle
+def student_list(request):
+  context={}
+  vles = VLE.objects.filter(user=request.user)
+  students = []
+  dca = Vle_csc_foss.objects.filter(programme_type='dca').values_list('spoken_foss')
+  individual = Vle_csc_foss.objects.filter(programme_type='individual').values_list('spoken_foss')
+  fdca = SpokenFoss.objects.filter(id__in=[x[0] for x in dca])
+  findividual = SpokenFoss.objects.filter(id__in=[x[0] for x in individual])
+  context['foss_dca'] = fdca
+  context['foss_individual'] = findividual
+  for vle in vles:
+    s = Student.objects.filter(vle_id=vle.id)
+    for item in s:
+      students.append(item)
+  context['students'] = students
+  return render(request,'csc/students_list.html',context)
+
+@csrf_exempt
+def assign_foss(request):
+  print(request.POST)
+  vle = VLE.objects.get(user=request.user)
+  students = request.POST.getlist('student[]')
+  fosses = request.POST.getlist('foss[]')
+  f = SpokenFoss.objects.filter(id__in=[int(x) for x in fosses]).values_list('foss')
+  foss_name = ', '.join([x[0] for x in f])
+  
+  print(f"students".ljust(40,'*')+f"students")
+  print(f"foss".ljust(40,'*')+f"foss")
+  for student in students:
+    for foss in fosses:
+      try:
+        f = Vle_csc_foss.objects.get(spoken_foss=int(foss),vle=vle)
+        s = Student.objects.get(id=int(student))
+        Student_Foss.objects.create(student=s,csc_foss=f)
+      except Exception as e:
+        print(e)
+    
+  return JsonResponse({'foss':foss_name,'student_count':len(students)})
+
+
+def student_profile(request,id):
+  context={}
+  student = Student.objects.get(id=id)
+  initial={'fname': student.user.first_name , 'lname': student.user.last_name, 'state' :student.state}
+  form = StudentForm(instance=student,initial=initial)
+  context['form'] = form
+  if request.method == 'POST':
+    initial={'fname': student.user.first_name , 'lname': student.user.last_name,'state':student.state}
+    form = StudentForm(request.POST,instance=student,initial=initial)
+    if form.is_valid():
+      user = User.objects.get(email=student.user.email)
+      user.first_name = form.cleaned_data['fname']
+      user.last_name = form.cleaned_data['lname']
+      user.save()
+      form.save()
+      messages.add_message(request, messages.SUCCESS, 'Student data updated. Refresh for viewing updated data.')
+  
+  dca_foss = []
+  individual_foss = []
+  sf = Student_Foss.objects.filter(student=student)
+  for item in sf:
+    if item.csc_foss.programme_type == 'dca':
+      dca_foss.append(item.csc_foss.spoken_foss)
+    else:
+      individual_foss.append(item.csc_foss.spoken_foss)
+
+  context['dca_foss'] = dca_foss
+  context['individual_foss'] = individual_foss
+  return render(request,'csc/student_profile.html',context)
+
+
+def courses(request):
+  context = {}
+  vles = VLE.objects.filter(user=request.user)
+  for vle in vles:
+    dca_csc_foss = Vle_csc_foss.objects.filter(vle=vle,programme_type='dca')
+    individual_csc_foss = Vle_csc_foss.objects.filter(vle=vle,programme_type='individual')
+    dca_foss = {}
+    for item in dca_csc_foss:
+      students = Student_Foss.objects.filter(csc_foss=item.id).count()      
+      dca_foss[item.spoken_foss.foss] = {'total_students':students}
+
+    individual_foss = {}
+    for item in individual_csc_foss:
+      students = Student_Foss.objects.filter(csc_foss=item.id).count()
+      individual_foss[item.spoken_foss.foss] = {'total_students':students}
+
+    context['dca_foss'] = dca_foss
+    context['individual_foss'] = individual_foss
+
+  return render(request,'csc/courses.html',context)
+
+
+@csrf_exempt
+def get_course_stats(request):
+  vles = VLE.objects.filter(user=request.user)
+  stats = {}
+  fosses = []
+  enrollment = []
+  for vle in vles:
+    csc_foss = Vle_csc_foss.objects.filter(vle=vle)
+    for item in csc_foss:
+      foss = item.spoken_foss.foss
+      stats[foss] = Student_Foss.objects.filter(csc_foss=item).count()
+      fosses.append(foss)
+      enrollment.append(Student_Foss.objects.filter(csc_foss=item).count())
+
+  return JsonResponse({'stats':stats,'fosses':fosses,'enrollment':enrollment,'len':len(fosses)})

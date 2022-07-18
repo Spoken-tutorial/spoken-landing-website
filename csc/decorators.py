@@ -1,7 +1,7 @@
 from email import message
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
-from utils import *
+from .utils import *
 
 # decorator 
 def is_vle(view_func):

@@ -10,6 +10,7 @@ from .models import CSC
 from django.db.models import Q
 # import utils as u
 from django.core.mail import send_mail
+from django.contrib.auth.models import Group
 
 def update_vle_data(): #CRON TASK
     url = getattr(settings, "URL_FETCH_VLE", "http://exam.cscacademy.org/shareiitbombayspokentutorial")
@@ -66,6 +67,7 @@ def update_vle_data(): #CRON TASK
                         address=item.get('address',''),pincode=item.get('pincode',''),plan=item.get('plan',''),
                         activation_status=1
                     )
+                    csc = CSC.objects.get(csc_id=item.get('csc_id'))
                     print(f"csc - {item['csc_id']} created")
                     csc_created.append(f"{item['csc_id']} ({item['email']})")
                     add_vle(item,csc)
@@ -148,6 +150,8 @@ def add_vle(item,csc):
         vle = VLE.objects.create(
             csc=csc,user=user,phone=item['phone'],status=1
         )
+        vle_group = Group.objects.get(name='VLE')
+        vle_group.user_set.add(user)
         print(f"created vle .... {user}")
     except IntegrityError as e: 
         print(f"vle already exists ....")
