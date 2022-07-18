@@ -7,7 +7,7 @@ from spokenlogin.models import *
 
 class FossForm(forms.Form):
 	programme_type = forms.ChoiceField(required=True, choices=PROGRAMME_TYPE_CHOICES)
-	spoken_foss = forms.ModelMultipleChoiceField(queryset=SpokenFoss.objects.filter(available_for_jio=True))
+	spoken_foss = forms.ModelMultipleChoiceField(queryset=FossCategory.objects.filter(available_for_jio=True))
 
 	# class Meta(object):
 	# 	model = Vle_csc_foss

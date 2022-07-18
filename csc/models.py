@@ -7,6 +7,7 @@ from spokenlogin.models import *
 from model_utils import Choices
 from cms.models import State, District, City
 
+
 PROGRAMME_TYPE_CHOICES = Choices(
     ('', ('-- None --')),('dca', ('DCA Programme')), ('individual', ('Individual Course'))
     )
@@ -49,20 +50,6 @@ class Transaction(models.Model):
     class Meta:
         unique_together = ('vle','csc','transcdate')
 
-class Vle_csc_foss(models.Model):
-  
-  programme_type = models.CharField(choices=PROGRAMME_TYPE_CHOICES,  max_length=100)
-  spoken_foss = models.IntegerField()
-  
-  created = models.DateField(blank=True,null=True)
-  updated = models.DateField(auto_now = True, null=True)
-  vle = models.ForeignKey(VLE,on_delete=models.CASCADE)
-  
-  #unique together
-  class Meta(object):
-    unique_together = (("spoken_foss","programme_type"),)
-  def __str__(self):
-      return self.spoken_foss.foss
 
 class Student(models.Model):
     student_id = models.CharField(max_length=255)
@@ -81,6 +68,9 @@ class Student(models.Model):
     pincode = models.CharField(max_length=6,blank=True) 
     address = models.CharField(max_length=255,blank=True)
     date_of_registration = models.DateField()
+
+
+
 
 class FossSuperCategory(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -117,7 +107,21 @@ class FossCategory(models.Model):
     def __str__(self):
         return self.foss
     
-    
+class Vle_csc_foss(models.Model):
+  
+  programme_type = models.CharField(choices=PROGRAMME_TYPE_CHOICES,  max_length=100)
+#   spoken_foss = models.IntegerField()
+  spoken_foss = models.ForeignKey(FossCategory,on_delete=models.CASCADE)
+  created = models.DateField(blank=True,null=True)
+  updated = models.DateField(auto_now = True, null=True)
+  vle = models.ForeignKey(VLE,on_delete=models.CASCADE)
+  
+  #unique together
+  class Meta(object):
+    unique_together = (("spoken_foss","programme_type"),)
+  def __str__(self):
+      return self.spoken_foss.foss
+         
 class Student_Foss(models.Model):
     student = models.ForeignKey(Student,on_delete=models.CASCADE)
     csc_foss = models.ForeignKey(Vle_csc_foss,on_delete=models.CASCADE)

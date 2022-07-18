@@ -2,11 +2,58 @@
 {% load static %}
 {% load crispy_forms_tags%}
 {% block title%} CSC - VLE Dashboard {% endblock title%}
+{% block css %}
+<style>
+.card-header{
+  background-color:#013A6B!important;
+  color: #fff;
+}
+</style>
 
+{% endblock %}
 
 
 {% block content%}
-<div  class="row" style="padding-top:9%; " >
+<div class="container" style="padding-top:9%;">
+  <div class="row">
+    <div class="col-6 px-5">
+      <div>
+        {% for message in messages %}
+        <div>
+          <div class="alert alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{% endif %}{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}success{% endif %}" role="alert">
+            {{ message|safe }}
+        </div>
+        {% endfor %}
+
+      </div>
+      <div class="card">
+        <div class="card-header"> Add Foss</div>
+        <div class="card-body">
+          <form action="{{action}}" method="post">
+            {% csrf_token %}
+            <!-- <div class='form-row'> -->
+              <div class='mb-3' required>
+               {{ form.programme_type | as_crispy_field }}
+              </div>
+
+        
+              <div class='mb-3' required>
+               {{ form.spoken_foss | as_crispy_field }}
+              </div>
+          
+          <button type="submit" class="btn" style="background: #013A6B;color: #fff; font-weight: bold;">Add</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+  
+    </div>
+
+  </div>
+</div>
+<div  class="row" style="padding-top:9%; ">
+  
 
    <section class="col-8 d-flex justify-content-center" >  
 
@@ -38,39 +85,7 @@
 
 
 
-    <section class="col-4 d-flex justify-content-center" style=" background-color: darkred;">
-
-        {% for message in messages %}
-        <div class="text-center alert {{ message.tags }}" role="alert" style="background-color: yellow;">
-                    {{ message|safe }}
-        </div>
-        {% endfor %}
-
-        <div class="col-lg-8 offset-lg-2">
-            <h1 class="text-left pb-2" style="font-size: 1.5rem;color: #0D47A1;width: 100%;border-bottom: 2px solid #0D47A1;">Add Foss</h1>
-            <form action="{{action}}" method="post" style="width: 100%;">
-              {% csrf_token %}
-
-              <div class='form-row'>
-                <div class='col-xs-12 form-group required'>
-                 {{ form.programme_type | as_crispy_field }}
-                </div>
-            </div>
-
-            <div class='form-row'>
-                <div class='col-xs-12 form-group required'>
-                 {{ form.spoken_foss | as_crispy_field }}
-                </div>
-            </div>
-
-            <button type="submit" id="submit" class="btn " style="background: #0D47A1;color: #fff; font-weight: bold;width: 100%;">Add</button>
-            </form>
-
-
-            <hr>
-
-        </div>
-    </section>
+    
 
 </div>
 

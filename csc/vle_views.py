@@ -65,32 +65,27 @@ def vle_dashboard(request):
 
     if request.method == 'POST':
         form = form = FossForm(request.POST)
-
-        print(form)
-
         if form.is_valid():
-            print('EEEEEEEEEEEEEEEEEE')
-            # form_data = form.save(commit=False)            
-
             programme_type = form.cleaned_data['programme_type']
-            print(programme_type, "!!!!!!!!!")
-
             spoken_foss = form.cleaned_data['spoken_foss']
+            vle = VLE.objects.filter(user=request.user).first()
             for sf in spoken_foss:
-                print(sf.id,"$$$$$$$$$$$$$$$")
                 #check if fossid already exist
                 vfoss=Vle_csc_foss()
 
                 vfoss.programme_type=programme_type
-                vfoss.spoken_foss=sf.id
+                # vfoss.spoken_foss=sf.id
+                vfoss.spoken_foss=sf
+                vfoss.vle=vle
                 try:
                     vfoss.save()
-                    messages.success(request, form_data.spoken_foss+" has been added")
-                except:
-                    messages.success(request, "Records already present")
+                    messages.success(request, sf.foss+" has been added.")
+                except Exception as e:
+                    print(f"exceptioon - {e}")
+                    messages.error(request, "Records already present.")
             
             return HttpResponseRedirect("/csc/vle/")
-
+        
         context = {'form':form}
         return render(request, 'csc/vle.html', context)
     else:
@@ -116,9 +111,9 @@ class GetFossOptionView(JSONResponseMixin, View):
 
 
     if programme_type == 'dca':
-        fosses = SpokenFoss.objects.filter(csc_dca_programme=True, available_for_jio=True).order_by('foss')
+        fosses = FossCategory.objects.filter(csc_dca_programme=True, available_for_jio=True).order_by('foss')
     else:
-        fosses = SpokenFoss.objects.filter(csc_dca_programme=False, available_for_jio=True).order_by('foss')
+        fosses = FossCategory.objects.filter(csc_dca_programme=False, available_for_jio=True).order_by('foss')
 
     for foss in fosses:
       foss_option += "<option value=" + str(foss.id) + ">" + str(foss.foss) + "</option>"
