@@ -52,3 +52,11 @@ class StudentForm(forms.ModelForm):
 		labels = {
 			'fname' :'First Nameing'
 		}
+
+
+class InvigilatorForm(forms.Form):
+	email = forms.EmailField()
+	fname = forms.CharField(max_length=120,label='First Name')
+	lname = forms.CharField(max_length=120,label='Last Name')
+	phone = forms.CharField(max_length=32,label='Contact Number')
+	

@@ -1,0 +1,57 @@
+{% extends 'csc_base.html'%}
+{% load crispy_forms_tags %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+<style>
+    .form-group{
+        margin-bottom: 16px;
+    }
+    .card-header{
+  background-color:#013A6B!important;
+  color: #fff;
+}
+</style>
+{% endblock css %}
+
+{% block content %}
+
+<div class="container mt-5 pt-5">
+    <div class="row my-5">
+        <div class="col-4">
+            <div class="card">
+                <div class="card-header">
+                  Edit Test
+                </div>
+                <div class="card-body">
+                    <form method="post">{% csrf_token %}
+                        {{ form | crispy }}
+                        <input type="submit" value="Update" class="btn btn-success">
+                    </form>
+                </div>
+              </div>
+            
+        </div>
+        <div class="col-6">
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        // $('#example').DataTable(); 
+    });
+  </script>
+{% endblock %}

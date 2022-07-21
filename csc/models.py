@@ -1,5 +1,7 @@
 
 from __future__ import unicode_literals
+from operator import mod
+from statistics import mode
 from django.db import models
 from django.contrib.auth.models import User
 from django.forms import ChoiceField
@@ -27,6 +29,9 @@ class CSC(models.Model):
     plan = models.CharField(choices=CSC_PLAN,max_length=100)
     activation_status = models.BooleanField(default=True) # If the csc is inactivated for some reason ; payment not done
 
+    def __str__(self):
+        
+        return f"{self.city},{self.district}"
     
 
 class VLE(models.Model):
@@ -37,6 +42,10 @@ class VLE(models.Model):
 
     class Meta:
         unique_together = ('csc','user')
+
+    def __str__(self):
+        return f"{self.user.first_name.title()} {self.user.last_name.title()}"
+
     
 class Transaction(models.Model):
     TRANSACTION_TENURE = [('quarterly','quarterly'),('biannually','biannually'),('annually','annually')]
@@ -128,3 +137,44 @@ class Student_Foss(models.Model):
 
     class Meta:
         unique_together = ('student','csc_foss')
+
+
+class Invigilator(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    phone = models.CharField(max_length=32)
+    vle = models.ManyToManyField(VLE)
+    added_by = models.ForeignKey(User,on_delete=models.CASCADE,related_name='added_by_user')
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.first_name} {self.user.last_name} - {self.user.email}"
+
+class Test(models.Model):
+    foss = models.ForeignKey(FossCategory,on_delete=models.CASCADE)
+    tdate = models.DateField()
+    ttime = models.TimeField()
+    # invigilator = models.ManyToManyField(Invigilator,blank=True,null=True)
+    publish = models.BooleanField()
+    slug = models.SlugField(max_length=40)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    vle = models.ForeignKey(VLE,on_delete=models.CASCADE)
+    note_student = models.TextField(blank=True,null=True)
+    note_invigilator = models.TextField(blank=True,null=True)
+    test_name = models.CharField(max_length=252,blank=True,null=True)
+
+    def get_absolute_url(self):
+        return f"{self.foss}"
+
+    def __str__(self):
+        if self.test_name:
+            return self.test_name
+        else:
+            return f"{self.foss} - {self.tdate}"
+
+class InvigilationRequest(models.Model):
+    invigilator = models.ForeignKey(Invigilator,on_delete=models.CASCADE)
+    test = models.ForeignKey(Test,on_delete=models.CASCADE)
+    status = models.IntegerField() #0-pending, 1-accepted, 2-rejected
+    

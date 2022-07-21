@@ -1,0 +1,146 @@
+{% extends 'csc_base.html'%}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+<style>
+    .fa-check-circle{
+        color: green;
+    }
+    .fa-times-circle,.fa-trash-alt{
+        color: maroon;
+    }
+    #example_length, #example_paginate{
+        display: none;
+    }
+    .fa-edit{
+        color: midnightblue;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="mt-5 pt-5">
+
+    <div class="container mt-5 py-5">
+        <div>
+            <!-- <button type="button" class="btn btn-success">Create Test </button> -->
+            <a class="btn btn-success" href="{% url 'csc:add_test' %}" role="button">Create Test</a>
+        </div>
+        <table class="table my-5" id="example">
+            
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th scope="col">FOSS</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Time</th>
+                        <th scope="col">Published</th>
+                        <th scope="col">Delete</th>
+                        <th scope="col">Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for test in tests %}
+                    <tr>
+                        <td>
+                            {% if test.test_name %}
+                            <span>{{test.test_name | title}}</span>
+                            {% else %}
+                            <span>{{test.foss | title}} Test</span>
+                            {% endif %}
+                        </td>
+                        <td>{{test.foss | title }}</td>
+                        <td>{{test.tdate}}</td>
+                        <td>{{test.ttime}}</td>
+                        <td>
+                            {% if test.publish %}
+                                <i class="far fa-check-circle"></i>
+                            {% else %}    
+                            <i class="far fa-times-circle"></i>
+                            {% endif %}
+                        </td> 
+                        <td><a href="{% url 'csc:delete_test' test.id %}"><i class="far fa-trash-alt"></i></a></td>
+                        <td><a href="{% url 'csc:update_test' test.id %}"><i class="far fa-edit"></i></a></td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+        </table>
+       
+    </div>
+    <div>
+        {% if is_paginated %}
+        {% include "_pagination.html" %}
+    {% endif %}
+    </div>
+    
+    
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> -->
+
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable(); 
+});
+
+
+
+function assign_foss(){      
+    var checkStudent = [];
+    var checkFoss = [];
+    $('input[name=check_student]').each(function () {
+    if(this.checked){
+        console.log(this);
+        checkStudent.push(this.value);
+    }     
+    });
+    if(checkStudent.length==0){
+        alert("Please select students to assign FOSS");
+    }else{
+        $('input[name=check_foss]').each(function () {
+        if(this.checked){
+        console.log(this);
+        checkFoss.push(this.value);
+    }     
+    });
+    if(checkFoss.length==0){
+        alert("Please select FOSS");
+    }else{
+        data = {student:checkStudent,foss:checkFoss}
+    url = '/csc/assign_foss/'
+
+    $.ajax({
+    url : url,
+    type: "POST",
+    data : data,
+    success: function(data, textStatus, jqXHR)
+    {
+        console.log(data);
+        console.log(data['foss']);
+        console.log(data);
+        alert('FOSS assigned successfully.\nFOSS assigned :' + data['foss'] +'\nTotal Students : '+ data['student_count'])
+    },
+    error: function (jqXHR, textStatus, errorThrown)
+    {
+        alert('e')
+    }
+});
+    }  
+}
+}
+  </script>
+{% endblock %}
+
+
+
+

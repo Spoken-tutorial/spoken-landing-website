@@ -1,0 +1,142 @@
+{% extends 'csc_base.html' %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+<style>
+    
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="container mt-5 py-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-3"><strong>Test Invigilation Requests</strong></div>
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                  <button class="nav-link active" id="nav-pending-tab" data-bs-toggle="tab" data-bs-target="#nav-pending" type="button" role="tab" aria-controls="nav-pending" aria-selected="true">Pending</button>
+                  <button class="nav-link" id="nav-accepted-tab" data-bs-toggle="tab" data-bs-target="#nav-accepted" type="button" role="tab" aria-controls="nav-accepted" aria-selected="false">Accepted</button>
+                  <button class="nav-link" id="nav-rejected-tab" data-bs-toggle="tab" data-bs-target="#nav-rejected" type="button" role="tab" aria-controls="nav-rejected" aria-selected="false">Rejected</button>
+                  <button class="nav-link" id="nav-all-tab" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab" aria-controls="nav-all" aria-selected="false">All</button>
+                </div>
+              </nav>
+              <div class="tab-content mt-5" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-pending" role="tabpanel" aria-labelledby="nav-pending-tab">
+                  <div>
+                    <table class="table" id='tb_pending'>
+                      <thead>
+                        <tr>
+                          <th scope="col">Test</th>
+                          <th scope="col">Date & Time</th>
+                          <th scope="col">VLE</th>
+                          <th scope="col">CSC</th>
+                          <th scope="col"></th>
+                          <th scope="col"></th>                          
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for item in pending %}
+                        <tr>
+                          <td>{% if item.test.test_name %}
+                            <span>{{item.test.test_name | title}}</span>
+                            {% else %}
+                            <span>{{item.test.foss | title}} Test</span>
+                            {% endif %}</td>
+                            
+                            <td>{{ item.test.tdate }},{{ item.test.ttime }}</td>
+                            <td>{{ item.test.vle }}</td>
+                            <td>{{ item.test.vle.csc }}</td>
+                            <td><a class="btn btn-sm btn-success" href="{% url 'csc:review_invigilation_request' %}?review=1&item={{item.id}}" role="button">Accept</a></td>
+                            <td><a class="btn btn-sm btn-danger" href="{% url 'csc:review_invigilation_request' %}?review=2&item={{item.id}}" role="button">Reject</a></td>
+                            
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="nav-accepted" role="tabpanel" aria-labelledby="nav-accepted-tab">
+                  <table class="table" id="tb_accepted">
+                    <thead>
+                      <tr>
+                        <th scope="col">Test</th>
+                        <th scope="col">Date & Time</th>
+                        <th scope="col">VLE</th>
+                        <th scope="col">CSC</th>
+                        <!-- <th scope="col"></th> -->
+                        <th scope="col"></th>                          
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for item in accepted %}
+                      <tr>
+                        <td>{% if item.test.test_name %}
+                          <span>{{item.test.test_name | title}}</span>
+                          {% else %}
+                          <span>{{item.test.foss | title}} Test</span>
+                          {% endif %}</td>
+                          <td>{{ item.test.tdate }},{{ item.test.ttime }}</td>
+                          <td>{{ item.test.vle }}</td>
+                          <td>{{ item.test.vle.csc }}</td>
+                          <!-- <td><a class="btn btn-sm btn-success" href="{% url 'csc:review_invigilation_request' %}?review=1&item={{item.id}}" role="button">Accept</a></td> -->
+                          <td><a class="btn btn-sm btn-danger" href="{% url 'csc:review_invigilation_request' %}?review=2&item={{item.id}}" role="button">Reject</a></td>
+                          <td></td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                <div class="tab-pane fade" id="nav-rejected" role="tabpanel" aria-labelledby="nav-rejected-tab">
+                  <table class="table" id="tb_rejected">
+                    <thead>
+                      <tr>
+                        <th scope="col">Test</th>
+                        <th scope="col">Date & Time</th>
+                        <th scope="col">VLE</th>
+                        <th scope="col">CSC</th>
+                        <th scope="col"></th>
+                        <!-- <th scope="col"></th>                           -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for item in rejected %}
+                      <tr>
+                        <td>{% if item.test.test_name %}
+                          <span>{{item.test.test_name | title}}</span>
+                          {% else %}
+                          <span>{{item.test.foss | title}} Test</span>
+                          {% endif %}</td>
+                          <td>{{ item.test.tdate }},{{ item.test.ttime }}</td>
+                          <td>{{ item.test.vle }}</td>
+                          <td>{{ item.test.vle.csc }}</td>
+                          <td><a class="btn btn-sm btn-success" href="{% url 'csc:review_invigilation_request' %}?review=1&item={{item.id}}" role="button">Accept</a></td>
+                          <!-- <td><a class="btn btn-sm btn-danger" href="{% url 'csc:review_invigilation_request' %}?review=0" role="button">Reject</a></td> -->
+                          
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                <div class="tab-pane fade" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
+                  
+                </div>
+              </div>
+        </div>
+    
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+<script>
+    $(document).ready(function () {
+      $('#tb_pending').DataTable(); 
+      $('#tb_accepted').DataTable(); 
+      $('#tb_rejected').DataTable(); 
+    });
+
+
+</script>
+{% endblock %}

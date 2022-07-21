@@ -1,4 +1,4 @@
-import email
+from django.db import IntegrityError
 from django.template import context
 from django.urls import reverse
 from re import template
@@ -8,7 +8,7 @@ from django.shortcuts import render
 from .utils import *
 from csc.models import *
 from spokenlogin.models import *
-from django.http import JsonResponse
+from django.http import JsonResponse, request
 from .vle_forms import *
 
 from django.template.context_processors import csrf
@@ -23,8 +23,13 @@ from django.contrib.auth.decorators import login_required
 from .decorators import *
 
 from django.views.generic.edit import CreateView
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.urls import reverse_lazy
 
-
+import string
+import random
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import Group
 
 class JSONResponseMixin(object):
   """
@@ -234,3 +239,248 @@ def get_course_stats(request):
       enrollment.append(Student_Foss.objects.filter(csc_foss=item).count())
 
   return JsonResponse({'stats':stats,'fosses':fosses,'enrollment':enrollment,'len':len(fosses)})
+
+
+# class TestCreateView(CreateView):
+#   model = Test
+#   fields = '__all__'
+  
+#   def get_form(self, *args, **kwargs):
+#     form = super(TestCreateView, self).get_form(*args, **kwargs)
+#     vle = VLE.objects.filter(user=self.request.user).first()
+#     vle_foss = Vle_csc_foss.objects.filter(vle=vle)
+#     fosses = FossCategory.objects.filter(id__in=[x.spoken_foss.id for x in vle_foss])
+#     form.fields['foss'].queryset = fosses
+#     return form
+
+#   def get_success_url(self):
+#     # return self.get_absolute_url()
+#     return '/'
+
+class TestListView(ListView):
+  model = Test
+  template_name = 'csc/test_list.html'
+  context_object_name = 'tests'
+  paginate_by = 25
+
+  def get_context_data(self, **kwargs):
+    context = super(TestListView, self).get_context_data(**kwargs)
+    vle = VLE.objects.filter(user = self.request.user).first()
+    tests = Test.objects.filter(vle = vle)
+    page = self.request.GET.get('page')
+    paginator = Paginator(tests, self.paginate_by)
+    try:
+      tests = paginator.page(page)
+    except PageNotAnInteger:
+      tests = paginator.page(1)
+    except EmptyPage:
+      tests = paginator.page(paginator.num_pages)
+    context['tests'] = tests
+    return context
+
+
+@method_decorator(login_required, name='dispatch')
+class TestCreateView(CreateView):
+  model = Test
+  template_name = 'csc/test_form.html'
+  fields = ['test_name','foss','tdate','ttime','note_student','note_invigilator','publish']
+  success_url = reverse_lazy('csc:list_test')
+
+  def get_form(self, *args, **kwargs):
+      form = super(TestCreateView, self).get_form(*args, **kwargs)
+      vle = VLE.objects.filter(user=self.request.user).first()
+      vle_foss = Vle_csc_foss.objects.filter(vle=vle)
+      fosses = FossCategory.objects.filter(id__in=[x.spoken_foss.id for x in vle_foss])
+      form.fields['foss'].queryset = fosses
+      # form.fields['invi'] = forms.IntegerField()
+      return form
+
+  def get_form_kwargs(self):
+    kwargs = super(TestCreateView, self).get_form_kwargs()
+    # kwargs['invi'] = self.request.user # pass the 'user' in kwargs
+    return kwargs
+
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    # user = self.request.user
+    # context["ticket_list"] = user.ticket_set.all()
+    vle = VLE.objects.filter(user=self.request.user).first()
+    context['tests'] = Test.objects.filter(vle=vle)
+    context['invigilators'] = Invigilator.objects.filter(vle=vle)
+    return context
+  
+  def form_valid(self, form):
+    vle = VLE.objects.filter(user=self.request.user).first()
+    form.instance.vle = vle 
+    print(form)
+
+    messages.success(self.request,"Test added successfully.")
+    return super().form_valid(form)
+
+@method_decorator(login_required, name='dispatch')
+class TestDeleteView(DeleteView):
+  model = Test
+  template_name = 'csc/test_confirm_delete.html'
+  success_url = reverse_lazy('csc:list_test')
+
+  def form_valid(self, form):
+    print('form is valid')
+
+@method_decorator(login_required, name='dispatch')
+class TestDetailView(DetailView):
+  model = Test
+  template_name = 'csc/test_detail.html'
+  context_object_name = 'test'
+  
+
+@method_decorator(login_required, name='dispatch')
+class TestUpdateView(UpdateView):
+  model = Test
+  template_name = 'csc/test_update_form.html'
+  context_object_name = 'test'
+  fields = ('foss', 'tdate', 'ttime', 'note_student', 'note_invigilator', 'test_name' )
+
+  def get_success_url(self):
+    messages.success(self.request,"Test updated successfully.")
+    return reverse_lazy('csc:detail_test', kwargs={'pk': self.object.id})
+
+  def get_form(self, *args, **kwargs):
+      form = super(TestUpdateView, self).get_form(*args, **kwargs)
+      vle = VLE.objects.filter(user=self.request.user).first()
+      vle_foss = Vle_csc_foss.objects.filter(vle=vle)
+      fosses = FossCategory.objects.filter(id__in=[x.spoken_foss.id for x in vle_foss])
+      form.fields['foss'].queryset = fosses
+      return form
+
+def invigilators(request):
+  context = {}
+  form = InvigilatorForm()
+  if request.method == 'POST':
+    form = InvigilatorForm(request.POST)
+    if form.is_valid():
+      email = form.cleaned_data['email']
+      fname = form.cleaned_data['fname']
+      lname = form.cleaned_data['lname']
+      phone = form.cleaned_data['phone']
+      try:
+        user = User.objects.create(
+                            username=email,first_name=fname,last_name=lname,
+                            email=email,is_staff=0,is_active=1
+                        )
+        password = ''.join([ random.choice(string.ascii_letters+string.digits) for x in range(8)])
+        enc_password = make_password(password)
+        user.password = enc_password
+        user.save()
+        invigilator=Invigilator.objects.create(user=user,phone=phone,added_by=request.user)
+        group = Group.objects.get(name='INVIGILATOR')
+        group.user_set.add(user)
+        messages.success(request,"Invigilator added successfully.")
+      except Exception as e:  
+        print(f"Exception while creating invigilator user: {e}")
+        messages.error(request,"Error occurred while adding invigilator.")
+      
+      return render(request, 'invigilators.html', {'form': form})
+
+  context['form'] = form
+  vle = VLE.objects.filter(user=request.user).first()
+  context['invigilators']  = Invigilator.objects.filter(vle=vle)
+  return render(request, 'csc/invigilators.html',context)
+
+@csrf_exempt
+def verify_invigilator_email(request):
+  USER_AND_INVIGIlATOR = 1
+  USER_NOT_INVIGIlATOR = 2
+  NOT_USER = 0
+  MULTIPLE_USER = 3
+  USER_AND_OWN_INVIGIlATOR = 4
+  data = {}
+  data['status'] = 0
+  email = request.GET.get('email','')
+  if email:
+    try:
+      user = User.objects.get(email=email)
+      is_invigilator = Invigilator.objects.filter(user=user)
+      invigilator_role = is_user_invigilator(user)
+      if (is_invigilator or invigilator_role):
+        vle = VLE.objects.filter(user=request.user)[0]
+        invigilator = is_invigilator[0]
+        if(vle in invigilator.vle.all()):
+          data['status'] = USER_AND_OWN_INVIGIlATOR
+          data['fname'] = user.first_name
+          data['lname'] = user.last_name
+          data['phone'] = is_invigilator[0].phone
+        else:
+          data['status'] = USER_AND_INVIGIlATOR
+          data['fname'] = user.first_name
+          data['lname'] = user.last_name
+          data['phone'] = is_invigilator[0].phone
+
+        return JsonResponse(data)
+      else:
+        data['status'] = USER_NOT_INVIGIlATOR
+        data['fname'] = user.first_name
+        data['lname'] = user.last_name
+        # data['fname'] = user.first_name
+    except User.MultipleObjectsReturned as e:
+      print(f"User.MultipleObjectsReturne : {e}")
+      data['status'] = MULTIPLE_USER
+    except User.DoesNotExist:
+      data['status'] = NOT_USER
+  return JsonResponse(data)
+
+@csrf_exempt
+def add_invigilator(request):
+  vle = VLE.objects.filter(user=request.user).first()
+  try:
+    invigilator_email = request.POST.get('invigilator_email')
+    invigilator_exist = request.POST.get('flag',False)
+    
+    invigilator_user = User.objects.get(email=invigilator_email)
+    if invigilator_exist:
+      invigilator = Invigilator.objects.get(user=invigilator_user)
+    else:
+      invigilator = Invigilator.objects.create(user=invigilator_user,phone=request.POST.get('phone'),added_by=request.user)
+    
+    invigilator.vle.add(vle)
+    messages.success(request,"Invigilator successfullly assigned to CSC.")
+  except Exception as e:
+    print(f"Exception : {e}")
+    messages.error(request,"An error occcured while adding invigilator.")
+  
+  data = {}
+  return JsonResponse(data)
+
+
+def invigilator_profile(request):
+  context = {}
+  invigilator = Invigilator.objects.get(user=request.user)
+  pending = InvigilationRequest.objects.filter(invigilator=invigilator,status=0)
+  accepted = InvigilationRequest.objects.filter(invigilator=invigilator,status=1)
+  rejected = InvigilationRequest.objects.filter(invigilator=invigilator,status=2)
+  all = InvigilationRequest.objects.filter(invigilator=invigilator)
+  context['pending'] = pending
+  context['accepted'] = accepted
+  context['rejected'] = rejected
+  context['all'] = all
+  return render(request,'csc/invigilator_profile.html',context)
+
+def add_invigilator_to_test(request):
+  data = {}
+  context = {}
+  test_id = request.POST.get('test')  
+  invigilators = request.POST.getlist('invigilators')
+  test = Test.objects.get(id=int(test_id))
+  for invigilator in invigilators:
+    InvigilationRequest.objects.create(invigilator_id=int(invigilator),test=test,status=0)
+  return render(request,'csc/test_form.html',context)
+
+def review_invigilation_request(request):
+  status = request.GET.get("review")
+  id = request.GET.get("item")
+  obj = InvigilationRequest.objects.get(id=id)
+  obj.status = int(status)
+  obj.save()
+  print(f'status : {request.GET.get("review")}')
+  return HttpResponseRedirect(reverse('csc:invigilator_profile') )
+
+  

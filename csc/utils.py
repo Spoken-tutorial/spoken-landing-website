@@ -8,3 +8,7 @@ def is_user_vle(user):
 def is_user_student(user):
     print("\n\n user is Student \n\n")
     return user.groups.filter(name="STUDENT").exists()   
+
+def is_user_invigilator(user):
+    print("\n\n user is INVIGILATOR \n\n")
+    return user.groups.filter(name="INVIGILATOR").exists()   
