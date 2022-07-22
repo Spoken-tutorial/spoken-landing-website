@@ -18,10 +18,11 @@ from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.template.context_processors import csrf
 
 # Spoken Tutorial Stuff
-from cdcontent.forms import *
+
 from csc.models import *
 from spokenlogin.models import *
 # #from forums.models import Answer, Question
+from cdcontent.forms import *
 
 
 # from events.models import AcademicCenter, State, AcademicKey

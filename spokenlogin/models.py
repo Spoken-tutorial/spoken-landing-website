@@ -1,5 +1,5 @@
 from django.db import models
-from csc.models import FossCategory
+from csc.models import *
 
 # Create your models here.
 class SpokenUser(models.Model):
