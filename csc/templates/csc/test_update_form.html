@@ -31,8 +31,20 @@
               </div>
             
         </div>
+        
         <div class="col-6">
-
+          <div class="card">
+            <div class="card-header">
+              Edit Invigilators
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'csc:add_invigilator_to_test' %}">{% csrf_token %}
+                    {{ invigilationRequestForm | crispy}}
+                    <input type='hidden' value="{{object.id}}" name='test_id'>
+                    <input type="submit" value="Create" class="btn btn-success">
+                </form>
+            </div>
+          </div>
         </div>
     </div>
 </div>
@@ -52,6 +64,14 @@
 <script>
     $(document).ready(function () {
         // $('#example').DataTable(); 
+        console.log('time');
+        console.log('{{object.ttime}}');
+        let elem = document.getElementById('id_ttime');
+        let time = '{{object.ttime}}'
+        elem.value = '{{t}}'
+        console.log(elem)
+        console.log(elem.value)
+        // elem.value = '{{t}}'
     });
   </script>
 {% endblock %}

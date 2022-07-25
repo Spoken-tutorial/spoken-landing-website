@@ -66,8 +66,19 @@ class CSCLogin(LoginView):
 @csrf_exempt
 def vle_dashboard(request):
     context = {}
-    user = request.user
+    # user = request.user
+    vle = VLE.objects.filter(user=request.user).first()
+    
+    context['upcoming_test_stats'] = get_upcoming_test_stats()
+    context['courses_offered_stats'] = get_courses_offered_stats()
+   
+    context['stats_dca'] = get_programme_stats('dca')
+    context['stats_individual'] = get_programme_stats('individual')
 
+    context['total_students_enrolled'] = Student.objects.filter(vle_id=vle).count()
+    context['total_tests_completed'] = Test.objects.filter(vle=vle,tdate__gte=datetime.datetime.today().date()).count()
+    context['total_certificates_issued'] = StudentTest.objects.filter(status=4).count() #ToDo check condition
+    
     if request.method == 'POST':
         form = form = FossForm(request.POST)
         if form.is_valid():
@@ -292,7 +303,8 @@ class TestCreateView(CreateView):
       vle_foss = Vle_csc_foss.objects.filter(vle=vle)
       fosses = FossCategory.objects.filter(id__in=[x.spoken_foss.id for x in vle_foss])
       form.fields['foss'].queryset = fosses
-      # form.fields['invi'] = forms.IntegerField()
+      form.fields['tdate'].widget = widgets.DateInput(attrs={'type': 'date'})
+      form.fields['ttime'].widget = widgets.DateInput(attrs={'type': 'time'})     
       return form
 
   def get_form_kwargs(self):
@@ -338,7 +350,8 @@ class TestUpdateView(UpdateView):
   model = Test
   template_name = 'csc/test_update_form.html'
   context_object_name = 'test'
-  fields = ('foss', 'tdate', 'ttime', 'note_student', 'note_invigilator', 'test_name' )
+  fields = ('test_name','foss', 'tdate', 'ttime', 'note_student', 'note_invigilator', 'publish' )
+  
 
   def get_success_url(self):
     messages.success(self.request,"Test updated successfully.")
@@ -350,7 +363,24 @@ class TestUpdateView(UpdateView):
       vle_foss = Vle_csc_foss.objects.filter(vle=vle)
       fosses = FossCategory.objects.filter(id__in=[x.spoken_foss.id for x in vle_foss])
       form.fields['foss'].queryset = fosses
+      form.fields['tdate'].widget = widgets.DateInput(attrs={'type': 'date'})
+      form.fields['ttime'].widget = widgets.DateInput(attrs={'type': 'time'})
+      t = str(self.get_object().ttime).split(' ')[0]
+      print(f"t ------ {t}")
+      form.fields['ttime'].initial = t
       return form
+
+  def get_context_data(self, **kwargs):
+    print(f"1 **".ljust(50,'-'))
+    context = super().get_context_data(**kwargs)
+    vle = VLE.objects.filter(user=self.request.user).first()
+    id = vle.id
+    vle = VLE.objects.filter(user=self.request.user).first()
+    invigilationRequestForm = InvigilationRequestForm(vle_id=id,test_id=self.get_object().id)
+    context['invigilationRequestForm'] = invigilationRequestForm
+    t = str(self.get_object().ttime).split(' ')[0]
+    context['t']=t
+    return context
 
 def invigilators(request):
   context = {}
@@ -467,12 +497,14 @@ def invigilator_profile(request):
 def add_invigilator_to_test(request):
   data = {}
   context = {}
-  test_id = request.POST.get('test')  
+  test = request.POST.get('test_id')  
+  test_id = request.POST.get('test',test)  
   invigilators = request.POST.getlist('invigilators')
   test = Test.objects.get(id=int(test_id))
   for invigilator in invigilators:
     InvigilationRequest.objects.create(invigilator_id=int(invigilator),test=test,status=0)
-  return render(request,'csc/test_form.html',context)
+  
+  return HttpResponseRedirect(reverse('csc:update_test',kwargs={'pk':test_id}) )
 
 def review_invigilation_request(request):
   status = request.GET.get("review")
@@ -483,4 +515,16 @@ def review_invigilation_request(request):
   print(f'status : {request.GET.get("review")}')
   return HttpResponseRedirect(reverse('csc:invigilator_profile') )
 
+def get_stats(request):
+  data = {}
+  print("4 ------- ")
+  data['upcoming_tests'] = get_upcoming_test_stats()
+  print("5 ------- ")
+  data['course_type_offered'] = get_courses_offered_stats()
+  print("6 ------- ")
+  data['dca_students'] = get_programme_stats('dca')
+  print("7 ------- ")
+  data['individual_students'] = get_programme_stats('individual')
+  print("8 ------- ")
   
+  return JsonResponse(data)

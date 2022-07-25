@@ -1,0 +1,46 @@
+
+<style>
+   
+.nav-link a{
+    color: #013A6B!important;
+}
+.fa-bars{
+    color:#fff;
+    margin-right: 6px;
+}
+</style>
+{% load helper %}
+
+<div id="side_bar">
+    
+    <ul class="list-group">
+        
+        <li class="nav-link">
+            {% if request.user|has_group:"VLE" %} 
+			<a class="nav-link scroll_link " href="{% url 'csc:vle_dashboard'%}"><i class="fas fa-home sb-icon"></i>Home<span class="sr-only">(current)</span></a>
+			{% else %}
+			<a class="nav-link scroll_link " href="{% url 'home'%}#home"><i class="fas fa-home sb-icon" ></i>Home<span class="sr-only">(current)</span></a>
+			{% endif %}
+        </li>
+        {% if request.user|has_group:"VLE" %}
+        <li class="nav-link">
+            <a class="nav-link scroll_link " href="{% url 'csc:courses' %}" ><i class="fas fa-book-open sb-icon"></i>Courses</a>
+        </li>
+        <li class="nav-link">
+            <a class="nav-link scroll_link " href="{% url 'csc:student_list' %}" ><i class="fas fa-user-graduate sb-icon"></i>Students</a>
+        </li>
+        <li class="nav-link" style="color:rgba(00, 0, 0, 0.5);border-bottom:1px solid rgba(00, 0, 0, 0.1);">
+            <span >Tests</span>
+        </li>
+        <li class="nav-link"><a class="dropdown-item scroll_link" href="{% url 'csc:list_test' %}"><i class="fas fa-clipboard sb-icon"></i>Test Details</a></li>
+		<li class="nav-link"><a class="dropdown-item scroll_link" href="{% url 'csc:invigilators' %}"><i class="fas fa-user-check sb-icon"></i>Invigilators</a></li>
+        {% endif %}
+        {% if request.user|has_group:"STUDENT" %}
+        <li class="nav-link"><a class="nav-link scroll_link scroll_link" href="{% url 'student:student_tests' %}">Tests</a></li>
+		{% endif %}
+        
+        
+        
+      </ul>
+     
+</div>

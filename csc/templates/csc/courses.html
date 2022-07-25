@@ -16,8 +16,8 @@
 {% endblock css %}
 
 {% block content %}
-<div class="container mt-5 py-md-2">
-    <div class="py-5">
+<div class="container">
+    <div >
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
               <button class="nav-link active" id="nav-dca-tab" data-bs-toggle="tab" data-bs-target="#nav-dca" type="button" role="tab" aria-controls="nav-dca" aria-selected="true">DCA FOSS</button>
@@ -88,17 +88,7 @@
           </div>
         
     </div>
-    
-        <div>
-            <p>Total Student Enrollment</p>
-            <canvas id="myChart" style="width:100%;max-width:500px;border: 1px solid rgba(0,0,0,0.1);"></canvas>
-        </div>
-
-   
-    <div>
-        
-    </div>
-    
+ 
 </div>
 
 {% endblock %}
@@ -130,31 +120,7 @@
                 hoverOffset: 4             
       }],      
     };
-    url = '/csc/get_course_stats/'
-    $.ajax({
-    url : url,
-    type: "GET",
-    success: function(data, textStatus, jqXHR)
-    {       
-           
-        stat_data['labels']=data['fosses']
-        stat_data['datasets'][0]['data']=data['enrollment']
-        stat_data['datasets'][0]['backgroundColor']=colorList.slice(data['len'])
-    var config = {
-      type: 'pie',
-      data: stat_data,
-   
-    };
-    console.log(config)
     
-    const myChart = new Chart(document.getElementById('myChart'),config)
-    console.log(myChart)  
-    },
-    error: function (jqXHR, textStatus, errorThrown)
-    {
-        console.log("ERROR")
-    }
-});
 }
 
 </script>
