@@ -15,7 +15,7 @@
 
 {% block content %}
 
-<div class="container mt-5 pt-5">
+<div class="container">
     <div class="row my-5">
         <div class="col-4">
             <div class="card">
@@ -41,7 +41,7 @@
                 <form method="post" action="{% url 'csc:add_invigilator_to_test' %}">{% csrf_token %}
                     {{ invigilationRequestForm | crispy}}
                     <input type='hidden' value="{{object.id}}" name='test_id'>
-                    <input type="submit" value="Create" class="btn btn-success">
+                    <input type="submit" value="Update Invigilator" class="btn btn-success">
                 </form>
             </div>
           </div>

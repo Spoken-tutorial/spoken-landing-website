@@ -113,6 +113,59 @@ def vle_dashboard(request):
         context['added_foss']=added_foss
         return render(request, 'csc/vle.html',context)
 
+def courses(request):
+  context = {}
+  vles = VLE.objects.filter(user=request.user)
+  for vle in vles:
+    dca_csc_foss = Vle_csc_foss.objects.filter(vle=vle,programme_type='dca')
+    individual_csc_foss = Vle_csc_foss.objects.filter(vle=vle,programme_type='individual')
+    dca_foss = {}
+    for item in dca_csc_foss:
+      students = Student_Foss.objects.filter(csc_foss=item.id).count()      
+      dca_foss[item.spoken_foss.foss] = {'total_students':students}
+
+    individual_foss = {}
+    for item in individual_csc_foss:
+      students = Student_Foss.objects.filter(csc_foss=item.id).count()
+      individual_foss[item.spoken_foss.foss] = {'total_students':students}
+
+    context['dca_foss'] = dca_foss
+    context['individual_foss'] = individual_foss
+
+  if request.method == 'POST':
+    form = form = FossForm(request.POST)
+    if form.is_valid():
+        programme_type = form.cleaned_data['programme_type']
+        spoken_foss = form.cleaned_data['spoken_foss']
+        vle = VLE.objects.filter(user=request.user).first()
+        for sf in spoken_foss:
+            #check if fossid already exist
+            vfoss=Vle_csc_foss()
+
+            vfoss.programme_type=programme_type
+            # vfoss.spoken_foss=sf.id
+            vfoss.spoken_foss=sf
+            vfoss.vle=vle
+            try:
+                vfoss.save()
+                messages.success(request, sf.foss+" has been added.")
+            except Exception as e:
+                print(f"exceptioon - {e}")
+                messages.error(request, "Records already present.")
+    
+    context['form'] = form
+    # return HttpResponseRedirect("/csc/courses/")
+    return render(request, 'csc/courses.html', context)
+  else:
+    form = FossForm()
+        # context['form']=foss_form
+    context['form'] = form
+    return render(request, 'csc/courses.html', context)
+        
+
+
+  return render(request,'csc/courses.html',context)
+
 @method_decorator(csrf_exempt, name='dispatch')
 class GetFossOptionView(JSONResponseMixin, View):
   def dispatch(self, *args, **kwargs):
@@ -144,18 +197,23 @@ class GetFossOptionView(JSONResponseMixin, View):
 @is_vle
 def student_list(request):
   context={}
-  vles = VLE.objects.filter(user=request.user)
+  vle = VLE.objects.filter(user=request.user).first()
   students = []
-  dca = Vle_csc_foss.objects.filter(programme_type='dca').values_list('spoken_foss')
-  individual = Vle_csc_foss.objects.filter(programme_type='individual').values_list('spoken_foss')
-  fdca = SpokenFoss.objects.filter(id__in=[x[0] for x in dca])
-  findividual = SpokenFoss.objects.filter(id__in=[x[0] for x in individual])
-  context['foss_dca'] = fdca
-  context['foss_individual'] = findividual
-  for vle in vles:
-    s = Student.objects.filter(vle_id=vle.id)
-    for item in s:
-      students.append(item)
+  # dca = Vle_csc_foss.objects.filter(programme_type='dca').values_list('spoken_foss')
+  # individual = Vle_csc_foss.objects.filter(programme_type='individual').values_list('spoken_foss')
+  # fdca = SpokenFoss.objects.filter(id__in=[x[0] for x in dca])
+  # fdca = SpokenFoss.objects.filter(id__in=[x[0] for x in dca])
+  # findividual = SpokenFoss.objects.filter(id__in=[x[0] for x in individual])
+  # findividual = SpokenFoss.objects.filter(id__in=[x[0] for x in individual])
+  fdca = Vle_csc_foss.objects.filter(programme_type='dca',vle=vle)
+  findividual = Vle_csc_foss.objects.filter(programme_type='individual',vle=vle)
+  context['foss_dca'] = [x.spoken_foss for x in fdca]
+  context['foss_individual'] = [x.spoken_foss for x in findividual]
+  # context['foss_individual'] = findividual
+  # for vle in vles:
+  s = Student.objects.filter(vle_id=vle.id)
+  for item in s:
+    students.append(item)
   context['students'] = students
   return render(request,'csc/students_list.html',context)
 
@@ -165,7 +223,7 @@ def assign_foss(request):
   vle = VLE.objects.get(user=request.user)
   students = request.POST.getlist('student[]')
   fosses = request.POST.getlist('foss[]')
-  f = SpokenFoss.objects.filter(id__in=[int(x) for x in fosses]).values_list('foss')
+  f = FossCategory.objects.filter(id__in=[int(x) for x in fosses]).values_list('foss')
   foss_name = ', '.join([x[0] for x in f])
   
   print(f"students".ljust(40,'*')+f"students")
@@ -213,26 +271,7 @@ def student_profile(request,id):
   return render(request,'csc/student_profile.html',context)
 
 
-def courses(request):
-  context = {}
-  vles = VLE.objects.filter(user=request.user)
-  for vle in vles:
-    dca_csc_foss = Vle_csc_foss.objects.filter(vle=vle,programme_type='dca')
-    individual_csc_foss = Vle_csc_foss.objects.filter(vle=vle,programme_type='individual')
-    dca_foss = {}
-    for item in dca_csc_foss:
-      students = Student_Foss.objects.filter(csc_foss=item.id).count()      
-      dca_foss[item.spoken_foss.foss] = {'total_students':students}
 
-    individual_foss = {}
-    for item in individual_csc_foss:
-      students = Student_Foss.objects.filter(csc_foss=item.id).count()
-      individual_foss[item.spoken_foss.foss] = {'total_students':students}
-
-    context['dca_foss'] = dca_foss
-    context['individual_foss'] = individual_foss
-
-  return render(request,'csc/courses.html',context)
 
 
 @csrf_exempt

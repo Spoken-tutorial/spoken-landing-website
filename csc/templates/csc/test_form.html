@@ -15,7 +15,7 @@
 
 {% block content %}
 
-<div class="container mt-5 pt-5">
+<div class="container">
     <div class="row my-5">
         <div class="col-4">
             <div class="card">
@@ -26,7 +26,7 @@
                     <form method="post">{% csrf_token %}
                         {{ form | crispy }}
                         
-                        <input type="submit" value="Create" class="btn btn-success">
+                        <input type="submit" value="Create Test" class="btn btn-success">
                     </form>
                 </div>
               </div>
@@ -51,7 +51,7 @@
                       {% endfor %}
                        
                       </select>
-                    <input type="submit" value="Create" class="btn btn-success">
+                    <input type="submit" value="Add Invigilator" class="btn btn-success">
                 </form>
             </div>
           </div>

@@ -1,4 +1,5 @@
 {% extends 'csc_base.html'%}
+{% load crispy_forms_tags%}
 {% block css %}
 <style>
     .tb-header{
@@ -20,12 +21,35 @@
     <div >
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-              <button class="nav-link active" id="nav-dca-tab" data-bs-toggle="tab" data-bs-target="#nav-dca" type="button" role="tab" aria-controls="nav-dca" aria-selected="true">DCA FOSS</button>
+              <button class="nav-link active" id="nav-course-tab" data-bs-toggle="tab" data-bs-target="#nav-course" type="button" role="tab" aria-controls="nav-course" aria-selected="true">DCA FOSS</button>
+              <button class="nav-link" id="nav-dca-tab" data-bs-toggle="tab" data-bs-target="#nav-dca" type="button" role="tab" aria-controls="nav-dca" aria-selected="true">DCA FOSS</button>
               <button class="nav-link" id="nav-individual-tab" data-bs-toggle="tab" data-bs-target="#nav-individual" type="button" role="tab" aria-controls="nav-individual" aria-selected="false">Individual FOSS</button>
             </div>
           </nav>
           <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active py-5" id="nav-dca" role="tabpanel" aria-labelledby="nav-dca-tab">
+            <div class="tab-pane fade show active py-5" id="nav-course" role="tabpanel" aria-labelledby="nav-course-tab">
+                
+        <div>
+            <div class="card">
+                <div class="card-header"> Add Foss</div>
+                <div class="card-body">
+                    <form action="{{action}}" method="post">
+                        {% csrf_token %}
+                          <div class='mb-3' required>
+                           {{ form.programme_type | as_crispy_field }}
+                          </div>
+                          <div class='mb-3' required>
+                           {{ form.spoken_foss | as_crispy_field }}
+                          </div>
+                      
+                      <button type="submit" class="btn" style="background: #013A6B;color: #fff; font-weight: bold;">Add</button>
+                      </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+            <div class="tab-pane fade py-5" id="nav-dca" role="tabpanel" aria-labelledby="nav-dca-tab">
                 <div class="alert alert-warning" role="alert">DCA FOSS</div>
         <div>
             <table id="tb-dca" class="table table-striped" style="width:100%">
@@ -105,6 +129,35 @@
         $('#tb-dca').DataTable();
         $('#tb-individual').DataTable(); 
         show_foss_enrollment();
+
+        if($('#id_programme_type').val() == '') {
+        $('#id_spoken_foss').val('');
+        $('#id_spoken_foss').prop('disabled', 'disabled');      
+      }
+    $('#id_programme_type').on('change', function(){
+        programme_type = $(this).val();
+        programme_type_name = $(this).children("option").filter(":selected").text();
+        $('#id_spoken_foss').html('<option>---------</option>');
+        if(programme_type != ''){
+            $.ajax({
+                url: "/csc/get-foss-option/",
+                type: "POST",
+                data: {
+                    programme_type: programme_type,
+                },
+                beforeSend: function() {
+                },
+                success: function(data) {
+                    if(data && data['spoken_foss_option']) {
+                        $('#id_spoken_foss').prop('disabled', false);
+                    $('#id_spoken_foss').html(data['spoken_foss_option']);
+                    
+                    }
+                 
+                }
+            });
+        }
+    });
     });
 
     function show_foss_enrollment(){

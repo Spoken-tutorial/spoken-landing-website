@@ -1,46 +1,86 @@
-
-<style>
-   
-.nav-link a{
-    color: #013A6B!important;
-}
-.fa-bars{
-    color:#fff;
-    margin-right: 6px;
-}
-</style>
+{% load static %}
 {% load helper %}
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+    <div class="position-sticky pt-3">
+      <ul class="nav flex-column">
+         
+            <li class="nav-item ">
+                <a id="logo" class="text-center d-flex justify-content-start m-2" href="/">
+                    <img src="{% static '/spoken/images/logo.png' %}" class="mr-2"> 
+                    <span style="font-size: 1rem;">CSC Academy Programme</span>
+                </a>
+              </li>
+             <hr>
 
-<div id="side_bar">
     
-    <ul class="list-group">
-        
-        <li class="nav-link">
+        <li class="nav-item">
             {% if request.user|has_group:"VLE" %} 
-			<a class="nav-link scroll_link " href="{% url 'csc:vle_dashboard'%}"><i class="fas fa-home sb-icon"></i>Home<span class="sr-only">(current)</span></a>
-			{% else %}
-			<a class="nav-link scroll_link " href="{% url 'home'%}#home"><i class="fas fa-home sb-icon" ></i>Home<span class="sr-only">(current)</span></a>
-			{% endif %}
+            <a class="nav-link scroll_link " href="{% url 'csc:vle_dashboard'%}"><i class="fas fa-user sb-icon"></i>{{user.email}}<span class="sr-only">(current)</span></a>
+            {% else %}
+            <a class="nav-link scroll_link " href="{% url 'home'%}#home"><i class="fas fa-home sb-icon" ></i>Home<span class="sr-only">(current)</span></a>
+            {% endif %}
         </li>
         {% if request.user|has_group:"VLE" %}
-        <li class="nav-link">
+        <li class="nav-item">
             <a class="nav-link scroll_link " href="{% url 'csc:courses' %}" ><i class="fas fa-book-open sb-icon"></i>Courses</a>
-        </li>
-        <li class="nav-link">
+          </li>
+          <li class="nav-item">
             <a class="nav-link scroll_link " href="{% url 'csc:student_list' %}" ><i class="fas fa-user-graduate sb-icon"></i>Students</a>
-        </li>
-        <li class="nav-link" style="color:rgba(00, 0, 0, 0.5);border-bottom:1px solid rgba(00, 0, 0, 0.1);">
-            <span >Tests</span>
-        </li>
-        <li class="nav-link"><a class="dropdown-item scroll_link" href="{% url 'csc:list_test' %}"><i class="fas fa-clipboard sb-icon"></i>Test Details</a></li>
-		<li class="nav-link"><a class="dropdown-item scroll_link" href="{% url 'csc:invigilators' %}"><i class="fas fa-user-check sb-icon"></i>Invigilators</a></li>
-        {% endif %}
-        {% if request.user|has_group:"STUDENT" %}
-        <li class="nav-link"><a class="nav-link scroll_link scroll_link" href="{% url 'student:student_tests' %}">Tests</a></li>
-		{% endif %}
+          </li>
+   
+    
+   
+    {% endif %}
+    {% if request.user|has_group:"STUDENT" %}
+    <li class="nav-item"><a class="nav-link scroll_link scroll_link" href="{% url 'student:student_tests' %}">Tests</a></li>
+    {% endif %}
+    
         
+       
+      </ul>
+
+      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <span>Tests</span>
+        <a class="link-secondary" href="#" aria-label="Add a new report">
+          <span data-feather="plus-circle"></span>
+        </a>
+      </h6>
+      <ul class="nav flex-column mb-2">
+          
+          
+        <li class="nav-item">
+            <a class="dropdown-item scroll_link" href="{% url 'csc:list_test' %}"><i class="fas fa-clipboard sb-icon"></i>Test Details</a>
+        </li>
+        <li class="nav-item">
+            <a class="dropdown-item scroll_link" href="{% url 'csc:invigilators' %}"><i class="fas fa-user-check sb-icon"></i>Invigilators</a>
+        </li>
+
         
         
       </ul>
-     
-</div>
+      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <span>User</span>
+        <a class="link-secondary" href="#" aria-label="Add a new report">
+          <span data-feather="plus-circle"></span>
+        </a>
+      </h6>
+      <ul class="nav flex-column mb-2">
+        {% if request.user|has_group:"INVIGILATOR" %} 
+        <li class="nav-item">
+            <a class="dropdown-item" href="{% url 'csc:invigilator_profile' %}"><i class="fas fa-user-tag sb-icon"></i>Invigilator Dashboard</a>
+        </li>
+    
+        {% endif %}
+    
+        <li class="nav-item">
+            <a class="dropdown-item" href="{% url 'password_change' %}"><i class="fas fa-key sb-icon"></i>Change Password</a>
+        </li>
+        <li class="nav-item">
+            <a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt sb-icon"></i>Logout</a>
+        </li>
+        
+
+        
+      </ul>
+    </div>
+  </nav>
