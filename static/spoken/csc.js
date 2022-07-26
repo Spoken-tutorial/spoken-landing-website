@@ -86,7 +86,7 @@ $(document).ready(function(){
                     labels: labels,
                     datasets: [{
                       label: key,
-                      backgroundColor: ['#EEC4C4','#94D0CC'],
+                      backgroundColor: ['#94D0CC','#EEC4C4'],
                       borderColor: '#fff',
                       data: data_points,
                     }]
