@@ -1,15 +1,15 @@
 
 from __future__ import unicode_literals
-from operator import mod
-from statistics import mode
 from django.db import models
 from django.contrib.auth.models import User
 from django.forms import ChoiceField
 from spokenlogin.models import *
 from model_utils import Choices
 from cms.models import State, District, City
+from django.forms import widgets
 
-
+REJECTED = 0
+APPROVED = 1
 PROGRAMME_TYPE_CHOICES = Choices(
     ('', ('-- None --')),('dca', ('DCA Programme')), ('individual', ('Individual Course'))
     )
@@ -163,7 +163,12 @@ class Test(models.Model):
     note_student = models.TextField(blank=True,null=True)
     note_invigilator = models.TextField(blank=True,null=True)
     test_name = models.CharField(max_length=252,blank=True,null=True)
+    #ToDO : Add status ; to mark if completed or cancellled
 
+    # class Meta:
+    #     widgets = {
+    #         'tdate':widgets.DateInput(attrs={'type': 'date'})
+    #     }
     def get_absolute_url(self):
         return f"{self.foss}"
 
@@ -178,3 +183,8 @@ class InvigilationRequest(models.Model):
     test = models.ForeignKey(Test,on_delete=models.CASCADE)
     status = models.IntegerField() #0-pending, 1-accepted, 2-rejected
     
+class StudentTest(models.Model):
+    student = models.ForeignKey(Student,on_delete=models.CASCADE)
+    test = models.ForeignKey(Test,on_delete=models.CASCADE)
+    status = models.IntegerField() #0 : Rejected, 1 : Approved
+

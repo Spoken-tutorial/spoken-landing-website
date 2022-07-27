@@ -21,8 +21,8 @@
 {% endblock css %}
 
 {% block content %}
-<div class="container mt-5 py-2">
-    <div class="mt-5">
+<div class="container py-2">
+    <div >
         {{ form.non_field_errors }}
         {% include "_error_msg.html" %}
         <!-- {% if messages %}
@@ -146,10 +146,8 @@
         const MULTIPLE_USER = 3
         const USER_AND_OWN_INVIGIlATOR = 4
         
-        const email = document.getElementById("id_email").value
-        alert(email);
-        alert('clicked');
-        let result = 100
+        const email = document.getElementById("id_email").value;
+        let result = 100;
         data = {email:email}
         url = '/csc/verify_invigilator_email/'
         $.ajax({
@@ -170,7 +168,7 @@
             const form_data = document.getElementById("form_data")
             const email_input = document.getElementById("id_email")
             btn_proceed.style.display='none';
-            alert('s')
+            
             if(data['status']==NOT_USER){
                 // show screen to add user details, create user & invigilator
                 console.log('NOT_USER');

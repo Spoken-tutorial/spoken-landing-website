@@ -1,0 +1,83 @@
+{% extends 'csc_base.html'%}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+<style>
+    
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="container mt-5 py-2">
+    <div class="mt-5">
+        {{ form.non_field_errors }}
+        {% if messages %}
+        <ul class="messages" style="padding-left: 0!important;">
+            {% for message in messages %}
+            <li style="list-style: none;">
+                <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">
+                    {{ message }}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+
+    <div>
+        <div class="row">
+            <div class="col-12">
+                <table class="table" id="tb_tests">
+                    <thead>
+                      <tr>
+                        <th scope="col">Test</th>
+                        <th scope="col">Date/Time</th>
+                        <th scope="col">Status</th>
+                        <!-- <th scope="col">Handle</th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for key,value in test_status.items %}
+                        <tr>
+                            <td>{{key}}</td>    
+                            <td>{{key.tdate}}, {{key.ttime}}</td>    
+                            <td>
+                                {% if value == 0 %}
+                                
+                                <a href="{% url 'student:student_change_test_status' %}?status=1&id={{key.id}}" class="btn btn-success btn-sm">Accept</a>
+                                
+                                {% elif value == 1  %}
+                                
+                                <a href="{% url 'student:student_change_test_status' %}?status=0&id={{key.id}}" class="btn btn-danger btn-sm">Reject</a>
+                                {% elif value == 2 %}
+                            
+                                <a href="#">value is 2</a>
+                                {% endif %}
+                            </td>    
+                        </tr>
+                        {% endfor %}
+                      
+                     
+                    </tbody>
+                  </table>   
+            <div>
+                    
+                </div>
+            </div>
+        </div>  
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+        $('#tb_tests').DataTable();   
+});
+</script>
+{% endblock %}
+

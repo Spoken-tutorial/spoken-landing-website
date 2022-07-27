@@ -13,6 +13,8 @@ urlpatterns = [
     path('courses/', courses, name="courses"),
     path('assign_foss/', assign_foss, name="assign_foss"),
     path('get_course_stats/', get_course_stats, name="get_course_stats"),
+    path('get_stats/', get_stats, name="get_stats"),
+    
     path('add_test/', TestCreateView.as_view(), name="add_test"),
     path('detail_test/<int:pk>', TestDetailView.as_view(), name="detail_test"),
     path('update_test/<int:pk>', TestUpdateView.as_view(), name="update_test"),

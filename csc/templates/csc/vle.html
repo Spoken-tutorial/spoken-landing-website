@@ -4,115 +4,263 @@
 {% block title%} CSC - VLE Dashboard {% endblock title%}
 {% block css %}
 <style>
+body{
+  background-color: #F1F2F5;
+}
 .card-header{
   background-color:#013A6B!important;
   color: #fff;
 }
+.test_info{
+  
+  font-size: 0.85rem;
+  color: rgba(0,0,0,0.5);
+}
+.fa-calendar-day,.fa-clipboard{
+  color: #013A6B;
+  margin-right: 6px;
+}
+.border-1{
+  border-left:  0.25rem solid #4e73df!important;
+} 
+.border-2{
+  border-left:  0.25rem solid #377D71!important;
+} 
+.border-3{
+  border-left:  0.25rem solid #36b9cc!important;
+} 
+.border-4{
+  border-left:  0.25rem solid #f6c23e!important;
+} 
+.text-xs{
+  font-size: 0.85rem;
+}
+.fa-users{
+  color: #4e73df;
+  opacity: 0.4;
+}
+.fa-clipboard-list{
+  color: #377D71;
+  opacity: 0.4;
+}
+.fa-award{
+  color: #36b9cc;
+  opacity: 0.4;
+}
+.heading{
+  color: #013A6B;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+.bg-white{
+  background: #fff;
+}
+.test_title{
+  color: #013A6B!important;
+}
 </style>
+<link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
+<script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
 
 {% endblock %}
 
 
 {% block content%}
-<div class="container" style="padding-top:9%;">
-  <div class="row">
-    <div class="col-6 px-5">
-      <div>
-        {% for message in messages %}
-        <div>
-          <div class="alert alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{% endif %}{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}success{% endif %}" role="alert">
-            {{ message|safe }}
-        </div>
-        {% endfor %}
+<div >
+    <!-- <div class="col-md-3">
+      {% include "sidebar.html" %}
+    </div> -->
+    <div >
+      <div class="row">
 
-      </div>
-      <div class="card">
-        <div class="card-header"> Add Foss</div>
-        <div class="card-body">
-          <form action="{{action}}" method="post">
-            {% csrf_token %}
-            <!-- <div class='form-row'> -->
-              <div class='mb-3' required>
-               {{ form.programme_type | as_crispy_field }}
-              </div>
-
-        
-              <div class='mb-3' required>
-               {{ form.spoken_foss | as_crispy_field }}
-              </div>
-          
-          <button type="submit" class="btn" style="background: #013A6B;color: #fff; font-weight: bold;">Add</button>
-          </form>
-        </div>
-      </div>
-    </div>
-    <div class="col-6">
-  
-    </div>
-
-  </div>
-</div>
-<div  class="row" style="padding-top:9%; ">
-  
-
-   <section class="col-8 d-flex justify-content-center" >  
-
-        <section  id="fosslist" style="background-color:orangered;">
-        <h2 class="text-center header-m">List Of Fosses Added</h2>
-        <hr>
-        <div id="products" class="row">
-          {% for foss in added_foss%}
-            <div style="">
-                <div>                  
-                    <h4>{{foss.programme_type}}</h4>
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-1 shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                              Total students enrolled</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_students_enrolled}}</div>
+                        </div>
+                        <div class="col-auto">
+                            <!-- <i class="fas fa-calendar fa-2x text-gray-300"></i> -->
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
                 </div>
-               <!-- <br> -->
-                <p style="text-decoration: none;">{{foss.spoken_foss}}</p>
-
-                <div>
-                  <a href="" class="btn1" target="_blank">Download CD content  <span class="app-i"><i class="fas fa-angle-double-right"></i></span></a>
-                </div>
-
             </div>
-              {% endfor%}
         </div>
-        </section>
-
-
-   </section>
-
-
-
-
-
     
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-2 shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total tests completed</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_tests_completed}}</div>
+                        </div>
+                        <div class="col-auto">
+                          <i class="fas fa-clipboard-list fa-2x "></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-3 shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total certificates
+                            </div>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{total_certificates_issued}}</div>
+                                </div>
+                                <div class="col">
+                                    <div class="progress progress-sm mr-2">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                          <i class="fas fa-award fa-2x"></i>
+                          
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Pending Requests Card Example -->
+        <!-- <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-4 shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Pending Requests</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-header">
+          Upcoming Tests
+        </div>
+        <div class="card-body">
+        
+          
+          <div class="row">
+            
+    
+              {% for key,value in upcoming_test_stats.items %}
+              <div class="col-md-3">
+              <div class="border p-2">
+                <div class="test_info">
+                  <p ><a href="{% url 'csc:update_test' pk=value.id %}" class="test_title"><i class="far fa-clipboard"></i> {{key}} <i class="fas fa-location-arrow"></i></a></p>
+                  <p><i class="fas fa-calendar-day"></i>{{value.date}} / {{value.time}}</p>
+                  <p>Approved : {{value.approved}}</p>
+                  <p>Rejected : {{value.rejected}}</p>
+                </div>
+                <canvas id="test_{{value.id}}"></canvas>
+              </div>
+            </div>
+              {% endfor %}
+              
+    
+          </div>
+        
+        </div>
+      </div>
 
+
+    </div>
+    <div class="row mt-2 ">
+      <div class="col-md-3 ">
+        <div class="border p-2 bg-white">
+          <p class="heading text-center">Enrollment based on Programme Type </p>
+          <div class="text-xs d-flex justify-content-around"><div>DCA({{courses_offered_stats.dca}})</div><div>Individual({{courses_offered_stats.individual}})</div></div>
+          <canvas id="prg_type"></canvas>  
+        </div>
+      </div>
+      <div class="col-4 mt-2 ">
+        <div class="border p-2 bg-white">
+          <p class="heading text-center">Enrollment for DCA Courses </p>
+          <canvas id="dca_course"></canvas>  
+        </div>
+      </div>
+      <div class="col-4 mt-2 ">
+        <div class="border p-2 bg-white">
+          <p class="heading text-center">Enrollment for Individual Courses </p>
+          <canvas id="individual_course"></canvas>  
+        </div>
+      </div>
+
+     
+
+    </div>
+
+    <!-- <div class="row">
+      <div class="col-md-3">
+        <div>
+          {% for message in messages %}
+          <div>
+            <div class="alert alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{% endif %}{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}success{% endif %}" role="alert">
+              {{ message|safe }}
+          </div>
+          {% endfor %}
+  
+        </div>
+        <div class="card">
+          <div class="card-header"> Add Foss</div>
+          <div class="card-body">
+            c
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        
+      </div>
+  
+    </div>
+  </div> -->
+    </div>
 </div>
 
+<div class="container" style="padding-top:9%;" id="main">
 
+  
+  
+  
  
 {% endblock %}
 
 {% block script %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="text/javascript" src="{% static '/spoken/csc.js' %}"></script>
 <script>
     
     $(document).ready(function(){
-
       if($('#id_programme_type').val() == '') {
         $('#id_spoken_foss').val('');
-        $('#id_spoken_foss').prop('disabled', 'disabled');
-        // $('.course').html('<option>---------</option>');
-        // $('.course').prop('disabled', 'disabled');
+        $('#id_spoken_foss').prop('disabled', 'disabled');      
       }
-
-
     $('#id_programme_type').on('change', function(){
         programme_type = $(this).val();
-        programme_type_name = $(this).children("option").filter(":selected").text()
-
-                alert(programme_type);
-
-
+        programme_type_name = $(this).children("option").filter(":selected").text();
         $('#id_spoken_foss').html('<option>---------</option>');
         if(programme_type != ''){
             $.ajax({
@@ -124,7 +272,6 @@
                 beforeSend: function() {
                 },
                 success: function(data) {
-                    // loading languages
                     if(data && data['spoken_foss_option']) {
                         $('#id_spoken_foss').prop('disabled', false);
                     $('#id_spoken_foss').html(data['spoken_foss_option']);
@@ -135,9 +282,6 @@
             });
         }
     });
-
-
-
-    });
+  });
   </script>
 {% endblock %}
