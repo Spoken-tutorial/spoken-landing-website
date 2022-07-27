@@ -60,3 +60,25 @@ class InvigilatorForm(forms.Form):
 	lname = forms.CharField(max_length=120,label='Last Name')
 	phone = forms.CharField(max_length=32,label='Contact Number')
 	
+
+class InvigilationRequestForm(forms.Form):
+	
+	test = forms.ModelChoiceField(queryset=None,widget=forms.Select(attrs={'disabled':'disabled'}))
+	invigilators = forms.ModelMultipleChoiceField(queryset=None)
+
+	def __init__(self, *args, **kwargs):		
+		vle_id = kwargs.pop('vle_id')
+		test_id = kwargs.pop('test_id')
+
+		
+		super(InvigilationRequestForm,self).__init__(*args, **kwargs)
+		vle = VLE.objects.get(id=vle_id)
+		self.fields['test'].queryset = Test.objects.filter(vle=vle)
+		self.fields['test'].initial = test_id
+		self.fields['invigilators'].queryset = Invigilator.objects.filter(vle=vle)
+		l = InvigilationRequest.objects.filter(test_id=test_id).values('invigilator')
+		l = [x['invigilator'] for x in l]
+		self.fields['invigilators'].initial = l
+
+
+

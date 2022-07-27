@@ -66,8 +66,19 @@ class CSCLogin(LoginView):
 @csrf_exempt
 def vle_dashboard(request):
     context = {}
-    user = request.user
+    # user = request.user
+    vle = VLE.objects.filter(user=request.user).first()
+    
+    context['upcoming_test_stats'] = get_upcoming_test_stats()
+    context['courses_offered_stats'] = get_courses_offered_stats()
+   
+    context['stats_dca'] = get_programme_stats('dca')
+    context['stats_individual'] = get_programme_stats('individual')
 
+    context['total_students_enrolled'] = Student.objects.filter(vle_id=vle).count()
+    context['total_tests_completed'] = Test.objects.filter(vle=vle,tdate__gte=datetime.datetime.today().date()).count()
+    context['total_certificates_issued'] = StudentTest.objects.filter(status=4).count() #ToDo check condition
+    
     if request.method == 'POST':
         form = form = FossForm(request.POST)
         if form.is_valid():
@@ -102,6 +113,59 @@ def vle_dashboard(request):
         context['added_foss']=added_foss
         return render(request, 'csc/vle.html',context)
 
+def courses(request):
+  context = {}
+  vles = VLE.objects.filter(user=request.user)
+  for vle in vles:
+    dca_csc_foss = Vle_csc_foss.objects.filter(vle=vle,programme_type='dca')
+    individual_csc_foss = Vle_csc_foss.objects.filter(vle=vle,programme_type='individual')
+    dca_foss = {}
+    for item in dca_csc_foss:
+      students = Student_Foss.objects.filter(csc_foss=item.id).count()      
+      dca_foss[item.spoken_foss.foss] = {'total_students':students}
+
+    individual_foss = {}
+    for item in individual_csc_foss:
+      students = Student_Foss.objects.filter(csc_foss=item.id).count()
+      individual_foss[item.spoken_foss.foss] = {'total_students':students}
+
+    context['dca_foss'] = dca_foss
+    context['individual_foss'] = individual_foss
+
+  if request.method == 'POST':
+    form = form = FossForm(request.POST)
+    if form.is_valid():
+        programme_type = form.cleaned_data['programme_type']
+        spoken_foss = form.cleaned_data['spoken_foss']
+        vle = VLE.objects.filter(user=request.user).first()
+        for sf in spoken_foss:
+            #check if fossid already exist
+            vfoss=Vle_csc_foss()
+
+            vfoss.programme_type=programme_type
+            # vfoss.spoken_foss=sf.id
+            vfoss.spoken_foss=sf
+            vfoss.vle=vle
+            try:
+                vfoss.save()
+                messages.success(request, sf.foss+" has been added.")
+            except Exception as e:
+                print(f"exceptioon - {e}")
+                messages.error(request, "Records already present.")
+    
+    context['form'] = form
+    # return HttpResponseRedirect("/csc/courses/")
+    return render(request, 'csc/courses.html', context)
+  else:
+    form = FossForm()
+        # context['form']=foss_form
+    context['form'] = form
+    return render(request, 'csc/courses.html', context)
+        
+
+
+  return render(request,'csc/courses.html',context)
+
 @method_decorator(csrf_exempt, name='dispatch')
 class GetFossOptionView(JSONResponseMixin, View):
   def dispatch(self, *args, **kwargs):
@@ -133,18 +197,23 @@ class GetFossOptionView(JSONResponseMixin, View):
 @is_vle
 def student_list(request):
   context={}
-  vles = VLE.objects.filter(user=request.user)
+  vle = VLE.objects.filter(user=request.user).first()
   students = []
-  dca = Vle_csc_foss.objects.filter(programme_type='dca').values_list('spoken_foss')
-  individual = Vle_csc_foss.objects.filter(programme_type='individual').values_list('spoken_foss')
-  fdca = SpokenFoss.objects.filter(id__in=[x[0] for x in dca])
-  findividual = SpokenFoss.objects.filter(id__in=[x[0] for x in individual])
-  context['foss_dca'] = fdca
-  context['foss_individual'] = findividual
-  for vle in vles:
-    s = Student.objects.filter(vle_id=vle.id)
-    for item in s:
-      students.append(item)
+  # dca = Vle_csc_foss.objects.filter(programme_type='dca').values_list('spoken_foss')
+  # individual = Vle_csc_foss.objects.filter(programme_type='individual').values_list('spoken_foss')
+  # fdca = SpokenFoss.objects.filter(id__in=[x[0] for x in dca])
+  # fdca = SpokenFoss.objects.filter(id__in=[x[0] for x in dca])
+  # findividual = SpokenFoss.objects.filter(id__in=[x[0] for x in individual])
+  # findividual = SpokenFoss.objects.filter(id__in=[x[0] for x in individual])
+  fdca = Vle_csc_foss.objects.filter(programme_type='dca',vle=vle)
+  findividual = Vle_csc_foss.objects.filter(programme_type='individual',vle=vle)
+  context['foss_dca'] = [x.spoken_foss for x in fdca]
+  context['foss_individual'] = [x.spoken_foss for x in findividual]
+  # context['foss_individual'] = findividual
+  # for vle in vles:
+  s = Student.objects.filter(vle_id=vle.id)
+  for item in s:
+    students.append(item)
   context['students'] = students
   return render(request,'csc/students_list.html',context)
 
@@ -154,7 +223,7 @@ def assign_foss(request):
   vle = VLE.objects.get(user=request.user)
   students = request.POST.getlist('student[]')
   fosses = request.POST.getlist('foss[]')
-  f = SpokenFoss.objects.filter(id__in=[int(x) for x in fosses]).values_list('foss')
+  f = FossCategory.objects.filter(id__in=[int(x) for x in fosses]).values_list('foss')
   foss_name = ', '.join([x[0] for x in f])
   
   print(f"students".ljust(40,'*')+f"students")
@@ -202,26 +271,7 @@ def student_profile(request,id):
   return render(request,'csc/student_profile.html',context)
 
 
-def courses(request):
-  context = {}
-  vles = VLE.objects.filter(user=request.user)
-  for vle in vles:
-    dca_csc_foss = Vle_csc_foss.objects.filter(vle=vle,programme_type='dca')
-    individual_csc_foss = Vle_csc_foss.objects.filter(vle=vle,programme_type='individual')
-    dca_foss = {}
-    for item in dca_csc_foss:
-      students = Student_Foss.objects.filter(csc_foss=item.id).count()      
-      dca_foss[item.spoken_foss.foss] = {'total_students':students}
 
-    individual_foss = {}
-    for item in individual_csc_foss:
-      students = Student_Foss.objects.filter(csc_foss=item.id).count()
-      individual_foss[item.spoken_foss.foss] = {'total_students':students}
-
-    context['dca_foss'] = dca_foss
-    context['individual_foss'] = individual_foss
-
-  return render(request,'csc/courses.html',context)
 
 
 @csrf_exempt
@@ -292,7 +342,8 @@ class TestCreateView(CreateView):
       vle_foss = Vle_csc_foss.objects.filter(vle=vle)
       fosses = FossCategory.objects.filter(id__in=[x.spoken_foss.id for x in vle_foss])
       form.fields['foss'].queryset = fosses
-      # form.fields['invi'] = forms.IntegerField()
+      form.fields['tdate'].widget = widgets.DateInput(attrs={'type': 'date'})
+      form.fields['ttime'].widget = widgets.DateInput(attrs={'type': 'time'})     
       return form
 
   def get_form_kwargs(self):
@@ -338,7 +389,8 @@ class TestUpdateView(UpdateView):
   model = Test
   template_name = 'csc/test_update_form.html'
   context_object_name = 'test'
-  fields = ('foss', 'tdate', 'ttime', 'note_student', 'note_invigilator', 'test_name' )
+  fields = ('test_name','foss', 'tdate', 'ttime', 'note_student', 'note_invigilator', 'publish' )
+  
 
   def get_success_url(self):
     messages.success(self.request,"Test updated successfully.")
@@ -350,7 +402,24 @@ class TestUpdateView(UpdateView):
       vle_foss = Vle_csc_foss.objects.filter(vle=vle)
       fosses = FossCategory.objects.filter(id__in=[x.spoken_foss.id for x in vle_foss])
       form.fields['foss'].queryset = fosses
+      form.fields['tdate'].widget = widgets.DateInput(attrs={'type': 'date'})
+      form.fields['ttime'].widget = widgets.DateInput(attrs={'type': 'time'})
+      t = str(self.get_object().ttime).split(' ')[0]
+      print(f"t ------ {t}")
+      form.fields['ttime'].initial = t
       return form
+
+  def get_context_data(self, **kwargs):
+    print(f"1 **".ljust(50,'-'))
+    context = super().get_context_data(**kwargs)
+    vle = VLE.objects.filter(user=self.request.user).first()
+    id = vle.id
+    vle = VLE.objects.filter(user=self.request.user).first()
+    invigilationRequestForm = InvigilationRequestForm(vle_id=id,test_id=self.get_object().id)
+    context['invigilationRequestForm'] = invigilationRequestForm
+    t = str(self.get_object().ttime).split(' ')[0]
+    context['t']=t
+    return context
 
 def invigilators(request):
   context = {}
@@ -467,12 +536,14 @@ def invigilator_profile(request):
 def add_invigilator_to_test(request):
   data = {}
   context = {}
-  test_id = request.POST.get('test')  
+  test = request.POST.get('test_id')  
+  test_id = request.POST.get('test',test)  
   invigilators = request.POST.getlist('invigilators')
   test = Test.objects.get(id=int(test_id))
   for invigilator in invigilators:
     InvigilationRequest.objects.create(invigilator_id=int(invigilator),test=test,status=0)
-  return render(request,'csc/test_form.html',context)
+  
+  return HttpResponseRedirect(reverse('csc:update_test',kwargs={'pk':test_id}) )
 
 def review_invigilation_request(request):
   status = request.GET.get("review")
@@ -483,4 +554,16 @@ def review_invigilation_request(request):
   print(f'status : {request.GET.get("review")}')
   return HttpResponseRedirect(reverse('csc:invigilator_profile') )
 
+def get_stats(request):
+  data = {}
+  print("4 ------- ")
+  data['upcoming_tests'] = get_upcoming_test_stats()
+  print("5 ------- ")
+  data['course_type_offered'] = get_courses_offered_stats()
+  print("6 ------- ")
+  data['dca_students'] = get_programme_stats('dca')
+  print("7 ------- ")
+  data['individual_students'] = get_programme_stats('individual')
+  print("8 ------- ")
   
+  return JsonResponse(data)
