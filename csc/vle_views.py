@@ -520,7 +520,7 @@ def add_invigilator(request):
   return JsonResponse(data)
 
 
-def invigilator_profile(request):
+def invigilator_dashboard(request):
   context = {}
   invigilator = Invigilator.objects.get(user=request.user)
   pending = InvigilationRequest.objects.filter(invigilator=invigilator,status=0)
@@ -531,7 +531,7 @@ def invigilator_profile(request):
   context['accepted'] = accepted
   context['rejected'] = rejected
   context['all'] = all
-  return render(request,'csc/invigilator_profile.html',context)
+  return render(request,'csc/invigilator_dashboard.html',context)
 
 def add_invigilator_to_test(request):
   data = {}
@@ -552,7 +552,7 @@ def review_invigilation_request(request):
   obj.status = int(status)
   obj.save()
   print(f'status : {request.GET.get("review")}')
-  return HttpResponseRedirect(reverse('csc:invigilator_profile') )
+  return HttpResponseRedirect(reverse('csc:invigilator_dashboard') )
 
 def get_stats(request):
   data = {}
