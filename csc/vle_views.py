@@ -68,6 +68,9 @@ def vle_dashboard(request):
     context = {}
     # user = request.user
     vle = VLE.objects.filter(user=request.user).first()
+
+    context['vle'] = vle
+    context['user'] = request.user
     
     context['upcoming_test_stats'] = get_upcoming_test_stats()
     context['courses_offered_stats'] = get_courses_offered_stats()
