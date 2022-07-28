@@ -50,3 +50,19 @@ def get_programme_stats(type):
     return d
 
 
+def get_foss_enroll_percent(vle):
+    csc_foss = [x for x in Vle_csc_foss.objects.filter(vle=vle)]
+    d = {}
+    print("------------------------------------------------------------------------------------------------------------------------")
+    print("------------------------------------------------------------------------------------------------------------------------")
+    print(f"csc_foss *** {csc_foss}")
+    total = Student_Foss.objects.filter(csc_foss__in = csc_foss).count()
+    for item in csc_foss:
+        print(item)
+        print(item.spoken_foss.foss)
+        print(Student_Foss.objects.filter(csc_foss = item))
+        d[item.spoken_foss.foss] = ((Student_Foss.objects.filter(csc_foss = item).count())/total)*100
+    
+    print(d)
+    print("------------------------------------------------------------------------------------------------------------------------")
+    return d
