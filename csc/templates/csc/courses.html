@@ -19,9 +19,11 @@
 {% block content %}
 <div class="container">
     <div >
+         {{ form.non_field_errors }}
+        {% include "_error_msg.html" %}
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-              <button class="nav-link active" id="nav-course-tab" data-bs-toggle="tab" data-bs-target="#nav-course" type="button" role="tab" aria-controls="nav-course" aria-selected="true">DCA FOSS</button>
+              <button class="nav-link active" id="nav-course-tab" data-bs-toggle="tab" data-bs-target="#nav-course" type="button" role="tab" aria-controls="nav-course" aria-selected="true">Add FOSS</button>
               <button class="nav-link" id="nav-dca-tab" data-bs-toggle="tab" data-bs-target="#nav-dca" type="button" role="tab" aria-controls="nav-dca" aria-selected="true">DCA FOSS</button>
               <button class="nav-link" id="nav-individual-tab" data-bs-toggle="tab" data-bs-target="#nav-individual" type="button" role="tab" aria-controls="nav-individual" aria-selected="false">Individual FOSS</button>
             </div>
