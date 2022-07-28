@@ -58,6 +58,9 @@ body{
 .test_title{
   color: #013A6B!important;
 }
+.progress{
+  height: 0.25rem;
+}
 </style>
 <link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
 <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
@@ -122,10 +125,7 @@ body{
                                 <div class="col-auto">
                                     <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{total_certificates_issued}}</div>
                                 </div>
-                                <div class="col">
-                                    <div class="progress progress-sm mr-2">
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
                         <div class="col-auto">
@@ -137,23 +137,7 @@ body{
             </div>
         </div>
     
-        <!-- Pending Requests Card Example -->
-        <!-- <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-4 shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Pending Requests</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-comments fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
+        
     </div>
     <div>
       <div class="card">
@@ -179,14 +163,9 @@ body{
               </div>
             </div>
               {% endfor %}
-              
-    
           </div>
-        
         </div>
       </div>
-
-
     </div>
     <div class="row mt-2 ">
       <div class="col-md-3 ">
@@ -208,44 +187,26 @@ body{
           <canvas id="individual_course"></canvas>  
         </div>
       </div>
-
-     
-
     </div>
-
-    <!-- <div class="row">
-      <div class="col-md-3">
-        <div>
-          {% for message in messages %}
-          <div>
-            <div class="alert alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{% endif %}{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}success{% endif %}" role="alert">
-              {{ message|safe }}
-          </div>
-          {% endfor %}
-  
-        </div>
-        <div class="card">
-          <div class="card-header"> Add Foss</div>
-          <div class="card-body">
-            c
-          </div>
+    <div>
+      
+    </div>
+    <div class="row mt-4">
+      {% for key,value in fosses_perc.items %}
+      <div class="col-md-2 mb-4">
+        <div class="card border-3 shadow h-100 py-2">
+            <p class="px-2">{{ key }}</p>
+            <div class="progress m-2">
+              <div class="progress-bar bg-warning" role="progressbar" style="width: {{value}}%" aria-valuenow="{{value}}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
         </div>
       </div>
-      <div class="col-6">
-        
-      </div>
-  
+      {% endfor %}
     </div>
-  </div> -->
-    </div>
+  </div>
 </div>
 
 <div class="container" style="padding-top:9%;" id="main">
-
-  
-  
-  
- 
 {% endblock %}
 
 {% block script %}

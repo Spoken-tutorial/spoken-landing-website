@@ -79,6 +79,7 @@ def vle_dashboard(request):
     context['total_tests_completed'] = Test.objects.filter(vle=vle,tdate__gte=datetime.datetime.today().date()).count()
     context['total_certificates_issued'] = StudentTest.objects.filter(status=4).count() #ToDo check condition
     
+    context['fosses_perc'] = get_foss_enroll_percent(vle)
     if request.method == 'POST':
         form = form = FossForm(request.POST)
         if form.is_valid():
