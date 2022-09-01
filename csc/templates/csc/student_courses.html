@@ -1,0 +1,254 @@
+{% extends "csc_base.html" %}
+{% load static %}
+{% load crispy_forms_tags%}
+{% block title%} CSC - VLE Dashboard {% endblock title%}
+{% block css %}
+<style>
+body{
+  background-color: #F1F2F5;
+}
+.card-header{
+  background-color:#013A6B!important;
+  color: #fff;
+}
+.p-icons{
+  color : #013A6B;
+}
+.test_info{
+  
+  font-size: 0.85rem;
+  color: rgba(0,0,0,0.5);
+}
+.fa-calendar-day,.fa-clipboard{
+  color: #013A6B;
+  margin-right: 6px;
+}
+.border-1{
+  border-left:  0.25rem solid #4e73df!important;
+} 
+.border-2{
+  border-left:  0.25rem solid #377D71!important;
+} 
+.border-3{
+  border-left:  0.25rem solid #36b9cc!important;
+} 
+.border-4{
+  border-left:  0.25rem solid #f6c23e!important;
+} 
+.text-xs{
+  font-size: 0.85rem;
+}
+.fa-users{
+  color: #4e73df;
+  opacity: 0.4;
+}
+.fa-clipboard-list{
+  color: #377D71;
+  opacity: 0.4;
+}
+.fa-award{
+  color: #36b9cc;
+  opacity: 0.4;
+}
+.heading{
+  color: #013A6B;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+.bg-white{
+  background: #fff;
+}
+.test_title{
+  color: #013A6B!important;
+}
+.progress{
+  height: 0.25rem;
+}
+/* custoome for this page */
+.fa-clipboard{
+  color :rgba(84, 186, 185, 1);
+  font-size: 1.2rem;
+}
+/* .fa-calendar-alt{
+  font-size: 1.2rem;
+} */
+
+</style>
+<link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
+<script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
+
+{% endblock %}
+
+
+{% block content%}
+
+
+
+<div >
+   
+    <div >
+      <div class="row">
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-1 shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                              Total students enrolled</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_students_enrolled}}</div>
+                        </div>
+                        <div class="col-auto">
+                            <!-- <i class="fas fa-calendar fa-2x text-gray-300"></i> -->
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-2 shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total tests completed</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_tests_completed}}</div>
+                        </div>
+                        <div class="col-auto">
+                          <i class="fas fa-clipboard-list fa-2x "></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-3 shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total certificates
+                            </div>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{total_certificates_issued}}</div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                          <i class="fas fa-award fa-2x"></i>
+                          
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                  <button class="nav-link active" id="nav-progress-tab" data-bs-toggle="tab" data-bs-target="#nav-progress" type="button" role="tab" aria-controls="nav-progress" aria-selected="true">In Progress</button>
+                  <button class="nav-link" id="nav-completed-tab" data-bs-toggle="tab" data-bs-target="#nav-completed" type="button" role="tab" aria-controls="nav-completed" aria-selected="false">Completed</button>
+                 
+                </div>
+              </nav>
+              <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-progress" role="tabpanel" aria-labelledby="nav-progress-tab">
+                    <div>
+                      {% for key,value in in_progress_foss_data.items %}
+                      <div class="card mt-3">
+                        <div class="card-header">
+                          {{key}}
+                        </div>
+                        <div class="card-body">
+                          {% if value.applied %}
+                              <p class="card-text"><i class="fas fa-clipboard"></i> You have applied for test scheduled on {{value.applied.test.tdate}}</p>
+                              <hr>
+                          {% endif %}
+                          
+                          
+                          <p class="mb-2"><strong>Upcoming tests : </strong></p>
+                          {% for item in value.upcoming_tests %}
+                            <p class="card-text"><i class="fas fa-calendar-day"></i> {{ item.tdate }}</p>
+                            
+                            {% empty %}
+                            <p class="card-text">No upcoming tests scheduled for this course.</p>
+                            
+                          <!-- <a href="#" class="btn btn-sm btn-warning">Raise Test Request</a> -->
+                          {% endfor %}
+                          
+                        </div>
+                      </div>
+
+                      {% endfor %}
+                        
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-completed" role="tabpanel" aria-labelledby="nav-completed-tab">
+                    <div>
+                        C
+                    </div>
+                </div>
+                
+              </div>
+        </div>
+    </div>
+
+   
+    <div>
+      
+    </div>
+   
+  </div>
+</div>
+
+<div class="container" style="padding-top:9%;" id="main">
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="text/javascript" src="{% static '/spoken/csc.js' %}"></script>
+<script>
+    
+    $(document).ready(function(){
+      if($('#id_programme_type').val() == '') {
+        $('#id_spoken_foss').val('');
+        $('#id_spoken_foss').prop('disabled', 'disabled');      
+      }
+    $('#id_programme_type').on('change', function(){
+        programme_type = $(this).val();
+        programme_type_name = $(this).children("option").filter(":selected").text();
+        $('#id_spoken_foss').html('<option>---------</option>');
+        if(programme_type != ''){
+            $.ajax({
+                url: "/csc/get-foss-option/",
+                type: "POST",
+                data: {
+                    programme_type: programme_type,
+                },
+                beforeSend: function() {
+                },
+                success: function(data) {
+                    if(data && data['spoken_foss_option']) {
+                        $('#id_spoken_foss').prop('disabled', false);
+                    $('#id_spoken_foss').html(data['spoken_foss_option']);
+                    
+                    }
+                 
+                }
+            });
+        }
+    });
+  });
+  </script>
+{% endblock %}

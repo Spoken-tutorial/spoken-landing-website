@@ -187,4 +187,19 @@ class StudentTest(models.Model):
     student = models.ForeignKey(Student,on_delete=models.CASCADE)
     test = models.ForeignKey(Test,on_delete=models.CASCADE)
     status = models.IntegerField() #0 : Rejected, 1 : Approved
+    test_status = models.IntegerField(default=0) #0: default - test not attended ; 1: attendance marked
+    def __str__(self):
+        return f"{self.id}"
 
+    class Meta:
+        unique_together = [['student', 'test']]
+
+class TestRequest(models.Model):
+    student = models.ForeignKey(Student,on_delete=models.CASCADE)
+    foss = models.ForeignKey(FossCategory,on_delete=models.CASCADE)
+    vle = models.ForeignKey(VLE,on_delete=models.CASCADE)
+    status = models.IntegerField() 
+    created = models.DateTimeField(auto_now_add=True) 
+
+    def __str__(self):
+        return f"{self.id}"

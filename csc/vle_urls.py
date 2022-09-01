@@ -4,6 +4,7 @@ from .views import *
 from django.urls import path
 from django.conf.urls import url
 from .vle_views import *
+from .ajax import ajax_mark_attendance
 app_name = 'csc'
 urlpatterns = [
     path('login/', CSCLogin.as_view(redirect_authenticated_user=True), name="login"),
@@ -16,6 +17,7 @@ urlpatterns = [
     path('get_stats/', get_stats, name="get_stats"),
     
     path('add_test/', TestCreateView.as_view(), name="add_test"),
+    path('mark_attendance/<int:id>', mark_attendance, name="mark_attendance"),
     path('detail_test/<int:pk>', TestDetailView.as_view(), name="detail_test"),
     path('update_test/<int:pk>', TestUpdateView.as_view(), name="update_test"),
     path('delete_test/<int:pk>', TestDeleteView.as_view(), name="delete_test"),
@@ -31,5 +33,7 @@ urlpatterns = [
       GetFossOptionView.as_view()
     ),
    
+  #  ajax
+    path('ajax_mark_attendance/', ajax_mark_attendance, name="ajax_mark_attendance")
     
 ]

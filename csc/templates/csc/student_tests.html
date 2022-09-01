@@ -4,70 +4,223 @@
 {% block css %}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
 <style>
+    body{
+      background-color: #F1F2F5;
+    }
+    .card-header{
+      background-color:#013A6B!important;
+      color: #fff;
+    }
+    .p-icons{
+      color : #013A6B;
+    }
+    .test_info{
+      
+      font-size: 0.85rem;
+      color: rgba(0,0,0,0.5);
+    }
+    .fa-calendar-day,.fa-clipboard{
+      color: #013A6B;
+      margin-right: 6px;
+    }
+    .border-1{
+      border-left:  0.25rem solid #4e73df!important;
+    } 
+    .border-2{
+      border-left:  0.25rem solid #377D71!important;
+    } 
+    .border-3{
+      border-left:  0.25rem solid #36b9cc!important;
+    } 
+    .border-4{
+      border-left:  0.25rem solid #f6c23e!important;
+    } 
+    .text-xs{
+      font-size: 0.85rem;
+    }
+    .fa-users{
+      color: #4e73df;
+      opacity: 0.4;
+    }
+    .fa-clipboard-list{
+      color: #377D71;
+      opacity: 0.4;
+    }
+    .fa-award{
+      color: #36b9cc;
+      opacity: 0.4;
+    }
+    .heading{
+      color: #013A6B;
+      font-size: 0.85rem;
+      font-weight: bold;
+    }
+    .bg-white{
+      background: #fff;
+    }
+    .test_title{
+      color: #013A6B!important;
+    }
+    .progress{
+      height: 0.25rem;
+    }
+    /* custoome for this page */
+    .fa-clipboard{
+      color :rgba(84, 186, 185, 1);
+      font-size: 1.2rem;
+    }
+    /* .fa-calendar-alt{
+      font-size: 1.2rem;
+    } */
     
-</style>
+    </style>
 {% endblock css %}
 
 {% block content %}
-<div class="container mt-5 py-2">
-    <div class="mt-5">
-        {{ form.non_field_errors }}
-        {% if messages %}
-        <ul class="messages" style="padding-left: 0!important;">
-            {% for message in messages %}
-            <li style="list-style: none;">
-                <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">
-                    {{ message }}
-                </div>
-            </li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-    </div>
-
-    <div>
-        <div class="row">
+       <div class="row">
             <div class="col-12">
-                <table class="table" id="tb_tests">
-                    <thead>
-                      <tr>
-                        <th scope="col">Test</th>
-                        <th scope="col">Date/Time</th>
-                        <th scope="col">Status</th>
-                        <!-- <th scope="col">Handle</th> -->
-                      </tr>
-                    </thead>
-                    <tbody>
-                        {% for key,value in test_status.items %}
-                        <tr>
-                            <td>{{key}}</td>    
-                            <td>{{key.tdate}}, {{key.ttime}}</td>    
-                            <td>
-                                {% if value == 0 %}
-                                
-                                <a href="{% url 'student:student_change_test_status' %}?status=1&id={{key.id}}" class="btn btn-success btn-sm">Accept</a>
-                                
-                                {% elif value == 1  %}
-                                
-                                <a href="{% url 'student:student_change_test_status' %}?status=0&id={{key.id}}" class="btn btn-danger btn-sm">Reject</a>
-                                {% elif value == 2 %}
-                            
-                                <a href="#">value is 2</a>
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                      <button class="nav-link active" id="nav-courses-tab" data-bs-toggle="tab" data-bs-target="#nav-courses" type="button" role="tab" aria-controls="nav-courses" aria-selected="true">Ongoing Courses</button>
+                      <button class="nav-link" id="nav-request-tab" data-bs-toggle="tab" data-bs-target="#nav-request" type="button" role="tab" aria-controls="nav-request" aria-selected="false">Test Request</button>
+                      <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</button>
+                    </div>
+                  </nav>
+                  <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active py-3" id="nav-courses" role="tabpanel" aria-labelledby="nav-courses-tab">
+                        <div>
+                            {% for key,value in in_progress_foss_data.items %}
+                            <div class="card mt-3">
+                              <div class="card-header">
+                                {{key}}
+                              </div>
+                              <div class="card-body">
+                                {% if value.applied %}
+                                    <p class="card-text"><i class="fas fa-clipboard"></i> You have applied for test scheduled on {{value.applied.tdate}}</p>
+                                    <hr>
                                 {% endif %}
-                            </td>    
-                        </tr>
-                        {% endfor %}
-                      
-                     
-                    </tbody>
-                  </table>   
-            <div>
-                    
-                </div>
+                                
+                                
+                                <p class="mb-2"><strong>Upcoming tests : </strong></p>
+                                {% for item in value.upcoming_tests %}
+                                <p class="card-text">
+                                    <i class="fas fa-calendar-day"></i> {{ item.tdate }} 
+                                    {% if not value.applied %}
+                                    <button type="button" class="btn btn-warning apply_btn" id="apply_{{item.id}}">Apply</button>
+                                    {% endif %}
+                                    
+                                </p>
+                                  
+                                  {% empty %}
+                                  <p class="card-text">No upcoming tests scheduled for this course.</p>
+                                  {% if not value.applied %}
+                                    <button type="button" class="btn btn-warning" id="open_tab">
+                                      <span style="color: #fff;">Raise Test Request</span>
+                                    </button>
+                                  {% endif %}
+                                  
+                                <!-- <a href="#" class="btn btn-sm btn-warning">Raise Test Request</a> -->
+                                {% endfor %}
+                                
+                              </div>
+                            </div>
+      
+                            {% endfor %}
+                              
+                          </div>
+                    </div>
+                    <div class="tab-pane fade py-3" id="nav-request" role="tabpanel" aria-labelledby="nav-request-tab">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="card">
+                                    <div class="card-header text-dark bg-warning">
+                                      <span style="color: #fff;">Raise Test Request</span>
+                                       
+                                    </div>
+                                    <div class="card-body">
+                                        <form>
+                                            <div class="mb-2">
+                                                <select class="form-select" aria-label="CSC" id="csc">                                   
+                                                    {% for item in csc %}
+                                                    <option value="{{item.0}}">{{item.2}} ({{item.1}})</option>
+                                                    {% endfor %}                                        
+                                                
+                                                  </select>
+                                            </div>
+                                            <div class="mb-2">
+                                                <select class="form-select" aria-label="FOSS" id="foss" >
+                                                    {% for item in fosses %}
+                                                    <option value="{{item.1}}">{{item.0}} </option>
+                                                    {% endfor %} 
+                                                </select>
+                                            </div>
+                                            <button type="button" class="btn btn-warning" id="raise_req">submit</button>
+                                       </form>
+                                    </div>
+                                  </div>
+                                  <div class="card mt-3">
+                                    <div class="card-header">
+                                      <strong>Tests requests raised :</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        {% if test_requests %}
+                                        <table class="table table-bordered">
+                                            <thead>
+                                              <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Course</th>
+                                                <th scope="col">Date</th>
+                                                
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for item in test_requests %}
+                                                <tr>
+                                                    <th scope="row">{{ forloop.counter }}</th>
+                                                    <td>{{item.foss.foss}}</td>
+                                                    <td>{{item.created}}</td>
+                                                  </tr>                                            
+                                                {% endfor %}
+                                            </tbody>
+                                          </table>
+                                        {% else %}
+                                        <p>No data.</p>
+                                        {% endif %}
+                                    </div>
+                                  </div>
+
+                            </div>
+
+                        </div>
+                        
+                          
+
+                    </div>
+                    <div class="tab-pane fade py-5" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
+                  </div>
             </div>
-        </div>  
-    </div>
-</div>
+            <div class="col-4">
+                
+                
+                  
+                  
+                  
+                
+            </div>
+       </div>
+       
+       <div class="modal" tabindex="-1" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p id="test_req_msg"></p>
+            </div>            
+          </div>
+        </div>
+      </div>
 {% endblock %}
 
 {% block script %}
@@ -75,9 +228,106 @@
 <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
 
 <script>
-    $(document).ready(function(){
-        $('#tb_tests').DataTable();   
-});
+    $(document).ready(function(){        
+        $( "#csc" ).change(function() {
+            let csc = $( "#csc" ).val();
+            $.ajax({
+                url: "/csc/student/list_foss_on_csc/",
+                type: "POST",
+                data: {
+                    csc: csc,
+                },
+                beforeSend: function() {
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#foss').empty()
+                    $.each(data['fosses'], function(key, value) {   
+                        $("#foss").prop("disabled", false);
+                        console.log(value[0],value[1]);
+                        $('#foss').append($("<option></option>")
+                                        .attr("value", value[1])
+                                        .text(value[0])); 
+                    });                 
+                },
+                error: function (jqXHR, textStatus, errorThrown){
+                    alert('erroor')
+                }
+            });
+        });
+
+        $( "#raise_req" ).click(function() {
+            let csc = $( "#csc" ).val();
+            let foss = $( "#foss option:selected" ).text();
+            let foss_id = $( "#foss" ).val();
+            $.ajax({
+                url: "/csc/student/raise_test_req/",
+                type: "POST",
+                data: {
+                    csc: csc,
+                    foss:foss,
+                    foss_id:foss_id,
+                },
+                beforeSend: function() {
+                },
+                success: function(data) {                    
+                    console.log(data);   
+                    $('#test_req_msg').html(data['msg']);                 
+                    var myModal = new bootstrap.Modal(document.getElementById('myModal'), {keyboard: false});
+                    myModal.show();                 
+                },
+                error: function (jqXHR, textStatus, errorThrown){
+                    $('#test_req_msg').html("Request not submitted. Some error occurred.");                 
+                    var myModal = new bootstrap.Modal(document.getElementById('myModal'), {keyboard: false});
+                    myModal.show();
+                }
+            });
+
+        });
+
+        $( "#open_tab" ).click(function() {
+            var someTabTriggerEl = document.querySelector('#nav-request-tab');            
+            var tab = new bootstrap.Tab(someTabTriggerEl);
+            tab.show()
+        });
+
+        $( ".apply_btn" ).click(function() {           
+            var id = $(this).attr('id');
+            console.log(id);
+            const test_id = id.split("_")[1];
+            console.log(test_id);
+            $.ajax({
+                url: "/csc/student/apply_for_test/",
+                type: "POST",
+                data: {
+                    test_id: test_id,
+                    
+                },
+                beforeSend: function() {
+                },
+                success: function(data) { 
+                    // alert('success');                   
+                    console.log(data);  
+                    $('#test_req_msg').html(data['msg']);                 
+                    var myModal = new bootstrap.Modal(document.getElementById('myModal'), {keyboard: false});
+                    myModal.show();   
+                    // $('#test_req_msg').html(data['msg']);                 
+                    // var myModal = new bootstrap.Modal(document.getElementById('myModal'), {keyboard: false});
+                    // myModal.show();                 
+                },
+                error: function (jqXHR, textStatus, errorThrown){
+                    alert('error');  
+                    // $('#test_req_msg').html("Request not submitted. Some error occurred.");                 
+                    // var myModal = new bootstrap.Modal(document.getElementById('myModal'), {keyboard: false});
+                    // myModal.show();
+                }
+            });
+            
+        });
+
+        
+    });
+    
 </script>
 {% endblock %}
 
