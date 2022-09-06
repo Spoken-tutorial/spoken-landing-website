@@ -1,0 +1,195 @@
+{% extends 'csc_base.html'%}
+{% load csc_tags %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+<style>
+    .fa-check-circle{
+        color: green;
+    }
+    .fa-times-circle,.fa-trash-alt{
+        color: maroon;
+    }
+    #example_length, #example_paginate{
+        display: none;
+    }
+    .fa-edit{
+        color: midnightblue;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-success" role="alert" style="display: none" id="status">
+                    Attendance marked!
+                  </div>
+                <div class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            {{test.test_name|default_if_none:test.foss.foss | title }}
+                            
+                        </div>
+                        <div class="card-body">
+                          
+                          <div class="card-text d-flex mb-3">
+                            <p class="me-5"><i class="far fa-calendar"></i> : {{test.tdate}}</p>
+                            <p class="me-5"><i class="far fa-clock "></i> : : {{test.ttime}}</p>
+                            <p>Foss : {{test.foss.foss}}</p>
+
+                          </div>
+                          
+                          <div class="btn-group mt-3" role="group" aria-label="Basic mixed styles example">
+                            
+                            <button type="button" class="btn btn-warning" disabled>Total enrolled : <span id="total_enrolled" >{{total_enrolled}}</span></button>
+                            <button type="button" class="btn btn-success" disabled>Attendance marked : <span id="attending" >{{attending}}</span></button>
+                            <button type="button"  class="btn btn-danger" disabled>Pending : <span id="pending"> {{pending}}</span></button>
+                          </div>
+                          <div class="card-text d-flex my-3">
+                            <p class="me-5"><button class="btn btn-sm " id="btn_select_all" style="background-color: #90B77D">Select all </button></p>
+                            <p class="me-5"><button class="btn btn-sm " id="btn_deselect_all"  style="background-color: #F29393">Deselect all </button></p>
+                            <p class="me-5"><button class="btn btn-sm btn-success" id="btn_mark_attendance">Mark attendance</button></p>
+                            <!-- <p>Total Students selected : <span id="students_selected"></span></p> -->
+                          </div>
+                        </div>
+                      </div>
+                </div>
+                <table class="table table-bordered mt-5" id="tb_students">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">email</th>
+                        <th scope="col">contact</th>
+                        <th scope="col"></th>
+                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                     
+                      {% for item in students %}
+                      
+                        <tr >
+                           
+                            <td>{{forloop.counter}}</th>
+                            <td>{{item.student.user.get_full_name | title}}</td>
+                            <td>{{item.student.user.email}}</td>
+                            <td>{{item.student.phone}}</td>
+                            <td> 
+                                <div class="form-check">
+                                    {% if item.test_status %}
+                                    <input class="form-check-input att" type="checkbox" value="{{item.id}}" id="check_{{item.id}}" checked>                               
+                                    {% else %}
+                                    <input class="form-check-input att" type="checkbox" value="{{item.id}}" id="check_{{item.id}}" >                               
+                                    {% endif %}
+                                </div>
+                            </td>
+                        
+                         </tr>
+                      
+                      
+                      {% endfor %}
+                      
+                      
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+        
+    </div>
+    <div>
+        {% if is_paginated %}
+        {% include "_pagination.html" %}
+    {% endif %}
+    </div>
+    
+    
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    function student_select_count(){
+        var selected = [];
+            $('input.att:checkbox:checked').each(function () {
+                selected.push($(this).val());
+            });
+        return selected;
+    }
+    $(document).ready(function () {
+        $('#tb_students').DataTable(
+            {
+                "pageLength": 200
+            }
+        ); 
+       
+        $( "#btn_mark_attendance" ).click(function() {
+            
+            var arr = [];
+                $('input.att:checkbox:checked').each(function () {
+                arr.push($(this).val());
+            });
+            console.log(arr);
+            const test_id = `{{test.id}}`
+            console.log(test_id);
+            data = {}
+            data['students'] = arr
+            data['test_id'] = test_id
+            url = '/csc/ajax_mark_attendance/'
+            $.ajax({
+                url : url,
+                type: "POST",
+                data : data,
+                success: function(data, textStatus, jqXHR)
+                {
+                    console.log(data);
+                    console.log(data['foss']);
+                    console.log(data);
+                    $('#total_enrolled').text(data['total_enrolled']);
+                    $('#attending').text(data['attending']);
+                    $('#pending').text(data['pending']);
+                    $('#status').show();
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    alert('error')
+                }
+            });
+        });
+       
+     
+
+    //     $('.att').change(function() {
+    //         const attending = $('#attending').text()
+    //         const l = student_select_count().length-parseInt(attending);
+    //         $('#students_selected').text(l);     
+    // });
+
+    
+    $( "#btn_select_all" ).click(function() {
+       
+        $('.att').prop('checked', true);  
+        // $('#students_selected').text(student_select_count().length); 
+    });
+
+    $( "#btn_deselect_all" ).click(function() {
+       
+       $('.att').prop('checked', false);  
+    //    $('#students_selected').text(student_select_count().length); 
+   });
+    
+});
+  </script>
+{% endblock %}
+
+
+

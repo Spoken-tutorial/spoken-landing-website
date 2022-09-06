@@ -32,7 +32,8 @@ urlpatterns = [
     path('dashboard/', spoken_views.dashboard, name='dashboard'),
     path('login/', auth_views.LoginView.as_view(template_name='spokenlogin/login.html',redirect_authenticated_user=True), name='login_other'),
     # path('csc/', include('csc.vle_urls')),
+    path('csc/student/', include('csc.student_urls', namespace='student')),
     path('csc/', include('csc.vle_urls', namespace='csc')),
-    path('csc/', include('csc.student_urls', namespace='student')),
+    
     path('accounts/', include('django.contrib.auth.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

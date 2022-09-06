@@ -64,6 +64,15 @@ body{
 .progress{
   height: 0.25rem;
 }
+/* custoome for this page */
+.fa-clipboard{
+  color :rgba(84, 186, 185, 1);
+  font-size: 1.2rem;
+}
+/* .fa-calendar-alt{
+  font-size: 1.2rem;
+} */
+
 </style>
 <link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
 <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
@@ -74,41 +83,9 @@ body{
 {% block content%}
 
 
-<div>
-  <div class="card mb-3">
-    <div class="card-header">
-      <div><i class="fas fa-user-circle mr-2">  </i>  <span>{{ user.first_name | title }} {{ user.last_name | title }}</span></div>
-      
-    </div>
-    <div class="card-body">
-      <div class="row">
-        <div class="col-md-4">
-          <div class="d-flex">
-            <span class="me-2"><i class="fas fa-university p-icons d-inline-block mr-5"></i></span>
-            <span class="me-2"><strong>CSC ID: </strong> {{ vle.csc.csc_id }}</span>
-          </div>
-          <div>
-            <span class="me-2"><i class="fas fa-map-marker-alt p-icons d-inline-block mr-5"></i></span>
-            <span class="me-2">{{ vle.csc.city }}, {{ vle.csc.state }}</span></div>
-        </div>
-        <div class="col-md-4 ">
-          <div class="d-flex">
-              <span class="me-2"><i class="fas fa-envelope p-icons d-inline-block mr-5"></i></span>
-              <span class="me-2">{{ user.email }}</span>
-          </div>
-            <div class="d-flex">
-              <span class="me-2"><i class="fas fa-phone-square-alt p-icons d-inline-block mr-5"></i></span>
-              <span class="me-2">{{ vle.phone }}</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-  </div>
 <div >
-    <!-- <div class="col-md-3">
-      {% include "sidebar.html" %}
-    </div> -->
+   
     <div >
       <div class="row">
 
@@ -175,70 +152,63 @@ body{
     
         
     </div>
-    <div>
-      <div class="card">
-        <div class="card-header">
-          Upcoming Tests
-        </div>
-        <div class="card-body">
-        
-          
-          <div class="row">
-            
-    
-              {% for key,value in upcoming_test_stats.items %}
-              <div class="col-md-3">
-              <div class="border p-2">
-                <div class="test_info">
-                  <p ><a href="{% url 'csc:update_test' pk=value.id %}" class="test_title"><i class="far fa-clipboard"></i> {{key}} <i class="fas fa-location-arrow"></i></a></p>
-                  <p><i class="fas fa-calendar-day"></i>{{value.date}} / {{value.time}}</p>
-                  <p>Approved : {{value.approved}}</p>
-                  <p>Rejected : {{value.rejected}}</p>
+
+    <div class="row">
+        <div class="col-12">
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                  <button class="nav-link active" id="nav-progress-tab" data-bs-toggle="tab" data-bs-target="#nav-progress" type="button" role="tab" aria-controls="nav-progress" aria-selected="true">In Progress</button>
+                  <button class="nav-link" id="nav-completed-tab" data-bs-toggle="tab" data-bs-target="#nav-completed" type="button" role="tab" aria-controls="nav-completed" aria-selected="false">Completed</button>
+                 
                 </div>
-                <canvas id="test_{{value.id}}"></canvas>
+              </nav>
+              <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-progress" role="tabpanel" aria-labelledby="nav-progress-tab">
+                    <div>
+                      {% for key,value in in_progress_foss_data.items %}
+                      <div class="card mt-3">
+                        <div class="card-header">
+                          {{key}}
+                        </div>
+                        <div class="card-body">
+                          {% if value.applied %}
+                              <p class="card-text"><i class="fas fa-clipboard"></i> You have applied for test scheduled on {{value.applied.test.tdate}}</p>
+                              <hr>
+                          {% endif %}
+                          
+                          
+                          <p class="mb-2"><strong>Upcoming tests : </strong></p>
+                          {% for item in value.upcoming_tests %}
+                            <p class="card-text"><i class="fas fa-calendar-day"></i> {{ item.tdate }}</p>
+                            
+                            {% empty %}
+                            <p class="card-text">No upcoming tests scheduled for this course.</p>
+                            
+                          <!-- <a href="#" class="btn btn-sm btn-warning">Raise Test Request</a> -->
+                          {% endfor %}
+                          
+                        </div>
+                      </div>
+
+                      {% endfor %}
+                        
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-completed" role="tabpanel" aria-labelledby="nav-completed-tab">
+                    <div>
+                        C
+                    </div>
+                </div>
+                
               </div>
-            </div>
-              {% endfor %}
-          </div>
         </div>
-      </div>
     </div>
-    <div class="row mt-2 ">
-      <div class="col-md-3 ">
-        <div class="border p-2 bg-white">
-          <p class="heading text-center">Enrollment based on Programme Type </p>
-          <div class="text-xs d-flex justify-content-around"><div>DCA({{courses_offered_stats.dca}})</div><div>Individual({{courses_offered_stats.individual}})</div></div>
-          <canvas id="prg_type"></canvas>  
-        </div>
-      </div>
-      <div class="col-4 mt-2 ">
-        <div class="border p-2 bg-white">
-          <p class="heading text-center">Enrollment for DCA Courses </p>
-          <canvas id="dca_course"></canvas>  
-        </div>
-      </div>
-      <div class="col-4 mt-2 ">
-        <div class="border p-2 bg-white">
-          <p class="heading text-center">Enrollment for Individual Courses </p>
-          <canvas id="individual_course"></canvas>  
-        </div>
-      </div>
-    </div>
+
+   
     <div>
       
     </div>
-    <div class="row mt-4">
-      {% for key,value in fosses_perc.items %}
-      <div class="col-md-2 mb-4">
-        <div class="card border-3 shadow h-100 py-2">
-            <p class="px-2">{{ key }}</p>
-            <div class="progress m-2">
-              <div class="progress-bar bg-warning" role="progressbar" style="width: {{value}}%" aria-valuenow="{{value}}" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
+   
   </div>
 </div>
 

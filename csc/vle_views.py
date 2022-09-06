@@ -30,6 +30,8 @@ import string
 import random
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
+from django.db.models import F,ExpressionWrapper
+from django.db.models.fields import BooleanField
 
 class JSONResponseMixin(object):
   """
@@ -68,6 +70,9 @@ def vle_dashboard(request):
     context = {}
     # user = request.user
     vle = VLE.objects.filter(user=request.user).first()
+
+    context['vle'] = vle
+    context['user'] = request.user
     
     context['upcoming_test_stats'] = get_upcoming_test_stats()
     context['courses_offered_stats'] = get_courses_offered_stats()
@@ -318,6 +323,7 @@ class TestListView(ListView):
     context = super(TestListView, self).get_context_data(**kwargs)
     vle = VLE.objects.filter(user = self.request.user).first()
     tests = Test.objects.filter(vle = vle)
+    # tests = Test.objects.filter(vle = vle).annotate(attendance=ExpressionWrapper(F('tdate')==date.today(),output_field=BooleanField()))
     page = self.request.GET.get('page')
     paginator = Paginator(tests, self.paginate_by)
     try:
@@ -327,6 +333,12 @@ class TestListView(ListView):
     except EmptyPage:
       tests = paginator.page(paginator.num_pages)
     context['tests'] = tests
+    
+    test_req = [x for x in TestRequest.objects.filter(vle=vle)]
+    context['test_req'] = test_req
+
+
+
     return context
 
 
@@ -420,6 +432,11 @@ class TestUpdateView(UpdateView):
     context['invigilationRequestForm'] = invigilationRequestForm
     t = str(self.get_object().ttime).split(' ')[0]
     context['t']=t
+    test = self.get_object()
+    students = [x.student for x in StudentTest.objects.filter(test = test)]
+    context['students'] = students
+    print(f"test - {test}")
+    print(f"students ---- {students}")
     return context
 
 def invigilators(request):
@@ -568,3 +585,20 @@ def get_stats(request):
   print("8 ------- ")
   
   return JsonResponse(data)
+
+def mark_attendance(request,id):
+  context = {}
+ 
+  test = Test.objects.get(id=id)
+  # st = [x.student for x in StudentTest.objects.filter(test=test)]
+  st = StudentTest.objects.filter(test=test)
+  context['test'] = test
+  context['students'] = st
+  total_enrolled = len(st)
+  attending = StudentTest.objects.filter(test_status=1).count()
+  pending = total_enrolled - attending
+  context['total_enrolled'] = total_enrolled
+  context['attending'] = attending
+  context['pending'] = pending
+  
+  return render(request,'csc/mark_attendance.html',context)
