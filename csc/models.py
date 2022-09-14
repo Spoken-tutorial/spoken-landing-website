@@ -14,6 +14,65 @@ PROGRAMME_TYPE_CHOICES = Choices(
     ('', ('-- None --')),('dca', ('DCA Programme')), ('individual', ('Individual Course'))
     )
 
+
+class FossSuperCategory(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta(object):
+        verbose_name = 'FOSS Category'
+        verbose_name_plural = 'FOSS Categories'
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
+
+class FossCategory(models.Model):
+    foss = models.CharField(unique=True, max_length=255)
+    description = models.TextField()
+    status = models.BooleanField(max_length=2)
+    is_learners_allowed = models.BooleanField(max_length=2,default=0 )
+    is_translation_allowed = models.BooleanField(max_length=2, default=0)
+    # user = models.ForeignKey(User, on_delete=models.PROTECT )
+    category = models.ManyToManyField(FossSuperCategory)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    show_on_homepage = models.PositiveSmallIntegerField(default=0, help_text ='0:Series, 1:Display on home page, 2:Archived')
+    available_for_nasscom = models.BooleanField(default=True, help_text ='If unchecked, this foss will not be available for nasscom' )
+    available_for_jio = models.BooleanField(default=True, help_text ='If unchecked, this foss will not be available for jio and spoken-tutorial.in' )
+    csc_dca_programme = models.BooleanField(default=True, help_text ='If unchecked, this foss will not be available for csc-dca programme' )
+    class Meta(object):
+        verbose_name = 'FOSS'
+        verbose_name_plural = 'FOSSes'
+        ordering = ('foss', )
+
+    def __str__(self):
+        return self.foss
+
+
+class CertifiateCategories(models.Model):
+    code = models.CharField(max_length=100, unique = True)
+    title = models.CharField(max_length=255, unique=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.code} - {self.title}"
+
+
+class CategoryCourses(models.Model):
+    certificate_category = models.ForeignKey(CertifiateCategories,on_delete=models.CASCADE)
+    foss = models.ForeignKey(FossCategory,on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.certificate_category.code} - {self.foss.foss}"
+
+
+
+
 class CSC(models.Model):
     CSC_PLAN = [('College Level Subscription','College Level Subscription'),
                 ('School Level Subscription','School Level Subscription')]
@@ -60,6 +119,27 @@ class Transaction(models.Model):
         unique_together = ('vle','csc','transcdate')
 
 
+class Vle_csc_foss(models.Model):
+  
+  programme_type = models.CharField(choices=PROGRAMME_TYPE_CHOICES,  max_length=100)
+#   spoken_foss = models.IntegerField()
+  spoken_foss = models.ForeignKey(FossCategory,on_delete=models.CASCADE)
+  created = models.DateField(blank=True,null=True)
+  updated = models.DateField(auto_now = True, null=True)
+  vle = models.ForeignKey(VLE,on_delete=models.CASCADE)
+  
+  #unique together
+  class Meta(object):
+    unique_together = (("spoken_foss","programme_type"),)
+  def __str__(self):
+      return self.spoken_foss.foss
+
+
+
+
+
+# =========== Student models start ===================================
+
 class Student(models.Model):
     student_id = models.CharField(max_length=255)
     user = models.ForeignKey(User,on_delete=models.CASCADE)
@@ -78,65 +158,29 @@ class Student(models.Model):
     address = models.CharField(max_length=255,blank=True)
     date_of_registration = models.DateField()
 
-
-
-
-class FossSuperCategory(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    class Meta(object):
-        verbose_name = 'FOSS Category'
-        verbose_name_plural = 'FOSS Categories'
-        ordering = ('name',)
-
-    def __str__(self):
-        return self.name
-
-class FossCategory(models.Model):
-    foss = models.CharField(unique=True, max_length=255)
-    description = models.TextField()
-    status = models.BooleanField(max_length=2)
-    is_learners_allowed = models.BooleanField(max_length=2,default=0 )
-    is_translation_allowed = models.BooleanField(max_length=2, default=0)
-    # user = models.ForeignKey(User, on_delete=models.PROTECT )
-    category = models.ManyToManyField(FossSuperCategory)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    show_on_homepage = models.PositiveSmallIntegerField(default=0, help_text ='0:Series, 1:Display on home page, 2:Archived')
-    available_for_nasscom = models.BooleanField(default=True, help_text ='If unchecked, this foss will not be available for nasscom' )
-    available_for_jio = models.BooleanField(default=True, help_text ='If unchecked, this foss will not be available for jio and spoken-tutorial.in' )
-    csc_dca_programme = models.BooleanField(default=True, help_text ='If unchecked, this foss will not be available for csc-dca programme' )
-    class Meta(object):
-        verbose_name = 'FOSS'
-        verbose_name_plural = 'FOSSes'
-        ordering = ('foss', )
-
-    def __str__(self):
-        return self.foss
     
-class Vle_csc_foss(models.Model):
-  
-  programme_type = models.CharField(choices=PROGRAMME_TYPE_CHOICES,  max_length=100)
-#   spoken_foss = models.IntegerField()
-  spoken_foss = models.ForeignKey(FossCategory,on_delete=models.CASCADE)
-  created = models.DateField(blank=True,null=True)
-  updated = models.DateField(auto_now = True, null=True)
-  vle = models.ForeignKey(VLE,on_delete=models.CASCADE)
-  
-  #unique together
-  class Meta(object):
-    unique_together = (("spoken_foss","programme_type"),)
-  def __str__(self):
-      return self.spoken_foss.foss
-         
-class Student_Foss(models.Model):
+
+class Student_certificate_course(models.Model):
     student = models.ForeignKey(Student,on_delete=models.CASCADE)
-    csc_foss = models.ForeignKey(Vle_csc_foss,on_delete=models.CASCADE)
+    cert_category = models.ForeignKey(CertifiateCategories,on_delete=models.CASCADE)
+    programme_starting_date = models.DateField(blank=True,null=True)
+    created = models.DateField(blank=True,null=True)
+    updated = models.DateField(auto_now = True, null=True)
 
     class Meta:
+        unique_together = ('student','cert_category')
+    
+
+class Student_Foss(models.Model):
+    student = models.ForeignKey(Student,on_delete=models.CASCADE)
+    csc_foss = models.ForeignKey(FossCategory,on_delete=models.CASCADE)
+    
+    class Meta:
         unique_together = ('student','csc_foss')
+
+
+# =========== Student models ens ===================================
+
 
 
 class Invigilator(models.Model):

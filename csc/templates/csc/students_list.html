@@ -78,17 +78,7 @@
             <div>
                 <!-- <p>Total students selected : <span id="student_count"></span></p> -->
             </div>
-          <ul class="list-group">
-            <li class="list-group-item list-group-item-warning">DCA FOSS</li>
-            {% for foss in foss_dca %}
-                <li class="list-group-item">
-                    <div class="form-check">
-                        <input class="form-check-input checkFoss" type="checkbox" value="{{foss.id}}" id="foss_{{foss.id}}" name="check_foss" >
-                        <span>{{foss.foss}}</span>
-                    </div>   
-                </li>                
-            {% endfor %}
-          </ul>
+         
          
           <hr>
           <div>
@@ -97,7 +87,7 @@
                 {% for foss in foss_individual %}
                     <li class="list-group-item">
                         <div class="form-check">
-                            <input class="form-check-input checkFoss" type="checkbox" value="{{foss.id}}" id="foss_{{foss.id}}" name="check_foss" >
+                            <input class="form-check-input checkFoss" type="checkbox" value="{{foss}}" id="foss_{{foss.id}}" name="check_foss" >
                             <span>{{foss.foss}}</span>
                         </div>   
                     </li>                
@@ -142,35 +132,35 @@ function assign_foss(){
     if(checkStudent.length==0){
         alert("Please select students to assign FOSS");
     }else{
-        $('input[name=check_foss]').each(function () {
-        if(this.checked){
-        console.log(this);
-        checkFoss.push(this.value);
-    }     
-    });
-    if(checkFoss.length==0){
-        alert("Please select FOSS");
-    }else{
-        data = {student:checkStudent,foss:checkFoss}
-    url = '/csc/assign_foss/'
+            $('input[name=check_foss]').each(function () {
+                if(this.checked){
+                console.log(this);
+                checkFoss.push(this.value);
+                }     
+            });
+            if(checkFoss.length==0){
+                alert("Please select FOSS");
+            }else{
+                data = {student:checkStudent,foss:checkFoss}
+                url = '/csc/assign_foss/'
 
-    $.ajax({
-    url : url,
-    type: "POST",
-    data : data,
-    success: function(data, textStatus, jqXHR)
-    {
-        console.log(data);
-        console.log(data['foss']);
-        console.log(data);
-        alert('FOSS assigned successfully.\nFOSS assigned :' + data['foss'] +'\nTotal Students : '+ data['student_count'])
-    },
-    error: function (jqXHR, textStatus, errorThrown)
-    {
-        alert('e')
-    }
-});
-    }  
+                $.ajax({
+                    url : url,
+                    type: "POST",
+                    data : data,
+                    success: function(data, textStatus, jqXHR)
+                    {
+                        console.log(data);
+                        console.log(data['foss']);
+                        console.log(data);
+                        alert('FOSS assigned successfully.\nFOSS assigned :' + data['foss'] +'\nTotal Students : '+ data['student_count'])
+                    },
+                    error: function (jqXHR, textStatus, errorThrown)
+                    {
+                        alert('e')
+                    }
+                });
+            }  
 }
 }
   </script>

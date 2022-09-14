@@ -205,16 +205,12 @@ def student_list(request):
   context={}
   vle = VLE.objects.filter(user=request.user).first()
   students = []
-  # dca = Vle_csc_foss.objects.filter(programme_type='dca').values_list('spoken_foss')
-  # individual = Vle_csc_foss.objects.filter(programme_type='individual').values_list('spoken_foss')
-  # fdca = SpokenFoss.objects.filter(id__in=[x[0] for x in dca])
-  # fdca = SpokenFoss.objects.filter(id__in=[x[0] for x in dca])
-  # findividual = SpokenFoss.objects.filter(id__in=[x[0] for x in individual])
-  # findividual = SpokenFoss.objects.filter(id__in=[x[0] for x in individual])
-  fdca = Vle_csc_foss.objects.filter(programme_type='dca',vle=vle)
-  findividual = Vle_csc_foss.objects.filter(programme_type='individual',vle=vle)
-  context['foss_dca'] = [x.spoken_foss for x in fdca]
-  context['foss_individual'] = [x.spoken_foss for x in findividual]
+  
+  findividual = FossCategory.objects.filter(available_for_jio=True)
+  # findividual = FossCategory.objects.filter(programme_type='individual',vle=vle)
+
+
+  context['foss_individual'] = [x for x in findividual]
   # context['foss_individual'] = findividual
   # for vle in vles:
   s = Student.objects.filter(vle_id=vle.id)
@@ -229,6 +225,7 @@ def assign_foss(request):
   vle = VLE.objects.get(user=request.user)
   students = request.POST.getlist('student[]')
   fosses = request.POST.getlist('foss[]')
+
   f = FossCategory.objects.filter(id__in=[int(x) for x in fosses]).values_list('foss')
   foss_name = ', '.join([x[0] for x in f])
   
@@ -237,7 +234,7 @@ def assign_foss(request):
   for student in students:
     for foss in fosses:
       try:
-        f = Vle_csc_foss.objects.get(spoken_foss=int(foss),vle=vle)
+        f = FossCategory.objects.get(id=int(foss))
         s = Student.objects.get(id=int(student))
         Student_Foss.objects.create(student=s,csc_foss=f)
       except Exception as e:
@@ -265,15 +262,50 @@ def student_profile(request,id):
   
   dca_foss = []
   individual_foss = []
-  sf = Student_Foss.objects.filter(student=student)
-  for item in sf:
-    if item.csc_foss.programme_type == 'dca':
-      dca_foss.append(item.csc_foss.spoken_foss)
-    else:
-      individual_foss.append(item.csc_foss.spoken_foss)
 
-  context['dca_foss'] = dca_foss
-  context['individual_foss'] = individual_foss
+# stu_cat_foss = {
+#   'IT01':['java','python']
+# }
+
+  
+  stu_cat_foss ={}
+  s_fosses=[]
+  
+
+  s_categories = Student_certificate_course.objects.filter(student=student)
+  print("%%%%%%%%%%%%%%%%")
+  print(s_categories)
+  
+  for s_cat in s_categories:
+
+    cat_fosses = FossCategory.objects.filter(
+      id__in=CategoryCourses.objects.filter(certificate_category=s_cat.cert_category).values_list('foss')
+      )
+    for cf in cat_fosses:
+      s_fosses.append(cf.foss)
+
+    stu_cat_foss[(s_cat.cert_category.code+" - "+s_cat.cert_category.title)]=s_fosses
+
+  print(stu_cat_foss,"########################")
+
+
+    
+
+
+
+  
+    
+
+    
+
+
+
+
+ 
+
+  context['s_categories'] = s_categories
+  context['stu_cat_foss'] = stu_cat_foss
+  
   return render(request,'csc/student_profile.html',context)
 
 
