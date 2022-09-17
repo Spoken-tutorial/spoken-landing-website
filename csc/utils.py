@@ -68,6 +68,7 @@ def get_foss_enroll_percent(vle):
     print("------------------------------------------------------------------------------------------------------------------------")
     return d
 
+
 def upcoming_foss_tests(foss,vle):
     tests = Test.objects.filter(foss=foss,vle=vle,tdate__gt=date.today())
     return list(tests)
