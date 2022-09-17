@@ -161,8 +161,8 @@ class Student(models.Model):
     
 
 class Student_certificate_course(models.Model):
-    student = models.ForeignKey(Student,on_delete=models.CASCADE)
-    cert_category = models.ForeignKey(CertifiateCategories,on_delete=models.CASCADE)
+    student = models.ForeignKey(Student,on_delete=models.CASCADE,related_name='certificate_course')
+    cert_category = models.ForeignKey(CertifiateCategories,on_delete=models.CASCADE,related_name='category_cert')
     programme_starting_date = models.DateField(blank=True,null=True)
     created = models.DateField(blank=True,null=True)
     updated = models.DateField(auto_now = True, null=True)
@@ -170,6 +170,9 @@ class Student_certificate_course(models.Model):
     class Meta:
         unique_together = ('student','cert_category')
     
+    def __str__(self):
+        return f"{self.cert_category.code}"
+
 
 class Student_Foss(models.Model):
     student = models.ForeignKey(Student,on_delete=models.CASCADE)
