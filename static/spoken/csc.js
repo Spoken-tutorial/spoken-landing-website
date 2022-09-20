@@ -63,8 +63,9 @@ $(document).ready(function(){
     url = '/csc/get_stats/'
     var upcoming_tests = {}
     var course_type_offered = {}
-    var dca_students = {}
-    var individual_students = {}
+    
+
+    course_count_result = {}
     $.ajax({
         url : url,
         type: "GET",
@@ -72,8 +73,9 @@ $(document).ready(function(){
         {       
             upcoming_tests = data['upcoming_tests']
             course_type_offered = data['course_type_offered']
-            dca_students = data['dca_students']
-            individual_students = data['individual_students']
+           
+            course_count_result= data['course_count_result']
+
             for (var key in upcoming_tests){
                 
                 d = upcoming_tests[key];
@@ -107,8 +109,11 @@ $(document).ready(function(){
                 const myChart = new Chart(document.getElementById('test_'+String(d['id'])),config);    
             }
             draw_prg_type_stats(data['course_type_offered']);
-            draw_course_enroll_stats(dca_students,'dca','dca_course');
-            draw_course_enroll_stats(individual_students,'individual','individual_course');            
+            alert(course_count_result)
+            //To do ankita : for course student count graph
+
+            // draw_course_enroll_stats(dca_students,'dca','dca_course');
+            // draw_course_enroll_stats(individual_students,'individual','individual_course');            
         },
         error: function (jqXHR, textStatus, errorThrown)
         {
