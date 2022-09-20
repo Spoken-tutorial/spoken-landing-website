@@ -143,11 +143,8 @@ class Vle_csc_foss(models.Model):
 class Student(models.Model):
     student_id = models.CharField(max_length=255)
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    # first_name = models.CharField(max_length=120)
-    # last_name = models.CharField(max_length=120)
     gender = models.CharField(max_length=10,blank=True)
     dob = models.DateField(blank=True)
-    # email = models.EmailField()
     phone = models.CharField(max_length=32,blank=True)
     edu_qualification = models.CharField(max_length=255,blank=True)
     vle_id = models.ManyToManyField(VLE) #if student joins another csc due to location change
@@ -157,6 +154,8 @@ class Student(models.Model):
     pincode = models.CharField(max_length=6,blank=True) 
     address = models.CharField(max_length=255,blank=True)
     date_of_registration = models.DateField()
+    occupation = models.CharField(max_length=255,blank=True,null=True)
+    category = models.CharField(max_length=255,blank=True,null=True)
 
     
 
