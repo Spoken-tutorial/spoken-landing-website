@@ -77,47 +77,48 @@ def vle_dashboard(request):
     context['upcoming_test_stats'] = get_upcoming_test_stats()
     context['courses_offered_stats'] = get_courses_offered_stats()
    
-    context['stats_dca'] = get_programme_stats('dca')
-    context['stats_individual'] = get_programme_stats('individual')
+    # context['stats_dca'] = get_programme_stats('dca')
+    # context['stats_individual'] = get_programme_stats('individual')
 
     context['total_students_enrolled'] = Student.objects.filter(vle_id=vle).count()
     context['total_tests_completed'] = Test.objects.filter(vle=vle,tdate__gte=datetime.datetime.today().date()).count()
     context['total_certificates_issued'] = StudentTest.objects.filter(status=4).count() #ToDo check condition
     
     context['fosses_perc'] = get_foss_enroll_percent(vle)
-    if request.method == 'POST':
-        form = form = FossForm(request.POST)
-        if form.is_valid():
-            programme_type = form.cleaned_data['programme_type']
-            spoken_foss = form.cleaned_data['spoken_foss']
-            vle = VLE.objects.filter(user=request.user).first()
-            for sf in spoken_foss:
-                #check if fossid already exist
-                vfoss=Vle_csc_foss()
+    return render(request, 'csc/vle.html', context)
+    # # if request.method == 'POST':
+    # #     form = form = FossForm(request.POST)
+    # #     if form.is_valid():
+    # #         programme_type = form.cleaned_data['programme_type']
+    # #         spoken_foss = form.cleaned_data['spoken_foss']
+    # #         vle = VLE.objects.filter(user=request.user).first()
+    # #         for sf in spoken_foss:
+    # #             #check if fossid already exist
+    # #             vfoss=Vle_csc_foss()
 
-                vfoss.programme_type=programme_type
-                # vfoss.spoken_foss=sf.id
-                vfoss.spoken_foss=sf
-                vfoss.vle=vle
-                try:
-                    vfoss.save()
-                    messages.success(request, sf.foss+" has been added.")
-                except Exception as e:
-                    print(f"exceptioon - {e}")
-                    messages.error(request, "Records already present.")
+    # #             vfoss.programme_type=programme_type
+    # #             # vfoss.spoken_foss=sf.id
+    # #             vfoss.spoken_foss=sf
+    # #             vfoss.vle=vle
+    # #             try:
+    # #                 vfoss.save()
+    # #                 messages.success(request, sf.foss+" has been added.")
+    # #             except Exception as e:
+    # #                 print(f"exceptioon - {e}")
+    # #                 messages.error(request, "Records already present.")
             
-            return HttpResponseRedirect("/csc/vle/")
+    # #         return HttpResponseRedirect("/csc/vle/")
         
-        context = {'form':form}
-        return render(request, 'csc/vle.html', context)
-    else:
-        context.update(csrf(request))
-        added_foss = Vle_csc_foss.objects.all()
+    #     # context = {'form':form}
+    #     return render(request, 'csc/vle.html', context)
+    # else:
+    #     context.update(csrf(request))
+    #     # added_foss = Vle_csc_foss.objects.all()
         
-        foss_form = FossForm()
-        context['form']=foss_form
-        context['added_foss']=added_foss
-        return render(request, 'csc/vle.html',context)
+    #     # foss_form = FossForm()
+    #     # context['form']=foss_form
+    #     # context['added_foss']=added_foss
+    #     return render(request, 'csc/vle.html',context)
 
 def courses(request):
   context = {}
@@ -262,55 +263,39 @@ def student_profile(request,id):
   
   dca_foss = []
   individual_foss = []
-
-# stu_cat_foss = {
-#   'IT01':['java','python']
-# }
+  
+  stu_cat_foss ={} #students cert-category and fosses dict
 
   
-  stu_cat_foss ={}
-  s_fosses=[]
-  
-
+  #certificate packages taken by students
   s_categories = Student_certificate_course.objects.filter(student=student)
-  print("%%%%%%%%%%%%%%%%")
-  print(s_categories)
   
   for s_cat in s_categories:
+    print("_______________________")
+    print(s_cat.cert_category)
+    print("_______________________")
 
     cat_fosses = FossCategory.objects.filter(
       id__in=CategoryCourses.objects.filter(certificate_category=s_cat.cert_category).values_list('foss')
       )
+    s_fosses=[] #list fosses against student id
     for cf in cat_fosses:
+
+      print(cf.foss)
       s_fosses.append(cf.foss)
+      print("******")
+      print(s_fosses)
+
 
     stu_cat_foss[(s_cat.cert_category.code+" - "+s_cat.cert_category.title)]=s_fosses
 
   print(stu_cat_foss,"########################")
-
-
-    
-
-
-
-  
-    
-
-    
-
-
-
-
  
 
   context['s_categories'] = s_categories
   context['stu_cat_foss'] = stu_cat_foss
   
   return render(request,'csc/student_profile.html',context)
-
-
-
-
 
 @csrf_exempt
 def get_course_stats(request):
@@ -611,10 +596,8 @@ def get_stats(request):
   print("5 ------- ")
   data['course_type_offered'] = get_courses_offered_stats()
   print("6 ------- ")
-  data['dca_students'] = get_programme_stats('dca')
+  data['course_count_result'] = get_programme_stats()
   print("7 ------- ")
-  data['individual_students'] = get_programme_stats('individual')
-  print("8 ------- ")
   
   return JsonResponse(data)
 
