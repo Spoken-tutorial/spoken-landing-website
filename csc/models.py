@@ -143,11 +143,8 @@ class Vle_csc_foss(models.Model):
 class Student(models.Model):
     student_id = models.CharField(max_length=255)
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    # first_name = models.CharField(max_length=120)
-    # last_name = models.CharField(max_length=120)
     gender = models.CharField(max_length=10,blank=True)
     dob = models.DateField(blank=True)
-    # email = models.EmailField()
     phone = models.CharField(max_length=32,blank=True)
     edu_qualification = models.CharField(max_length=255,blank=True)
     vle_id = models.ManyToManyField(VLE) #if student joins another csc due to location change
@@ -157,12 +154,14 @@ class Student(models.Model):
     pincode = models.CharField(max_length=6,blank=True) 
     address = models.CharField(max_length=255,blank=True)
     date_of_registration = models.DateField()
+    occupation = models.CharField(max_length=255,blank=True,null=True)
+    category = models.CharField(max_length=255,blank=True,null=True)
 
     
 
 class Student_certificate_course(models.Model):
-    student = models.ForeignKey(Student,on_delete=models.CASCADE)
-    cert_category = models.ForeignKey(CertifiateCategories,on_delete=models.CASCADE)
+    student = models.ForeignKey(Student,on_delete=models.CASCADE,related_name='certificate_course')
+    cert_category = models.ForeignKey(CertifiateCategories,on_delete=models.CASCADE,related_name='category_cert')
     programme_starting_date = models.DateField(blank=True,null=True)
     created = models.DateField(blank=True,null=True)
     updated = models.DateField(auto_now = True, null=True)
@@ -170,6 +169,9 @@ class Student_certificate_course(models.Model):
     class Meta:
         unique_together = ('student','cert_category')
     
+    def __str__(self):
+        return f"{self.cert_category.code}"
+
 
 class Student_Foss(models.Model):
     student = models.ForeignKey(Student,on_delete=models.CASCADE)

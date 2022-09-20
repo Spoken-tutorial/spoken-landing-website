@@ -34,6 +34,7 @@ urlpatterns = [
     # path('csc/', include('csc.vle_urls')),
     path('csc/student/', include('csc.student_urls', namespace='student')),
     path('csc/', include('csc.vle_urls', namespace='csc')),
+    path('csc/api/v1/', include('csc.api.urls')),
     
     path('accounts/', include('django.contrib.auth.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

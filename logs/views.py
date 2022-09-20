@@ -3,8 +3,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from drf_yasg.utils import swagger_auto_schema
 from .models import TutorialProgress
-
+@swagger_auto_schema(methods=['post'], auto_schema=None)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def save_tutorial_progress(request):
@@ -15,9 +16,11 @@ def save_tutorial_progress(request):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@swagger_auto_schema(methods=['get','post'], auto_schema=None)
 @api_view(['GET','POST'])
 @permission_classes([IsAuthenticated])
 def get_set_tutorial_progress(request):
+    
     try:
         tp=TutorialProgress.objects.get(
             user=request.user, 

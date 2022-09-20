@@ -84,6 +84,7 @@ def home(request):
 
 #api/jobfairs/
 class JobFairList(APIView):
+    swagger_schema = None
     def get(self,request):
         # jobfairs = Jobfair.objects.all()
         jobfairs = Event.objects.filter(type='JOB')

@@ -5,6 +5,7 @@ from .utils import *
 from logs.models import TutorialProgress,CourseProgress
 
 class TutorialSearchAPI(APIView):
+    swagger_schema = None
     """
     Search tutorial based on get url parameters. 
     Parameters: (search_foss, search_language)

@@ -7,11 +7,9 @@ from datetime import date
 from django.db.models import Count
 
 def is_user_vle(user):
-    print("\n\n user is VLE \n\n")
     return user.groups.filter(name="VLE").exists()   
 
 def is_user_student(user):
-    print("\n\n user is Student \n\n")
     return user.groups.filter(name="STUDENT").exists()   
 
 def is_user_invigilator(user):
