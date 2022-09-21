@@ -1,4 +1,5 @@
 {% load static%}
+{% load helper %}
 {% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html>
@@ -48,6 +49,10 @@
 		  </a>
 		
 		  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+			{% if request.user|has_group:"VLE" %}
+			<a class="dropdown-item" href="{% url 'csc:vle_dashboard' %}">VLE Dashboard</a>
+			{% endif %}
+			
 			<a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
 		  </div>
 		</div>

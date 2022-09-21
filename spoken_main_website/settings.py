@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+from django.contrib.messages import constants as messages
 """
 Django settings for spoken_main_website project.
 
@@ -50,6 +51,9 @@ INSTALLED_APPS = [
     'django_ers',
     'cms',
     'cdcontent',
+    'rest_framework.authtoken',
+    'drf_yasg',
+    # 'rest_framework_swagger',
 
 ]
 
@@ -177,6 +181,7 @@ GOOGLE_RECAPTCHA_SITE_KEY = os.getenv("GOOGLE_RECAPTCHA_SITE_KEY")
 SAML_FOLDER = os.path.join(BASE_DIR, 'saml')
 
 AUTHENTICATION_BACKENDS = [
+    'csc.backends.CSCBackend',
     'spokenlogin.backends.SpokenBackend',
     'sso.backends.SSOBackend',
     'django.contrib.auth.backends.ModelBackend'
@@ -199,7 +204,13 @@ else:
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES':[
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
     ]
+
 }
 
 LOGIN_URL='/login/'
@@ -232,3 +243,18 @@ URL_FETCH_VLE = os.getenv("URL_FETCH_VLE")
 CRONJOBS = [
     ('8 13 * * *', 'csc.cron.update_vle_data')
 ]
+SWAGGER_SETTINGS = {
+    "SECURITY_DEFINITIONS":{
+        "Token": {"type": "apiKey", "name": "Authorization",
+          "in": "header"},
+          "Basic": {"type": "basic"},
+    }
+}
+
+MESSAGE_TAGS = {
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+
+}
