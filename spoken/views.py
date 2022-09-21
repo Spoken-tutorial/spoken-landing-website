@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.conf import settings
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from .models import ContactMsg, Products, Nav, Blended_workshops, Jobfair, Internship, Testimonials, MediaTestimonials, Award
 from django_ers.models import *
 from datetime import datetime
@@ -18,6 +19,7 @@ from logs.models import TutorialProgress,CourseProgress
 from logs.views import get_set_tutorial_progress
 from django.core.mail import send_mail
 from django.conf import settings
+
 
 today = datetime.today().strftime('%Y-%m-%d')
 
@@ -64,6 +66,11 @@ def home(request):
         c = ContactForm()
 
     # return HttpResponse("Hello, world. You're at the spoken landing page.")
+    group = [x.name for x in request.user.groups.all()]
+    if 'VLE' in group:
+        return HttpResponseRedirect(reverse('csc:vle_dashboard'))
+    if 'STUDENT' in group:
+        return HttpResponseRedirect(reverse('csc:student_dashboard'))
     navs = Nav.objects.filter(status=1)
     products = Products.objects.all().order_by('order')
     now = timezone.now()

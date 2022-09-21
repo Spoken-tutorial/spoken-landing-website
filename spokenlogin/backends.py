@@ -25,7 +25,7 @@ class SpokenBackend(ModelBackend):
                         user.save()
                 return user
         except SpokenUser.DoesNotExist:
-            return None
+             return None
 
     def get_user(self, user_id):
         try:
