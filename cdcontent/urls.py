@@ -1,6 +1,6 @@
 # Third Party Stuff
 from django.conf.urls import url
-from cdcontent.views import *
+from .views import *
 app_name = 'cdcontent'
 urlpatterns = [
     # Main pages dispatcher

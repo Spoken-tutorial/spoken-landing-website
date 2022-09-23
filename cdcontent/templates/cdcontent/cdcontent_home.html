@@ -1,0 +1,99 @@
+{% extends 'csc_base.html'%}
+{% load widget_tweaks %}
+{% load static %}
+{% block content %}
+
+<form role="form" id="main_cddownload" method="post" enctype="multipart/form-data" class="cdcontentform form-horizontal">
+  <div class="row well bs-component" style="margin-top: 20px;">
+  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+    <div class="alert alert-danger" role="alert">
+    <strong>Note:</strong> The maximum file size to download is 1 GB.
+    </div>
+    <fieldset>
+    {% csrf_token %}
+    <div class="form-group">
+    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 col-lg-offset-3 col-md-offset-3 col-sm-offset-3">
+        {{ form.selected_foss.errors }}
+    </div>
+    </div>
+    <div class="form-group">
+    <label for="id_foss_category" class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label">FOSS Category:</label>
+    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+        {% render_field form.foss_category class+="form-control foss_category" tabindex="1" %}
+        {{ form.foss_category.errors }}
+        <small>Please select FOSS</small>
+        {% render_field form.selected_foss class+='selected_foss' %}
+    </div>
+    </div>
+    <div class="form-group">
+    <label for="id_level" class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label">Level:</label>
+    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+        {% render_field form.level class+="form-control level" tabindex="2" %}
+        {{ form.level.errors }}
+        <small>Please select the Level</small>
+    </div>
+    </div>
+    <div class="form-group">
+    <label for="id_language" class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label">Languages: <span class='ajax-refresh ajax-refresh-language'><i class="fa fa-2 fa-refresh fa-spin"></i></span></label>
+    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+        {% render_field form.language class+="form-control language" tabindex="3" %}
+        {{ form.language.errors }}
+        <small>For selecting multiple languages, please use </small>
+        <small><b>&lt;CTRL&gt; + Click</b>.</small>
+    </div>
+    </div>
+    <div class="form-group">
+    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 col-lg-offset-3 col-md-offset-3 col-sm-offset-3">
+        <span class='ajax-refresh ajax-refresh-add-foss'><i class="fa fa-2 fa-refresh fa-spin"></i></span>
+        <input type="button" class="add_foss_lang btn btn-primary" value="Add selected FOSS"  tabindex="4" />
+        <input type="submit" class="btn btn-primary create_zip" value="Create ZIP file" tabindex="5" />
+    </div>
+    </div>
+    </fieldset>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+    <div class="table-responsive">
+    <table class="added-foss table table-condensed table-bordered table-hover" id="added-foss">
+    </table>
+    </div>
+    <div id="rate-div" style="display: none">
+  
+    </div>
+    <div class="download-link">        
+    </div>
+    <div class="user-message" >         
+    </div> 
+  </div>
+  </div>
+</form>
+
+
+{% endblock %}
+
+
+{% block script %}
+<script type="text/javascript" src="{% static 'cdcontent/js/cdcontent.js' %}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    alert(1);
+      if($('.foss_category').val() == '') {
+        alert(2);
+          $('.level').attr("disabled", "disabled");
+          $('.language').attr("disabled", "disabled");
+      }
+      
+   
+});
+
+// if ($.cookie('modal_status') != '1'){
+//     $('.alertmodal').modal('show');
+//     $.cookie('modal_status', '1',{ expires: null}); 
+// }
+</script>
+
+{% endblock %}
+

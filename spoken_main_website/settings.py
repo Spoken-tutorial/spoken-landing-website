@@ -28,6 +28,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG")
 
+
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
@@ -53,6 +54,7 @@ INSTALLED_APPS = [
     'cdcontent',
     'rest_framework.authtoken',
     'drf_yasg',
+    'widget_tweaks',
     # 'rest_framework_swagger',
 
 ]
