@@ -126,6 +126,14 @@ DATABASES = {
         'HOST': os.getenv("ERS_DB_HOST"),
         'PORT':'',
     },
+    'forums': {	
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.	
+        'NAME': os.getenv("FDB"),                      # Or path to database file if using sqlite3.	
+        'USER': os.getenv("FDB_USER"),	
+        'PASSWORD': os.getenv("FDB_PASS"),
+        'HOST': os.getenv("FDB_DB_HOST"),                  # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.	
+        'PORT': '',                  # Set to empty string for default.	
+    },
 
 }
 

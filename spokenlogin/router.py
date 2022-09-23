@@ -1,10 +1,13 @@
 class SpokenRouter:
     
     def db_for_read(self, model, **hints):
+        if model._meta.db_table == 'website_question' or model._meta.db_table == 'website_answer':
+            return 'forums'
         if model._meta.app_label == 'spokenlogin':
             return 'spk'
         if model._meta.app_label == 'cdcontent':
             return 'spk'
+        
         return None
 
     def db_for_write(self, model, **hints):

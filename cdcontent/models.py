@@ -10,6 +10,8 @@ class Level(models.Model):
 
     class Meta(object):
         verbose_name = 'Tutorial Level'
+        db_table = 'creation_level'
+
 
     def __str__(self):
         return self.level
@@ -105,6 +107,9 @@ class TutorialCommonContent(models.Model):
 
     class Meta(object):
         verbose_name = 'Tutorial Common Content'
+        managed = False
+        db_table = 'creation_tutorialcommoncontent'
+
 
     def keyword_as_list(self):
         return self.keyword.split(',')
@@ -197,6 +202,7 @@ class Question(models.Model):
   class Meta(object):
     db_table = 'website_question'
     get_latest_by = "date_created"
+    managed = False
 
 class Answer(models.Model):
   uid  = models.IntegerField()
@@ -212,3 +218,4 @@ class Answer(models.Model):
 
   class Meta(object):
     db_table = 'website_answer'
+    managed = False
