@@ -27,14 +27,15 @@ def send_pwd_mail(u):
         Spoken Tutorial | IIT Bombay
     """
     try:
-        send_mail(
-    subject,
-    message,
-    from_email,
-    ["ankitamk@gmail.com"],
-    # [u.email],
-    fail_silently=False,
-    )
+        print(f"username,pwd : {u.username},{u.password}".ljust(40,'*'))
+    #     send_mail(
+    # subject,
+    # message,
+    # from_email,
+    # ["ankitamk@gmail.com"],
+    # # [u.email],
+    # fail_silently=False,
+    # )
     except Exception as e:
         print(e)
         print(f"Failed to send mail to user : {u.email}")
