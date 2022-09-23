@@ -33,6 +33,11 @@ from django.contrib.auth.models import Group
 from django.db.models import F,ExpressionWrapper
 from django.db.models.fields import BooleanField
 
+from datetime import timedelta
+from django.conf import settings
+import requests
+from .cron import add_vle,add_transaction
+
 class JSONResponseMixin(object):
   """
   A mixin that can be used to render a JSON response.
@@ -617,3 +622,39 @@ def mark_attendance(request,id):
   context['pending'] = pending
   
   return render(request,'csc/mark_attendance.html',context)
+
+@csrf_exempt
+def check_vle_email(request):
+  data = {}
+  email = request.POST.get('email','')
+  last_update_date = VLE.objects.order_by('user__date_joined').last().user.date_joined
+  delta_date = last_update_date - timedelta(2)
+  payload = {'date':delta_date}
+  url = getattr(settings, "URL_FETCH_VLE", "http://exam.cscacademy.org/shareiitbombayspokentutorial")
+  response = requests.get(url,params=payload)
+  data['status'] = 0
+  if response.status_code == 200:
+      result = response.json()
+      result = result['req_data']
+      for item in result:
+        if email == item['email']:
+            try:
+                csc = CSC.objects.get(csc_id=item['csc_id'])
+            except CSC.DoesNotExist:
+                print(f"csc - {item['csc_id']} does not exists")
+                CSC.objects.create(
+                    csc_id=item.get('csc_id'),institute=item.get('institute',''),state=item.get('state',''),
+                    city=item.get('city',''),district=item.get('district',''),block=item.get('block',''),
+                    address=item.get('address',''),pincode=item.get('pincode',''),plan=item.get('plan',''),
+                    activation_status=1
+                )
+                csc = CSC.objects.get(csc_id=item.get('csc_id'))
+            add_vle(item,csc)
+            vle = VLE.objects.get(user__email=email)
+            add_transaction(vle,csc,item['transcdate'])
+            messages.add_message(request,messages.INFO,'hello')
+            data['status'] = 1
+  else:
+    data['status'] = 2
+    
+  return JsonResponse(data)

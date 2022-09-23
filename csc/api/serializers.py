@@ -3,7 +3,7 @@ from django.contrib.auth.models import User, Group
 
 from rest_framework import serializers
 
-from csc.models import Student, Student_certificate_course,CertifiateCategories
+from csc.models import Student, Student_certificate_course,CertifiateCategories, VLE
 from csc.api.utility import send_pwd_mail
 
 class CertifiateCategoriesSerializer(serializers.ModelSerializer):
@@ -21,6 +21,16 @@ class StudentCertificateCourseSerializer(serializers.ModelSerializer):
         model = Student_certificate_course
         fields = ["cert_category","programme_starting_date"]
 
+class UserForVLESerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["email"]
+
+class VLESerializer(serializers.ModelSerializer):
+    user = UserForVLESerializer()
+    class Meta:
+        model = VLE
+        fields = ["user"]
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -31,6 +41,7 @@ class UserSerializer(serializers.ModelSerializer):
 class StudentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     certificate_course = StudentCertificateCourseSerializer(many=True)
+    vle_id = VLESerializer(many=True)
     
     class Meta:
         model = Student
@@ -48,9 +59,14 @@ class StudentSerializer(serializers.ModelSerializer):
         u = User.objects.get(email=user['email'])
         course_data = validated_data.pop('certificate_course')
         vle_ids = validated_data.pop('vle_id')
+        vle_email = vle_ids[0]['user']['email']
         validated_data['user_id'] = u.id # validated_data updated
         student = Student.objects.create(**validated_data)
-        student.vle_id.add(*vle_ids)
+        try:
+            vle_spk = VLE.objects.get(user__email=vle_email)
+            student.vle_id.add(vle_spk.id)
+        except User.DoesNotExist:
+            raise serializers.ValidationError(f"User with email {vle_email} does not exists.")
         for data in course_data:
             Student_certificate_course.objects.create(student=student, **data)
         student_group = Group.objects.get(name='STUDENT') 
