@@ -91,91 +91,27 @@ def vle_dashboard(request):
     
     context['fosses_perc'] = get_foss_enroll_percent(vle)
     return render(request, 'csc/vle.html', context)
-    # # if request.method == 'POST':
-    # #     form = form = FossForm(request.POST)
-    # #     if form.is_valid():
-    # #         programme_type = form.cleaned_data['programme_type']
-    # #         spoken_foss = form.cleaned_data['spoken_foss']
-    # #         vle = VLE.objects.filter(user=request.user).first()
-    # #         for sf in spoken_foss:
-    # #             #check if fossid already exist
-    # #             vfoss=Vle_csc_foss()
-
-    # #             vfoss.programme_type=programme_type
-    # #             # vfoss.spoken_foss=sf.id
-    # #             vfoss.spoken_foss=sf
-    # #             vfoss.vle=vle
-    # #             try:
-    # #                 vfoss.save()
-    # #                 messages.success(request, sf.foss+" has been added.")
-    # #             except Exception as e:
-    # #                 print(f"exceptioon - {e}")
-    # #                 messages.error(request, "Records already present.")
-            
-    # #         return HttpResponseRedirect("/csc/vle/")
-        
-    #     # context = {'form':form}
-    #     return render(request, 'csc/vle.html', context)
-    # else:
-    #     context.update(csrf(request))
-    #     # added_foss = Vle_csc_foss.objects.all()
-        
-    #     # foss_form = FossForm()
-    #     # context['form']=foss_form
-    #     # context['added_foss']=added_foss
-    #     return render(request, 'csc/vle.html',context)
+   
 
 def courses(request):
   context = {}
   vles = VLE.objects.filter(user=request.user)
   for vle in vles:
-    dca_csc_foss = Vle_csc_foss.objects.filter(vle=vle,programme_type='dca')
-    individual_csc_foss = Vle_csc_foss.objects.filter(vle=vle,programme_type='individual')
-    dca_foss = {}
-    for item in dca_csc_foss:
-      students = Student_Foss.objects.filter(csc_foss=item.id).count()      
-      dca_foss[item.spoken_foss.foss] = {'total_students':students}
 
     individual_foss = {}
-    for item in individual_csc_foss:
-      students = Student_Foss.objects.filter(csc_foss=item.id).count()
-      individual_foss[item.spoken_foss.foss] = {'total_students':students}
+    # for item in individual_csc_foss:
+    #   students = Student_Foss.objects.filter(csc_foss=item.id).count()
+    #   individual_foss[item.spoken_foss.foss] = {'total_students':students}
 
-    context['dca_foss'] = dca_foss
-    context['individual_foss'] = individual_foss
 
-  if request.method == 'POST':
-    form = form = FossForm(request.POST)
-    if form.is_valid():
-        programme_type = form.cleaned_data['programme_type']
-        spoken_foss = form.cleaned_data['spoken_foss']
-        vle = VLE.objects.filter(user=request.user).first()
-        for sf in spoken_foss:
-            #check if fossid already exist
-            vfoss=Vle_csc_foss()
-
-            vfoss.programme_type=programme_type
-            # vfoss.spoken_foss=sf.id
-            vfoss.spoken_foss=sf
-            vfoss.vle=vle
-            try:
-                vfoss.save()
-                messages.success(request, sf.foss+" has been added.")
-            except Exception as e:
-                print(f"exceptioon - {e}")
-                messages.error(request, "Records already present.")
+    fosses = FossCategory.objects.filter(available_for_jio=True)
+    indi_students = Student_certificate_course.objects.filter(cert_category__code='INDI', student__in=Student.objects.filter(vle_id=vle.id)).values_list('student_id')
     
-    context['form'] = form
-    # return HttpResponseRedirect("/csc/courses/")
-    return render(request, 'csc/courses.html', context)
-  else:
-    form = FossForm()
-        # context['form']=foss_form
-    context['form'] = form
-    return render(request, 'csc/courses.html', context)
-        
+    for item in fosses:
+      students = Student_Foss.objects.filter(csc_foss=item.id, student__in=indi_students).count()
+      individual_foss[item.foss] = {'total_students':students}
 
-
+    context['individual_foss'] = individual_foss
   return render(request,'csc/courses.html',context)
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -238,6 +174,7 @@ def assign_foss(request):
   print(f"students".ljust(40,'*')+f"students")
   print(f"foss".ljust(40,'*')+f"foss")
   for student in students:
+    #check if student has individual
     for foss in fosses:
       try:
         f = FossCategory.objects.get(id=int(foss))
@@ -280,10 +217,16 @@ def student_profile(request,id):
     print(s_cat.cert_category)
     print("_______________________")
 
-    cat_fosses = FossCategory.objects.filter(
-      id__in=CategoryCourses.objects.filter(certificate_category=s_cat.cert_category).values_list('foss')
-      )
-    s_fosses=[] #list fosses against student id
+    if s_cat.cert_category.code=="INDI":
+      #indi code
+      cat_fosses = FossCategory.objects.filter(
+        id__in=Student_Foss.objects.filter(student_cert_course=s_cat).values_list('csc_foss'))
+    else:
+
+      cat_fosses = FossCategory.objects.filter(
+        id__in=CategoryCourses.objects.filter(certificate_category=s_cat.cert_category).values_list('foss')
+        )
+    s_fosses=[] #list fosses in category
     for cf in cat_fosses:
 
       print(cf.foss)

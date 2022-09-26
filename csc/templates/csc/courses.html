@@ -18,103 +18,51 @@
 
 {% block content %}
 <div class="container">
-    <div >
-         {{ form.non_field_errors }}
-        {% include "_error_msg.html" %}
+    <div>
+         
         <nav>
-            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-              <button class="nav-link active" id="nav-course-tab" data-bs-toggle="tab" data-bs-target="#nav-course" type="button" role="tab" aria-controls="nav-course" aria-selected="true">Add FOSS</button>
-              <button class="nav-link" id="nav-dca-tab" data-bs-toggle="tab" data-bs-target="#nav-dca" type="button" role="tab" aria-controls="nav-dca" aria-selected="true">DCA FOSS</button>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">              
+             <!--  <button class="nav-link" id="nav-dca-tab" data-bs-toggle="tab" data-bs-target="#nav-dca" type="button" role="tab" aria-controls="nav-dca" aria-selected="true">DCA FOSS</button> -->
               <button class="nav-link" id="nav-individual-tab" data-bs-toggle="tab" data-bs-target="#nav-individual" type="button" role="tab" aria-controls="nav-individual" aria-selected="false">Individual FOSS</button>
             </div>
-          </nav>
-          <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active py-5" id="nav-course" role="tabpanel" aria-labelledby="nav-course-tab">
-                
-        <div>
-            <div class="card">
-                <div class="card-header"> Add Foss</div>
-                <div class="card-body">
-                    <form action="{{action}}" method="post">
-                        {% csrf_token %}
-                          <div class='mb-3' required>
-                           {{ form.programme_type | as_crispy_field }}
-                          </div>
-                          <div class='mb-3' required>
-                           {{ form.spoken_foss | as_crispy_field }}
-                          </div>
-                      
-                      <button type="submit" class="btn" style="background: #013A6B;color: #fff; font-weight: bold;">Add</button>
-                      </form>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active py-5" id="nav-course" role="tabpanel" aria-labelledby="nav-course-tab">   </div>
+
+            <div class="tab-pane fade py-5" id="nav-individual" role="tabpanel" aria-labelledby="nav-individual-tab">
+                <div class="alert alert-info" role="alert">Individual FOSS</div>
+                <div>
+                    <table id="tb-individual" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th class="tb-header"> <span><i class="far fa-file-code"></i></span> Course</th>
+                                <th class="tb-header"> <span><i class="fas fa-user"></i> </span> Current Enrollment</th>
+                                <th class="tb-header"><span><i class="fas fa-check-square"></i></span> Certificates Issued</th>
+                                <th class="tb-header"><span><i class="fas fa-users"></i></span>Total Enrollment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for key,value in individual_foss.items %}
+                            <tr class="tb-data">
+                                <td >
+                                <span class="form-check"><input class="form-check-input messageCheckbox" type="checkbox" value="{{student.id}}" id="{{student.id}}" name="check_student" ></span>
+                                </td>
+                                <td>{{key}}</td>                  
+                                <td>{{value.total_students}}</td>                    
+                                <td></td>                    
+                                <td>{{value.total_students}}</td>                     
+                            </tr>
+                            {% endfor %}                                
+                        <tbody>
+                    </table>
                 </div>
             </div>
 
-        </div>
-    </div>
-            <div class="tab-pane fade py-5" id="nav-dca" role="tabpanel" aria-labelledby="nav-dca-tab">
-                <div class="alert alert-warning" role="alert">DCA FOSS</div>
-        <div>
-            <table id="tb-dca" class="table table-striped" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th class="tb-header"> <span><i class="far fa-file-code"></i></span> Course</th>
-                        <th class="tb-header"> <span><i class="fas fa-user"></i> </span> Current Enrollment</th>
-                        <th class="tb-header"><span><i class="fas fa-check-square"></i></span> Certificates Issued</th>
-                        <th class="tb-header"><span><i class="fas fa-users"></i></span>Total Enrollment</th>
-                        
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for key,value in dca_foss.items %}
-                    <tr class="tb-data">
-                        <td >
-                            <span class="form-check"><input class="form-check-input messageCheckbox" type="checkbox" value="{{student.id}}" id="{{student.id}}" name="check_student" ></span>
-                        </td>
-                        <td>{{key}}</td>                    
-                        <td>{{value.total_students}}</td>                    
-                        <td></td>                    
-                        <td>{{value.total_students}}</td>                    
-                    </tr>
-                    {% endfor %}                                
-                    <tbody>
-                </table>
-        </div>
-            </div>
-            <div class="tab-pane fade py-5" id="nav-individual" role="tabpanel" aria-labelledby="nav-individual-tab">
-                <div class="alert alert-info" role="alert">Individual FOSS</div>
-        <div>
-            <table id="tb-individual" class="table table-striped" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th class="tb-header"> <span><i class="far fa-file-code"></i></span> Course</th>
-                        <th class="tb-header"> <span><i class="fas fa-user"></i> </span> Current Enrollment</th>
-                        <th class="tb-header"><span><i class="fas fa-check-square"></i></span> Certificates Issued</th>
-                        <th class="tb-header"><span><i class="fas fa-users"></i></span>Total Enrollment</th>
-                        
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for key,value in individual_foss.items %}
-                    <tr class="tb-data">
-                        <td >
-                            <span class="form-check"><input class="form-check-input messageCheckbox" type="checkbox" value="{{student.id}}" id="{{student.id}}" name="check_student" ></span>
-                        </td>
-                        <td>{{key}}</td>                  
-                        <td>{{value.total_students}}</td>                    
-                        <td></td>                    
-                        <td>{{value.total_students}}</td>                     
-                    </tr>
-                    {% endfor %}                                
-                    <tbody>
-                </table>
-        </div>
-            </div>
-          </div>
-        
-    </div>
- 
+
+
+        </div>        
+    </div> 
 </div>
 
 {% endblock %}
@@ -128,38 +76,11 @@
     
 
     $(document).ready(function () {
-        $('#tb-dca').DataTable();
+        
         $('#tb-individual').DataTable(); 
         show_foss_enrollment();
 
-        if($('#id_programme_type').val() == '') {
-        $('#id_spoken_foss').val('');
-        $('#id_spoken_foss').prop('disabled', 'disabled');      
-      }
-    $('#id_programme_type').on('change', function(){
-        programme_type = $(this).val();
-        programme_type_name = $(this).children("option").filter(":selected").text();
-        $('#id_spoken_foss').html('<option>---------</option>');
-        if(programme_type != ''){
-            $.ajax({
-                url: "/csc/get-foss-option/",
-                type: "POST",
-                data: {
-                    programme_type: programme_type,
-                },
-                beforeSend: function() {
-                },
-                success: function(data) {
-                    if(data && data['spoken_foss_option']) {
-                        $('#id_spoken_foss').prop('disabled', false);
-                    $('#id_spoken_foss').html(data['spoken_foss_option']);
-                    
-                    }
-                 
-                }
-            });
-        }
-    });
+
     });
 
     function show_foss_enrollment(){
