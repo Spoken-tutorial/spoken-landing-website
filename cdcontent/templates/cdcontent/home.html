@@ -1,0 +1,281 @@
+{% load cdcontentdata %}<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>
+            Search Tutorials | spoken-tutorial.org
+        </title>
+        <link rel="shortcut icon" href="../includes/images/favicon.ico">
+        <link rel="stylesheet" href="../includes/css/bootstrap.min.css" type="text/css" media="screen" charset="utf-8">
+        <link rel="stylesheet" href="../includes/css/font-awesome.min.css" type="text/css" media="screen" charset="utf-8">
+        <link rel="stylesheet" href="../includes/css/main.css" type="text/css" media="screen" charset="utf-8">
+        <link href="../includes/css/video-js.min.css" rel="stylesheet" type="text/css">
+        <style>
+            .tutorial-search-form{
+                margin-top: 20px;
+            }
+            .video-js {
+                padding-top: 56.25%
+            }
+            .vjs-fullscreen {
+                padding-top: 0px;
+            }
+            .playlist-container{
+                background: #1a1a1a;
+                margin-bottom: 20px;
+            }
+            .description, .order {
+                font-size: 13px;
+            }
+            .forward {
+                float: right;
+            }
+            .playlist ul {
+                 height: 330px;
+                 overflow-y: scroll;
+                 margin-bottom: 0px;
+            }
+            .playlist, .playlist-container, .video-container{
+                padding-left: 0px;
+                padding-right: 0px;
+            }
+            .playlist ul{
+                list-style:none;
+                padding-left: 0px;
+            }
+            .playlist ul .playlist-item{
+                clear: both;
+                overflow: hidden;
+            }
+            .playlist ul .playlist-item.active{
+                background: #3a3a3a;
+            }
+            .playlist ul .playlist-item a{
+                color: white;
+                display: block;
+                overflow: hidden;
+                padding: 15px 10px;
+            }
+            .playlist ul .playlist-item.active a{
+                color: orange;
+            }
+            .playlist ul .playlist-item:hover{
+                background: gray;
+            }
+            .playlist ul .playlist-item .thumb, .playlist ul .playlist-item .thumb .order{
+                padding-right: 10px;
+            }
+            .playlist-info{
+                color: white;
+                padding: 10px;
+                background: black;
+            }
+            .playlist-controls{
+                background: black;
+                border-top: 1px solid #3a3a3a;
+                padding: 10px 0;
+            }
+            .playlist-controls a{
+                color: white;
+            }
+            .playlist-controls span{
+                margin: 0 10px;
+            }
+            #content-wrapper #content-inner div.container{
+                padding-left: 0px;
+            }
+            p.list-group-item-text {
+                margin-top: 7px;
+            }
+            .list-zipfiles {
+                overflow-x: hidden;
+                max-height: 150px;
+            }
+            .review-data pre {
+                margin-bottom: 0px;
+            }
+            .video-js .vjs-tech{
+                position:absolute;
+                top:0;
+                left:0;
+                width:100%;
+                height:100%;
+            }
+        </style>
+        <script src="../includes/js/video.js"></script>
+    </head>
+    <body>
+        <div id="page-wrapper">
+            <!-- header begin -->
+            <div id="header-wrapper">
+                <nav class="navbar yamm navbar-default navbar-fixed-top" role="navigation">
+                    <div id="header-inner">
+                        <div class="container-fluid">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-nav">
+                                    <span class="sr-only">Toggle Navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                                <a href="">
+                                    <img width="110px" src="../includes/images/logo.png">
+                                    Spoken <span class="title">Tutorial</span>
+                                </a>
+                            </div>
+                        </div> <!-- /.container-fluid -->
+                    </div> <!-- /#header-inner -->
+                </nav>
+            </div> <!-- /#header-wrapper -->
+            <!-- header end -->
+            <div id="content-wrapper">
+                <div id="content-inner" class="container">
+                    <div id="content" class="col-lg-12 col-md-12 col-sm-12">
+                        <h4 class="page-title"><i class="fa fa-list-ul"></i> Search Tutorials</h4>
+                        <div class="row well tab-content tutorial-search-form">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <form action="" method="POST" class="form-horizontal" style="margin-bottom: 0px;">
+                                    <div class="form-group" style="margin-bottom: 0px;">
+                                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                            <select class="form-control foss" id="id_foss" name="foss" tabindex="1">
+                                                <option value="0">Select Foss Category</option>
+                                                {% for foss_key,foss_detail in foss_details.items %}
+                                                    <option value="{{ foss_key }}">{{ foss_details|get_foss_name:foss_key }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                            <select class="form-control language" id="id_language" name="language" tabindex="1" value="">
+                                                <option value="0">Select Language</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                            <input class="btn btn-primary search-btn" type="button" value="Submit">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div><!-- .row well tab-content tutorial-search-form -->
+                        <hr />
+                        <div class="video-container col-lg-8 col-md-8 col-sm-8 col-lg-offset-2 col-md-offset-2">
+                            <select class="form-control languages" id="id_languages" name="languages" tabindex="1" value="">
+                                <option value="English">Select Language for Side-by-Side method video</option>
+                                {% for language in languages %}
+                                <option value="{{ language }}">{{ language }}</option>
+                                {% endfor %}
+                            </select>
+                                <br />
+                            <video id="st_video" class="video-js vjs-default-skin" controls preload="auto" width="auto" height="auto" data-setup="{}">
+                                <source src="./Side-by-Side-Method-English.ogv" type="video/ogg" />
+                            </video>
+
+                            <br /><hr>
+                            <h3>Spoken Tutorial Forums:</h3>
+                            <hr>
+                            <video id="forum_video" class="video-js vjs-default-skin" controls preload="auto" width="auto" height="auto" data-setup="{}">
+                                <source src="./Spoken-Tutorial-Forums-English.ogv" type="video/ogg" />
+                            </video>
+
+                            <br /><hr>
+                            <h3>Spoken Tutorial Supplementary Material:</h3>
+                            <hr>
+                            <video id="forum_video" class="video-js vjs-default-skin" controls preload="auto" width="auto" height="auto" data-setup="{}">
+                                <source src="./Spoken-Tutorial-Supplementary-Material-English.ogv" type="video/ogg" />
+                            </video>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div id="footer-wrapper">
+                <div class="container-inner sans-serif">
+                    <div class="container">
+                        <div class="col-lg-8 col-md-8 col-sm-8  footer-links">
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <ul class="list-unstyled">
+                                    <li><a href="http://fossee.in/" target="_blank">FOSSEE Project</a></li>
+                                    <li><a href="http://www.scilab.in/" target="_blank">Scilab Project</a></li>
+                                    <li><a href="http://www.oscad.in/" target="_blank">Oscad</a></li>
+                                    <li><a href="http://python.fossee.in/" target="_blank">Python</a></li>
+                                    <li><a href="http://cfd.fossee.in/" target="_blank">CFD</a></li>
+                                    <li><a href="http://or.fossee.in/" target="_blank">OR-Project</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <ul class="list-unstyled">
+                                    <li><a href="http://aakashlabs.org/" target="_blank">Aakash Labs</a></li>
+                                    <li><a href="http://www.co-learn.in/" target="_blank">Co-learn</a></li>
+                                    <li><a href="http://www.sakshat.ac.in/" target="_blank">Education Mission</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <ul class="list-unstyled">
+                                    <li><a href="http://process.spoken-tutorial.org/index.php/Software-Training#About_SELF_Workshops" target="_blank">Software Training</a></li>
+                                    <li><a href="http://process.spoken-tutorial.org/" target="_blank">Creation</a></li>
+                                    <li><a href="https://spoken-tutorial.org/articles/" target="_blank">News</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <ul class="list-unstyled">
+                                    <li><a href="https://spoken-tutorial.org/about" target="_blank">About</a></li>
+                                    <!-- <li><a href="http://localhost:8000/tutorial-search/#" target="_blank">Partners</a></li> -->
+                                    <li><a href="https://spoken-tutorial.org/software-training/" target="_blank">Training</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 license fill">
+                            <div class="fill">
+                                <footer>
+                                    Developed at IIT Bombay <br>
+                                    This work is licensed under <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/" rel="license" class="ext" target="_blank">Creative Commons</a>
+                                </footer>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /#page-wrapper -->
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="../includes/js/jquery-1.11.0.min.js"></script>
+        <script src="../includes/js/bootstrap.min.js"></script>
+        <script>
+            $(document).ready(function(){
+                // set video player volume by 20%
+                var myPlayer = videojs('st_video');
+                myPlayer.volume(0.2);
+                var fossList = [];
+                fossList[0] = '';
+
+                {% for foss_key,foss_detail in foss_details.items %}
+                fossList[{{ foss_key }}] = '{{ foss_details|get_lang_details:foss_key|safe }}';
+                {% endfor %}
+
+                $('.foss').on("change", function(){
+                    foss = $('.foss').val();
+                    $('.language').html('<option value="0">Select Language</option>' + fossList[foss]);
+                });
+
+                $('.languages').on("change", function(){
+                    language = ($(this).val()).trim();
+        		    mp = videojs('st_video');
+                    mp.src({ type: "video/ogg", src: './Side-by-Side-Method-'+language+'.ogv' });
+                    mp.play();
+        	 	    mp.volume(0.2);
+
+                });
+
+                $('.search-btn').on("click", function(){
+                    foss = $('.foss').val();
+                    lang = $('.language').val();
+                    lang_name = $('.language option:selected').text();
+                    if(foss != 0 && lang != 0) {
+                        parent.frame1.location.href = "./" + foss + '/list-videos-' + lang_name + ".html";
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

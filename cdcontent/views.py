@@ -17,7 +17,7 @@ from django.template.context_processors import csrf
 
 # Spoken Tutorial Stuff
 from cdcontent.forms import *
-from .models import Language
+from .models import Language, FossCategory,Level,Question,Answer
 # Create your views here.
 def zipdir(src_path, dst_path, archive):
     for root, dirs, dir_files in os.walk(src_path):
@@ -181,7 +181,11 @@ def add_static_files(archive):
 
 
 def convert_template_to_html_file(archive, filename, request, template, ctx):
-    html = render(request, template, ctx).content
+    try:
+        html = render(request,template, ctx).content
+    except Exception as e:
+        print(e)
+    
     html_string = html.decode('utf-8')
     html_string = html_string.replace('Content-Type: text/html; charset=utf-8', '').strip("\n")
     archive.writestr(filename, html_string)
@@ -227,8 +231,13 @@ def add_srt_file(archive, tr_rec, filepath, eng_flag, srt_files):
 
 
 def internal_computation(request, user_type):
-    zipfile_name = '{}.zip'.format(datetime.datetime.now().strftime('%Y%m%d%H%M%S%f'))
-    file_obj = open('{}cdimage/{}'.format(settings.MEDIA_ROOT, zipfile_name), 'wb')
+    zipfile_name = '{}.zip'.format(datetime.now().strftime('%Y%m%d%H%M%S%f'))
+    # file_obj = open('{}cdimage/{}'.format(settings.MEDIA_ROOT, zipfile_name), 'wb')
+    zip_file_name = os.path.join(settings.MEDIA_ROOT, 'cdimage',zipfile_name)
+
+   
+
+    file_obj = open(zip_file_name, 'wb')
     archive = zipfile.ZipFile(file_obj, 'w', zipfile.ZIP_DEFLATED, allowZip64=True)
     try:
         selectedfoss = json.loads(request.POST.get('selected_foss', {}))
@@ -281,14 +290,19 @@ def internal_computation(request, user_type):
                 filepath = 'spoken/videos/{}show-video-{}.html'.format(tutorial_path, rec.language.name)
                 ctx = {'tr_rec': rec, 'tr_recs': tr_recs,
                        'media_path': settings.MEDIA_ROOT, 'tutorial_path': tutorial_path,'question_s': question_s}
+                
+                # convert_template_to_html_file(archive, filepath, request,
+                #                               "cdcontent/templates/watch_tutorial.html", ctx)
                 convert_template_to_html_file(archive, filepath, request,
-                                              "cdcontent/templates/watch_tutorial.html", ctx)
+                                              "cdcontent/watch_tutorial.html", ctx)
                 # for each question find the answers
                 for question in question_s:
                     answer=Answer.objects.filter(question=question)
                     ctx = {'question': question, 'answer': answer}
                     filepath = 'spoken/videos/' + str(foss_rec.id) + '/' + str(rec.tutorial_detail_id) + '/answer-to-question-' + str(question.id) + '.html'
-                    convert_template_to_html_file(archive, filepath, request, "cdcontent/templates/answer_to_question.html", ctx)
+                    #ToDo
+                    # convert_template_to_html_file(archive, filepath, request, "cdcontent/templates/answer_to_question.html", ctx)
+                    convert_template_to_html_file(archive, filepath, request, "cdcontent/answer_to_question.html", ctx)
 
 
 
@@ -296,8 +310,9 @@ def internal_computation(request, user_type):
             filepath = 'spoken/videos/' + str(foss_rec.id) + '/list-videos-' + language.name + '.html'
             ctx = {'collection': tr_recs, 'foss_details': all_foss_details,
                    'foss': foss_rec.id, 'lang': language.id}
-            convert_template_to_html_file(archive, filepath, request,
-                                          "cdcontent/templates/tutorial_search.html", ctx)
+            #ToDo
+            # convert_template_to_html_file(archive, filepath, request,"cdcontent/templates/tutorial_search.html", ctx)
+            convert_template_to_html_file(archive, filepath, request,"cdcontent/tutorial_search.html", ctx)
 
         # add common files for current foss
         add_common_files(archive, common_files)
@@ -309,16 +324,23 @@ def internal_computation(request, user_type):
 
     ctx = {'foss_details': all_foss_details, 'foss':'' ,
            'lang': '', 'languages': languages}
-    convert_template_to_html_file(archive, 'spoken/videos/home.html', request,
-                                  "cdcontent/templates/home.html", ctx)
+    #ToDo
+    # convert_template_to_html_file(archive, 'spoken/videos/home.html', request,"cdcontent/templates/home.html", ctx)
+    convert_template_to_html_file(archive, 'spoken/videos/home.html', request,"cdcontent/home.html", ctx)
 
     # add all required static files to archive
     add_static_files(archive)
     archive.close()
 
     file_obj.close()
-    file_path= os.path.dirname(os.path.realpath(__file__))+'/../media/cdimage/{}'.format(zipfile_name)
+    file_path= os.path.join(settings.MEDIA_ROOT, 'cdimage',zipfile_name)
+    
+    # file_path= os.path.dirname(os.path.realpath(__file__))+'/../media/cdimage/{}'.format(zipfile_name)
+    # file_path= os.path.dirname(os.path.realpath(__file__))+'/../media/cdimage/{}'.format(zipfile_name)
+    
+    # file_path1= os.path.join()
     response = HttpResponse(open(file_path, 'rb'), content_type='application/zip')
+    return zipfile_name
     if user_type == 'paid':
         return zipfile_name
     elif user_type == 'general':
@@ -328,7 +350,6 @@ def internal_computation(request, user_type):
 def home(request):
     if request.method == 'POST':
         form = CDContentForm(request.POST)
-
         if form.is_valid():
             try:
                 zipfile_name = internal_computation(request, 'paid')
@@ -346,31 +367,17 @@ def home(request):
         form = CDContentForm()
     # states = State.objects.order_by('name')
 
-    context = {
-        'form': form,
-        # 'states': states,
-        # 'payment_form': PayeeForm(user=request.user),
-    }
-    # if request.user.is_authenticated():
-        # payee_list = Payee.objects.prefetch_related(
-        #     'cdfosslanguages_set__foss','cdfosslanguages_set__lang',
-        #     'payment_transaction').filter(user=request.user)
-        # context['payee_list'] = payee_list
+    context = {'form': form,}
     context.update(csrf(request))
-    context['organizer_paid'] = is_organizer_paid(request)
     return render(request, "cdcontent/cdcontent_home.html", context)
 
 @csrf_exempt
 def ajax_fill_languages(request):
-    print(f"1".ljust(50,'*'))
     data = ''
     fossid = request.POST.get('foss', '')
     levelid = int(request.POST.get('level', 0))
-    print(f"2".ljust(50,'*'))
     if fossid:
-        print(f"3".ljust(50,'*'))
         if levelid:
-            print(f"4".ljust(50,'*'))
             lang_recs = TutorialResource.objects.filter(
                 Q(status=1) | Q(status=2), tutorial_detail__foss_id=fossid,
                 tutorial_detail__level_id=levelid).values_list(
@@ -387,7 +394,6 @@ def ajax_fill_languages(request):
 
 @csrf_exempt
 def ajax_add_foss(request):
-    
     foss = request.POST.get('foss', '')
     level = int(request.POST.get('level', 0))
     selectedfoss = {}
@@ -420,14 +426,9 @@ def ajax_show_added_foss(request):
 
     for key, values in list(tmp.items()):
         langs_list = list(values[0])
-        
-        
-
         foss, level = FossCategory.objects.get(pk=key), int(values[1])
-        
         langs = ', '.join(list(
             Language.objects.filter(id__in=list(values[0])).order_by('name').values_list('name', flat=True)))
-        
         if level:
             tr_recs = TutorialResource.objects.filter(Q(status=1) | Q(
                 status=2), tutorial_detail__foss=foss, tutorial_detail__level_id=level, language_id__in=langs_list)
@@ -448,30 +449,23 @@ def ajax_show_added_foss(request):
         for rec in tr_recs:
             try:
                 languages.add(rec.language.name)
-
                 # calculate video size
                 filepath = 'videos/{}/{}/{}'.format(foss.id, rec.tutorial_detail_id, rec.video)
-
                 if os.path.isfile(settings.MEDIA_ROOT + filepath):
                     fsize += os.path.getsize(settings.MEDIA_ROOT + filepath)
-
                 # calculate str file size
                 ptr = filepath.rfind(".")
                 filepath = filepath[:ptr] + '.srt'
                 if os.path.isfile(settings.MEDIA_ROOT + filepath):
                     fsize += os.path.getsize(settings.MEDIA_ROOT + filepath)
-
                 if eng_flag:
                     filepath = 'videos/{}/{}/{}-English.srt'.format(
                         key, rec.tutorial_detail_id, rec.tutorial_detail.tutorial.replace(' ', '-'))
-
                     if os.path.isfile(settings.MEDIA_ROOT + filepath) and filepath not in srt_files:
                         fsize += os.path.getsize(settings.MEDIA_ROOT + filepath)
-
                 # append common files path to list
                 common_files_path = '{}videos/{}/{}/resources'.format(settings.MEDIA_ROOT, key,
                                                                       rec.tutorial_detail_id)
-
                 # if rec.common_content.slide_status > 0:
                 #     common_files.add('{}/{}'.format(common_files_path, rec.common_content.slide))
 
@@ -522,81 +516,9 @@ def ajax_show_added_foss(request):
     data += '<tr><td colspan="3">Extra files</td><td>{}</td></tr>'.format(humansize(fsize))
     
     #check if user is registered
-    user_details = check_user_details(request,fsize_total )
+    # user_details = check_user_details(request,fsize_total )
+    #ToDo
+    user_details = ['RP',2000]
+
     output = {0: data, 1: humansize(fsize_total), 2:user_details}
     return HttpResponse(json.dumps(output), content_type='application/json')
-
-
-def get_user_type(request):
-    user_type = 0
-    classification ={
-    'unregistered' : 'UR',
-    'registered_not_paid' : 'RNP',
-    'registered_paid' : 'RP'
-    }
-    # 'UR':'UnRegistered User',
-    # 'RNP':'Registered but not Paid User',
-    # 'RP':'Registered and Paid User'
-    if request.user.is_authenticated():
-        try:
-            AcademicKey.objects.get(academic_id=request.user.organiser.academic_id, expiry_date__gte=date.today())
-            return classification['registered_paid']
-        except AcademicKey.DoesNotExist:
-            user_type = classification['registered_not_paid']
-        except AcademicKey.MultipleObjectsReturned:
-            return classification['registered_paid']
-        except:
-            user_type = classification['registered_not_paid']
-
-
-
-        try:
-            AcademicKey.objects.get(academic_id=request.user.invigilator.academic_id, expiry_date__gte=date.today())
-            return classification['registered_paid']
-        except AcademicKey.DoesNotExist:
-            user_type = classification['registered_not_paid']
-        except AcademicKey.MultipleObjectsReturned:
-            return classification['registered_paid']
-        except:
-            user_type = classification['registered_not_paid']
-        
-
-        try:
-            AcademicKey.objects.get(academic_id=request.user.student.academic_id, expiry_date__gte=date.today())
-            return classification['registered_paid']
-        except AcademicKey.DoesNotExist:
-            user_type = classification['registered_not_paid']
-        except AcademicKey.MultipleObjectsReturned:
-            return classification['registered_paid']
-        except:
-            user_type = classification['registered_not_paid']
-        return user_type
-    else:
-        return classification['unregistered']
-
-def get_payable_amount(filesize):
-    lt_100 = 99
-    gt_100 = 250
-    gst = 0.18
-    if filesize < 100.0: 
-        return (lt_100 + (lt_100 * gst))
-    else:
-        return (gt_100 + (gt_100 * gst))
-
-def check_user_details(request, filesize):
-    file_size = round(filesize/ pow(2,20),1)
-    user_type = get_user_type(request)
-    amount = get_payable_amount(file_size)
-    if user_type == 'RP':
-        return ['RP','No Limit']
-    else:
-        return [user_type, amount]
-
-# return '1' if organizer belongs to paid college with valid expiry date, else '0'
-def is_organizer_paid(request):
-    try:
-        idcase = AcademicKey.objects.get(academic_id=request.user.organiser.academic_id, expiry_date__gte=date.today())
-        organizer_paid = '1' if (idcase.expiry_date >= date.today()) else '0'
-    except:
-        organizer_paid = '0'
-    return organizer_paid
