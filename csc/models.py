@@ -109,7 +109,7 @@ class VLE(models.Model):
 class Transaction(models.Model):
     TRANSACTION_TENURE = [('quarterly','quarterly'),('biannually','biannually'),('annually','annually')]
     
-    vle = models.ForeignKey(VLE,on_delete=models.CASCADE)
+    vle = models.ForeignKey(VLE,on_delete=models.CASCADE,related_name='transaction_date')
     csc = models.ForeignKey(CSC,on_delete=models.CASCADE)
     transcdate = models.DateField(null=False)
     tenure = models.CharField(choices=TRANSACTION_TENURE,max_length=10,null=True,blank=True)
