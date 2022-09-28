@@ -27,7 +27,7 @@ def send_pwd_mail(u):
         Spoken Tutorial | IIT Bombay
     """
     try:
-        print(f"username,pwd : {u.username},{u.password}".ljust(40,'*'))
+        print(f"/n/nSending mail ; username,pwd : {u.username},{pwd}".ljust(40,'*'))
     #     send_mail(
     # subject,
     # message,

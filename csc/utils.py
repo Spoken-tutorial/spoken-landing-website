@@ -73,3 +73,14 @@ def check_student_test_status(test,student):
         return studentTest[0].test
     return False
 
+def getFirstName(name):
+    formatted = name.split()
+    if formatted:
+        return formatted[0]
+    return ''
+
+def getLastName(name):
+    formatted = name.split(maxsplit=1)
+    if len(formatted)>1:
+        return formatted[1]
+    return ''
