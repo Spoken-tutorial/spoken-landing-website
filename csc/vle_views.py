@@ -220,7 +220,7 @@ def student_profile(request,id):
     if s_cat.cert_category.code=="INDI":
       #indi code
       cat_fosses = FossCategory.objects.filter(
-        id__in=Student_Foss.objects.filter(student_cert_course=s_cat).values_list('csc_foss'))
+        id__in=Student_Foss.objects.filter(cert_category=s_cat.cert_category).values_list('csc_foss'))
     else:
 
       cat_fosses = FossCategory.objects.filter(

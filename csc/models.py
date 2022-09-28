@@ -176,10 +176,11 @@ class Student_certificate_course(models.Model):
 class Student_Foss(models.Model):
     student = models.ForeignKey(Student,on_delete=models.CASCADE)
     csc_foss = models.ForeignKey(FossCategory,on_delete=models.CASCADE)
-    cert_course = models.ForeignKey(Student_certificate_course, on_delete=models.CASCADE, null=True)
+    cert_category = models.ForeignKey(CertifiateCategories, on_delete=models.CASCADE, null=True)
+    foss_start_date = models.DateField(blank=True,null=True)
     
     class Meta:
-        unique_together = ('student','csc_foss', 'cert_course')
+        unique_together = ('student','csc_foss', 'cert_category')
 
 
 # =========== Student models ens ===================================
