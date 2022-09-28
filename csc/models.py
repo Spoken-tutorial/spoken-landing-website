@@ -85,7 +85,8 @@ class CSC(models.Model):
     block = models.CharField(max_length=100) 
     address = models.CharField(max_length=255) 
     pincode = models.CharField(max_length=6) 
-    plan = models.CharField(choices=CSC_PLAN,max_length=100)
+    # plan = models.CharField(choices=CSC_PLAN,max_length=100)
+    plan = models.CharField(max_length=255)
     activation_status = models.BooleanField(default=True) # If the csc is inactivated for some reason ; payment not done
 
     def __str__(self):
@@ -176,12 +177,13 @@ class Student_certificate_course(models.Model):
 class Student_Foss(models.Model):
     student = models.ForeignKey(Student,on_delete=models.CASCADE)
     csc_foss = models.ForeignKey(FossCategory,on_delete=models.CASCADE)
-    cert_course = models.ForeignKey(Student_certificate_course, on_delete=models.CASCADE, null=True)
+    csc_cert_course = models.ForeignKey(Student_certificate_course, on_delete=models.CASCADE, null=True)
     
     class Meta:
-        unique_together = ('student','csc_foss', 'cert_course')
+        unique_together = ('student','csc_foss', 'csc_cert_course')
 
-
+    def __str__(self):
+        return f"{self.csc_foss.foss}"
 # =========== Student models ens ===================================
 
 

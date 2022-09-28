@@ -35,16 +35,34 @@ function draw_course_enroll_stats(courses,type,id){
 
 
 function draw_prg_type_stats(d){
+  console.log('printing d................')
+  console.log(d)
     const labels = [
         'DCA',
-        'Individual',
+        'FDP01',
+        'FDP02',
+        'FDP03',
+        'FDP04',
+        'FDP05',
+        // 'FDP06',
+        // 'FDP07',
+        // 'FDP08',
+        // 'INDI',
+        // 'IT01',
+        // 'IT02',
+        // 'IT03',
+        // 'IT04'
+
        ];
-    data_points = [d['dca'],d['individual']];
+    // data_points = [d['DCA'],d['FDP01'],d['FDP02'],d['FDP03'],d['FDP04'],d['FDP05'],['FDP06'],['FDP07'],['FDP08'],['INDI'],['IT01'],['IT02'],['IT03'],['IT04']];
+    data_points = [d['DCA'],d['FDP01'],d['FDP02'],d['FDP03'],d['FDP04'],d['FDP05']];
     const data = {
         labels: labels,
         datasets: [{
           label: 'Programme Type',
-          backgroundColor: ['#ffecb5','#cff4fc'],
+          // backgroundColor: ['#ffecb5','#cff4fc'],
+          // backgroundColor: colorList.slice(labels.length),
+          backgroundColor:['rgb(216, 133, 163)','rgb(253, 187, 47)','rgb(230, 246, 157)','rgb(170, 222, 167)','rgb(100, 194, 166)','rgb(45, 135, 187)'],
           borderColor: '#fff',
           data: data_points,
         }]
@@ -108,10 +126,12 @@ $(document).ready(function(){
                 };
                 const myChart = new Chart(document.getElementById('test_'+String(d['id'])),config);    
             }
-            draw_prg_type_stats(data['course_type_offered']);
-            alert(course_count_result)
+            draw_prg_type_stats(data['course_count_result']);
+            // alert(course_count_result)
+            console.log(course_count_result)
             //To do ankita : for course student count graph
-
+            console.log("******************************")
+            console.log(data['course_type_offered'])
             // draw_course_enroll_stats(dca_students,'dca','dca_course');
             // draw_course_enroll_stats(individual_students,'individual','individual_course');            
         },

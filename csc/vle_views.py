@@ -26,11 +26,14 @@ from django.views.generic.edit import CreateView
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.urls import reverse_lazy
 
+import logging
+
+
 import string
 import random
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
-from django.db.models import F,ExpressionWrapper
+from django.db.models import F,ExpressionWrapper,Subquery,OuterRef,Exists,Q
 from django.db.models.fields import BooleanField
 
 from datetime import timedelta
@@ -89,7 +92,7 @@ def vle_dashboard(request):
     context['total_tests_completed'] = Test.objects.filter(vle=vle,tdate__gte=datetime.datetime.today().date()).count()
     context['total_certificates_issued'] = StudentTest.objects.filter(status=4).count() #ToDo check condition
     
-    context['fosses_perc'] = get_foss_enroll_percent(vle)
+    # context['fosses_perc'] = get_foss_enroll_percent(vle)
     return render(request, 'csc/vle.html', context)
    
 
@@ -147,6 +150,15 @@ def student_list(request):
   context={}
   vle = VLE.objects.filter(user=request.user).first()
   students = []
+  search = False
+  course = request.GET.get('course')
+  foss = request.GET.get('foss')
+  name = request.GET.get('name')
+  dates = request.GET.get('dates')
+  print(f"\n\n{request.GET}")
+  print(f"{course},{foss},{name},{dates}")
+  
+    
   
   findividual = FossCategory.objects.filter(available_for_jio=True)
   # findividual = FossCategory.objects.filter(programme_type='individual',vle=vle)
@@ -155,31 +167,104 @@ def student_list(request):
   context['foss_individual'] = [x for x in findividual]
   # context['foss_individual'] = findividual
   # for vle in vles:
-  s = Student.objects.filter(vle_id=vle.id)
+  # s = Student.objects.filter(vle_id=vle.id)
+  indi_id = CertifiateCategories.objects.get(code="INDI").id
+  indi_course = Student_certificate_course.objects.filter(student_id=OuterRef('id'),cert_category_id=indi_id)
+  s = Student.objects.filter(vle_id=vle.id).annotate(indi=Exists(indi_course))
+  print(s.query)
+  # all_students = Student.objects.filter(vle_id=vle.id)
+  if name:
+    print(f"\n name")
+    s = s.filter(Q(user__first_name__icontains=name)|Q(user__last_name__icontains=name)|Q(user__email__icontains=name))
+  if course:
+    print(f"\n course - {course}")
+    if CertifiateCategories.objects.get(id=course).code == 'INDI':
+      context['is_indi'] = True
+    try:
+      s = s.filter(id__in=[x.student.id for x in Student_certificate_course.objects.filter(cert_category__id=course)])
+    except Exception as e:
+      print(e)
+      print(f"course except")
+  if foss:
+    print(f"\n foss")
+    try:
+      s = s.filter(id__in=[Student_Foss.objects.get(id=foss)])
+    except:
+      print(f"foss except")
+  if not (course or foss or name):
+    context['is_indi'] = True
+    
+  # if dates:
+  #   print(f"\n dates")
+  #   start = dates.split('-')[0].strip()
+  #   end = dates.split('-')[0].strip()
+  #   print(f"\n\n\n\nstart - {start}, end - {end}")
+    
+  
+    
+  #   if start==end:
+  #     print("\n\n equal dates")
+  #     start_date = datetime.datetime.strptime(start, '%m/%d/%Y')
+  #     start_date = start_date.date()
+  #     s = s.filter(date_of_registration=start_date)
+  #   else:
+  #     start_date = datetime.datetime.strptime(start, '%m/%d/%Y').date()
+  #     end_date = datetime.datetime.strptime(start, '%m/%d/%Y').date()
+      
+  #     print("\n\n not equal dates")
+  #     s = s.filter(date_of_registration__gte=start,date_of_registration_lte=end_date)
+      
+  print(f"\n\ns - {s}\n\n")
   for item in s:
+    # print(type(item.indi))
+    if item.indi:
+      # print(item.id)
+      pass
     students.append(item)
   context['students'] = students
+  context['students'] = s
+  # print(f"\ncontext['students']")
+  # print(f"{context['students']}")
+  vle_courses = Student_certificate_course.objects.filter(student__in=s)
+  distinct_courses = set()
+  for item in vle_courses:
+    # print(item.cert_category)
+    distinct_courses.add(item.cert_category)
+  context['distinct_courses'] = distinct_courses
+  vle_fosses = Student_Foss.objects.filter(student__in=s)
+  # print(f"\n\nvle_fosses *** {vle_fosses}\n\n")
+  distinct_foss = set()
+  for item in vle_fosses:
+    distinct_foss.add(item.csc_foss)
+  l = list(distinct_foss)
+  l.sort(key=lambda x: x.foss.title())
+  context['distinct_foss'] = l
+  # print(f"distinct_courses ******* {distinct_courses}")
   return render(request,'csc/students_list.html',context)
 
 @csrf_exempt
 def assign_foss(request):
+  print(f"\n\nPOST******************************************")
   print(request.POST)
   vle = VLE.objects.get(user=request.user)
   students = request.POST.getlist('student[]')
-  fosses = request.POST.getlist('foss[]')
-
-  f = FossCategory.objects.filter(id__in=[int(x) for x in fosses]).values_list('foss')
-  foss_name = ', '.join([x[0] for x in f])
   
-  print(f"students".ljust(40,'*')+f"students")
-  print(f"foss".ljust(40,'*')+f"foss")
+  fosses = request.POST.getlist('foss[]')
+  
+
+  # f = FossCategory.objects.filter(id__in=[int(x) for x in fosses]).values_list('foss')
+  f = FossCategory.objects.filter(foss__in=[x for x in fosses]).values_list('foss')
+  foss_name = ', '.join([x[0] for x in f])
   for student in students:
     #check if student has individual
     for foss in fosses:
+      print(f"foss in for ***** {foss}\n")
       try:
-        f = FossCategory.objects.get(id=int(foss))
+        f = FossCategory.objects.get(foss=foss)
         s = Student.objects.get(id=int(student))
-        Student_Foss.objects.create(student=s,csc_foss=f)
+        c = CertifiateCategories.objects.get(code='INDI')
+        scc = Student_certificate_course.objects.get(student=s,cert_category=c)
+        Student_Foss.objects.create(student=s,csc_foss=f,csc_cert_course=scc)
       except Exception as e:
         print(e)
     
@@ -570,23 +655,28 @@ def mark_attendance(request,id):
 def check_vle_email(request):
   data = {}
   email = request.POST.get('email','')
-  last_update_date = VLE.objects.order_by('user__date_joined').last().user.date_joined
-  delta_date = last_update_date - timedelta(2)
-  payload = {'date':delta_date}
+  print(f"email - :{email}")
+  # Code to be used later when csc adds date payload in api
+  # last_update_date = VLE.objects.order_by('user__date_joined').last().user.date_joined
+  # delta_date = last_update_date - timedelta(2)
+  # payload = {'date':delta_date}
   url = getattr(settings, "URL_FETCH_VLE", "http://exam.cscacademy.org/shareiitbombayspokentutorial")
-  response = requests.get(url,params=payload)
+  # response = requests.get(url,params=payload)
+  response = requests.get(url)
   data['status'] = 0
   if response.status_code == 200:
-      result = response.json()
-      result = result['req_data']
+      result = response.json()['req_data']
+      # result = response.json()
+      # result = result['req_data']
       for item in result:
         if email == item['email']:
+            logging.debug("Found email matching csc.")
             try:
                 csc = CSC.objects.get(csc_id=item['csc_id'])
             except CSC.DoesNotExist:
-                print(f"csc - {item['csc_id']} does not exists")
+                print(f"**csc - {item['csc_id']} does not exists")
                 CSC.objects.create(
-                    csc_id=item.get('csc_id'),institute=item.get('institute',''),state=item.get('state',''),
+                    csc_id=item.get('csc_id'),institute=item.get('institute_name',''),state=item.get('state',''),
                     city=item.get('city',''),district=item.get('district',''),block=item.get('block',''),
                     address=item.get('address',''),pincode=item.get('pincode',''),plan=item.get('plan',''),
                     activation_status=1
@@ -595,7 +685,7 @@ def check_vle_email(request):
             add_vle(item,csc)
             vle = VLE.objects.get(user__email=email)
             add_transaction(vle,csc,item['transcdate'])
-            messages.add_message(request,messages.INFO,'hello')
+            # messages.add_message(request,messages.INFO,'hello')
             data['status'] = 1
   else:
     data['status'] = 2

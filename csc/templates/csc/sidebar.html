@@ -5,11 +5,25 @@
 
     <ul class="nav flex-column">
 
-        <li class="nav-item ">
+        {% comment %} <li class="nav-item ">
             <a id="logo" class="text-center d-flex justify-content-start m-2" href="/">
             <img src="{% static '/spoken/images/logo.png' %}" class="mr-2"> 
-            <span style="font-size: 1rem;">CSC Academy Programme</span>
+            <img src="{% static '/spoken/images/csc.png' %}" class="mr-2"> 
+            <span style="font-size: 1rem;">CSC Academy Programmes</span>
             </a>
+        </li> {% endcomment %}
+        
+        <li class="nav-item ">
+            <div class="row">
+                <div class="col-6 text-center d-flex align-items-end justify-content-end ">
+                    <img src="{% static '/spoken/images/logo.png' %}" class="col-6"  style="width:50%;"> 
+                </div>
+                <div class="col-6 text-center d-flex align-items-end">
+                    <img src="{% static '/spoken/images/csc1.png' %}" class="col-6  mx-auto " style="width:80%;"> 
+                </div>
+            </div>
+            <hr>
+            <div style="font-size: 1rem;color:var(--orange);" class="text-center">CSC Academy Programme</div>
         </li>
         <hr>
         
@@ -25,11 +39,12 @@
                 
                 <a class="nav-link scroll_link " href="{% url 'csc:vle_dashboard'%}"><i class="fas fa-user sb-icon"></i>VLE Dashboard<span class="sr-only">(current)</span></a>
                 
-                <a class="nav-link scroll_link " href="{% url 'home'%}#home"><i class="fas fa-home sb-icon" ></i>Home<span class="sr-only">(current)</span></a>
+                <a class="nav-link scroll_link " href="https://spoken-tutorial.in/"><i class="fas fa-home sb-icon" ></i>Home<span class="sr-only">(current)</span></a>
                 
             </li>
             <li class="nav-item">
                 <a class="nav-link scroll_link " href="{% url 'csc:courses' %}" ><i class="fas fa-book-open sb-icon"></i>Courses</a>
+                <a class="nav-link scroll_link " href="{% url 'cdcontent:cdcontenthome' %}" ><i class="fas fa-book-open sb-icon"></i>Courses</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link scroll_link " href="{% url 'csc:student_list' %}" ><i class="fas fa-user-graduate sb-icon"></i>Students</a>
@@ -74,7 +89,7 @@
             </h6>
 
             <li class="nav-item"><a class="nav-link scroll_link scroll_link" href="{% url 'student:student_tests' %}">Tests</a></li>
-            <li class="nav-item"><a class="nav-link scroll_link scroll_link" href="{% url 'student:courses' %}">Courses</a></li>
+            {% comment %} <li class="nav-item"><a class="nav-link scroll_link scroll_link" href="{% url 'student:courses' %}">Courses</a></li> {% endcomment %}
         {% endif %}
 
     </ul>

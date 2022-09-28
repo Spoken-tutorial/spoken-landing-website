@@ -6,7 +6,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 import random, string
-
+from csc.models import Student_certificate_course,CategoryCourses,Student_Foss
+from django.db import IntegrityError
 
 def send_pwd_mail(u):
     
@@ -40,3 +41,14 @@ def send_pwd_mail(u):
         print(e)
         print(f"Failed to send mail to user : {u.email}")
     
+def map_foss_to_student(student):
+    cert_courses = Student_certificate_course.objects.filter(student=student)
+    print(f"\n\ncert_courses ***** {cert_courses}\n")
+    l = []
+    for course in cert_courses:
+        fosses = CategoryCourses.objects.filter(certificate_category_id=course.cert_category_id).values('foss')
+        for foss in fosses:
+            try:
+                Student_Foss.objects.create(student=student,csc_cert_course=course,csc_foss_id=foss['foss'])
+            except IntegrityError as e:
+                pass

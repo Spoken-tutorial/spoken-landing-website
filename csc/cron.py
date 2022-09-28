@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import IntegrityError
 import requests
 from django.conf import settings
@@ -11,6 +12,7 @@ from django.db.models import Q
 # import utils as u
 from django.core.mail import send_mail
 from django.contrib.auth.models import Group
+from .utils import get_tenure_end_date
 
 def update_vle_data(): #CRON TASK
     url = getattr(settings, "URL_FETCH_VLE", "http://exam.cscacademy.org/shareiitbombayspokentutorial")
@@ -101,9 +103,10 @@ def send_password_mail(user,password):
     """
     try:
         print(f"sending mail .....{to_email},{password}")
-        # send_mail(subject,message,from_email,to_email,fail_silently=False)
-    except:
+        send_mail(subject,message,from_email,[to_email],fail_silently=False)
+    except Exception as e:
         print("Error in sending mail")
+        print(e)
 
 
 def send_log_mail(message):
@@ -157,8 +160,13 @@ def add_vle(item,csc):
         print(f"vle already exists ....")
         vle = VLE.objects.get(Q(csc=csc) and Q(user=user))
     tdate = item.get('transcdate').split()[0]
+    
+    tdate = datetime.strptime(tdate,'%Y-%m-%d')
+    print(f"tdate ************************ {tdate}")
     try:
-        transaction = Transaction.objects.create(vle=vle,csc=csc,transcdate=tdate,tenure=None,tenure_end_date=None)
+        tenure_end_date = get_tenure_end_date(tdate)
+        print(f"**tenure_end_date : {tenure_end_date}")
+        transaction = Transaction.objects.create(vle=vle,csc=csc,transcdate=tdate,tenure=None,tenure_end_date=tenure_end_date)
     except Exception as e: 
         print(e)
 
