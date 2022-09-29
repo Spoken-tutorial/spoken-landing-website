@@ -3,8 +3,9 @@ from tokenize import group
 import datetime
 from .models import *
 from .models import REJECTED, APPROVED 
-from datetime import date
+from datetime import date,timedelta
 from django.db.models import Count
+from django.conf import settings
 
 def is_user_vle(user):
     return user.groups.filter(name="VLE").exists()   
@@ -45,8 +46,12 @@ def get_programme_stats():
     
     course_count_result = (Student_certificate_course.objects.values('cert_category__code').annotate(scount=Count('cert_category__code')).order_by())
     print(course_count_result)
+    d = {}
+    for item in course_count_result:
+        d[item['cert_category__code']]=item['scount']
     course_count = [x for x in course_count_result]
-
+    print(f"course_count\n\n\n\n{course_count}")
+    return d
     return course_count
 
 
@@ -84,3 +89,13 @@ def getLastName(name):
     if len(formatted)>1:
         return formatted[1]
     return ''
+
+def get_tenure_end_date(tdate):
+    print(f"Inside tenure date")
+    subscription_period = getattr(settings, "CSC_SUBSCRIPTION_PERIOD", 100)
+    print(f"subscription_period - {subscription_period} ")
+    end_date = tdate + timedelta(100)
+    print(f"*****1")
+    print(f"end_date ****** {str(end_date)}")
+    return end_date
+    

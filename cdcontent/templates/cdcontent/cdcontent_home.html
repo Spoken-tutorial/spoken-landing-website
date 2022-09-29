@@ -4,11 +4,13 @@
 {% block content %}
 
 <form role="form" id="main_cddownload" method="post" enctype="multipart/form-data" class="cdcontentform form-horizontal">
-  <div class="row well bs-component" style="margin-top: 20px;">
-  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-    <div class="alert alert-danger" role="alert">
+  <div class="row well bs-component p-5" style="margin-top: 20px;">
+  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+    {% comment %} <div class="alert alert-danger" role="alert">
     <strong>Note:</strong> The maximum file size to download is 1 GB.
-    </div>
+    </div> {% endcomment %}
+    <p style="color:#013A6B;font-size:1.2rem">Download CD Content</p>
+    <hr>
     <fieldset>
     {% csrf_token %}
     <div class="form-group">
@@ -16,8 +18,8 @@
         {{ form.selected_foss.errors }}
     </div>
     </div>
-    <div class="form-group">
-    <label for="id_foss_category" class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label">FOSS Category:</label>
+    <div class="form-group mb-3">
+    <label for="id_foss_category" class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label"><b>FOSS Category:</b></label>
     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
         {% render_field form.foss_category class+="form-control foss_category" tabindex="1" %}
         {{ form.foss_category.errors }}
@@ -25,16 +27,16 @@
         {% render_field form.selected_foss class+='selected_foss' %}
     </div>
     </div>
-    <div class="form-group">
-    <label for="id_level" class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label">Level:</label>
+    <div class="form-group mb-3">
+    <label for="id_level" class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label"><b>Level:</b></label>
     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
         {% render_field form.level class+="form-control level" tabindex="2" %}
         {{ form.level.errors }}
         <small>Please select the Level</small>
     </div>
     </div>
-    <div class="form-group">
-    <label for="id_language" class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label">Languages: <span class='ajax-refresh ajax-refresh-language'><i class="fa fa-2 fa-refresh fa-spin"></i></span></label>
+    <div class="form-group mb-3">
+    <label for="id_language" class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label"><b>Languages:</b> <span class='ajax-refresh ajax-refresh-language'><i class="fa fa-2 fa-refresh fa-spin"></i></span></label>
     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
         {% render_field form.language class+="form-control language" tabindex="3" %}
         {{ form.language.errors }}
@@ -83,8 +85,68 @@
           $('.level').attr("disabled", "disabled");
           $('.language').attr("disabled", "disabled");
       }
-      
-   
+
+      //CSC API
+        // const data = { username: 'example' };
+
+        const data = {
+          "certificate_course": [
+            {
+              "cert_category": "IT02",
+              "programme_starting_date": "2022-09-26"
+            }
+          ],
+          "user": {
+            "first_name": "Vijay",
+            "last_name": "Testing",
+            "email": "vijay_13@example.com"
+          },
+          "gender": "Male",
+          "dob": "1994-09-26",
+          "phone": "9999111111 ",
+          "edu_qualification": "BCA",
+          "vle_id": [
+            {
+              "user": {
+                "email": "vle_email@example.com"
+              }
+            }
+          ],
+          "state": 29,
+          
+          "district": 481,
+          "pincode": "328001",
+          "address": "Address Here",
+          "date_of_registration": "2022-09-26",
+          "category": "Gen",
+          "occupation": "Software Eng."
+        }
+        
+
+        fetch('http://127.0.0.1:8000/csc/api/v1/students/', {
+        method: 'POST', // or 'PUT'
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization' : 'Token 77a9de406af6e268b2f669d41d14a04176438c27'
+        },
+        body: JSON.stringify(data),
+        })
+        .then((response) => 
+          {
+            console.log(response.status)
+            return response.json())
+          }
+        
+        .then((data) => {
+            alert('Success:');
+            console.log('success');
+            console.log(data);
+        })
+        .catch((error) => {
+            alert('error');
+            console.error('Error:', error);
+        });   
 });
 
 // if ($.cookie('modal_status') != '1'){

@@ -85,7 +85,8 @@ class CSC(models.Model):
     block = models.CharField(max_length=100) 
     address = models.CharField(max_length=255) 
     pincode = models.CharField(max_length=6) 
-    plan = models.CharField(choices=CSC_PLAN,max_length=100)
+    # plan = models.CharField(choices=CSC_PLAN,max_length=100)
+    plan = models.CharField(max_length=255)
     activation_status = models.BooleanField(default=True) # If the csc is inactivated for some reason ; payment not done
 
     def __str__(self):
@@ -183,6 +184,8 @@ class Student_Foss(models.Model):
         unique_together = ('student','csc_foss', 'cert_category')
 
 
+    def __str__(self):
+        return f"{self.csc_foss.foss}"
 # =========== Student models ens ===================================
 
 

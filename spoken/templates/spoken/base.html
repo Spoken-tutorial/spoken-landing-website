@@ -16,7 +16,7 @@
 	{% block css %}{% endblock css %}
 </head>
 <body>
-	<!--bootstrap navbar--->
+	<!--bootstrap navbar -->
 	<nav class="navbar navbar-expand-lg fixed-top navbar-light navbar-custom">
 		<a id="logo" class="navbar-brand brand-custom" href="/"><img src="{% static '/spoken/images/logo.png' %}" class="d-inline-block " alt="">  Applications of Spoken Tutorials</a>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,27 +52,37 @@
 			{% if request.user|has_group:"VLE" %}
 			<a class="dropdown-item" href="{% url 'csc:vle_dashboard' %}">VLE Dashboard</a>
 			{% endif %}
+
+			{% if request.user|has_group:"STUDENT" %}
+			<a class="dropdown-item" href="{% url 'student:student_dashboard' %}">STUDENT Dashboard</a>
+			{% endif %}
 			
 			<a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
 		  </div>
+		  
 		</div>
 		 <li class="nav-item active">
 		  {{user.username}}
 		</li>
 		{% else %}
 		<li class="nav-item active">
+			<a class="nav-link scroll_link btn btn-secondary" href="{% url 'login'%}" >LOGIN</a>
+			{% comment %} <a class="nav-link scroll_link " href="{% url 'login_other' %}" style="color:black">Other - Login</a> {% endcomment %}
+		</li>
+		
+		<!--<li class="nav-item active">
 			<div class="dropdown">
 				<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				  <i class="far fa-user-circle"></i> Login
 				</a>
 			  
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-					<a class="nav-link scroll_link " href="{% url 'csc:login' %}" style="color:black">CSC - Login</a>
+					{% comment %} <a class="nav-link scroll_link " href="{% url 'csc:login' %}" style="color:black">CSC - Login</a> {% endcomment %}
 					<a class="nav-link scroll_link " href="{% url 'login_other' %}" style="color:black">Other - Login</a>
 
 				</div>
 			  </div>
-			<!-- <div class="dropdown">
+			 <div class="dropdown">
 				<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
 				  Login
 				</button>
@@ -80,10 +90,8 @@
 				  <li></li>
 				  <li></li>
 				</ul>
-			  </div> -->
-			
-		  <!-- <a class="nav-link scroll_link " href="{% url 'login' %}">Login</a> -->
-		</li>
+			  </div> 
+		</li>-->
 		{% endif %}
 	  </ul>
 	</div>

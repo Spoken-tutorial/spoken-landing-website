@@ -20,7 +20,7 @@
 				<p>Need help? <a target="_blank" class="login-help" href="https://process.spoken-tutorial.org/index.php/Software-Training#Contacts_For_Training">Please contact your training manager. </a> </p>
 			</div>
 			<div class="mt-5 alert alert-info w-100 text-center" role="alert">
-				<b>Note for VLE : </b>If you are a <b>VLE</b> and didn't receive a password for Spoken Tutorial - CSC, 
+				<b>Note for VLE : </b>If you are a <b>VLE</b> and didn't receive a password/or forgot your password for Spoken Tutorial - CSC, 
 				<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
 					Launch demo modal
 				  </button> -->
@@ -40,7 +40,7 @@
 			<div class="modal-dialog">
 			  <div class="modal-content">
 				<div class="modal-header">
-				  <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+				  <p class="modal-title" id="exampleModalLabel">Please enter your email registered with CSC.</p>
 				  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				  </button>
@@ -73,7 +73,6 @@
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script>
 	$(document).ready(function(){       
-        
 		$( "#check_vle_email" ).click(function() {
 		data = {}
 		data['email'] = $("#new_vle_id").val();
@@ -89,7 +88,6 @@
                     console.log(data);
 					if(data['status']==1){
 						$("#vle_status").text("A password has been sent to your mail!");
-						alert('');
 					}else if (data['status']==2){
 						$("#vle_status").text("Some error occurred.Please try later.");
 					}else{
