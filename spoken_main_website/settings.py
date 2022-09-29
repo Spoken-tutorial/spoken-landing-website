@@ -268,3 +268,4 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 
 }
+CSC_SUBSCRIPTION_PERIOD = 100

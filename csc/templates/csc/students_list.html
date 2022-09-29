@@ -19,6 +19,10 @@
     .f-name{
         color: rgba(0,0,0,0.5);
     }
+    .c-btn{
+        background-color:#F19584!important;
+        border-color:#F19584;
+    }
 </style>
 {% endblock css %}
 
@@ -29,7 +33,7 @@
             <form method="GET">
                 <div class="row">
                     <div class="col-md-3 col-6 mb-3">
-                        <label for="category_select" class="form-label" >Course</label>
+                        <label for="category_select" class="form-label" ><b>Course</b></label>
                         <select class="form-select" aria-label="Default select example" name="course" id="category_select">
                             <option value="0">Select All</option>
                         {% for item in distinct_courses%}
@@ -39,7 +43,7 @@
                     </div>
                     
                     <div class="col-md-3  col-6 mb-3">
-                        <label for="foss_select" class="form-label" >Foss</label>
+                        <label for="foss_select" class="form-label" ><b>Foss</b></label>
                         <select class="form-select" aria-label="Default select example" name="foss" id="foss_select">
                             <option value="0">Select All</option>
                         {% for item in distinct_foss%}
@@ -48,17 +52,17 @@
                       </select>
                     </div>
                       <div class="col-md-3  col-6 mb-3">
-                        <label for="name" class="form-label" >Name/Email</label>
+                        <label for="name" class="form-label" ><b>Name/Email</b></label>
                         <input type="text" class="form-control" id="name" aria-describedby="nameEmail" name="name">
-                        <div id="emailHelp" class="form-text">Search by name or email</div>
+                        <div id="emailHelp" class="form-text">Search by student name or email</div>
                       </div>
-                      <div class="col-md-3  col-6 ">
+                      {% comment %} <div class="col-md-3  col-6 ">
                         <label for="name" class="form-label" >Registration Date Range</label>
                         <input  class="form-control" id="dates" aria-describedby="nameEmail" name="dates" >
-                      </div>
+                      </div> {% endcomment %}
 
                 </div>
-                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="submit" class="btn btn-primary c-btn">Submit</button>
             </form>
         </div>
         <hr>
@@ -71,7 +75,9 @@
             
         </div>
         <div>
-            <p class="f-name fs-sm ">* Click on student name below to view/edit student details.</p>
+            <p class="f-name fs-sm ">* Click on student name below to view student details.</p>
+            <hr>
+            <p>Search results for : {{search_foss}}, {{search_course}}, {{search_name}}</p>
             <hr>
         </div>
         <div>

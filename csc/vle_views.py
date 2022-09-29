@@ -20,7 +20,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-from .decorators import *
+from .decorators import is_vle
 
 from django.views.generic.edit import CreateView
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -33,7 +33,7 @@ import string
 import random
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
-from django.db.models import F,ExpressionWrapper,Subquery,OuterRef,Exists,Q
+from django.db.models import F,ExpressionWrapper,Subquery,OuterRef,Exists,Q, Count
 from django.db.models.fields import BooleanField
 
 from datetime import timedelta
@@ -73,7 +73,9 @@ class CSCLogin(LoginView):
         if is_user_student(self.request.user): return reverse('csc:vle_dashboard')
         # ToDo if student ; redirect to student dashboard
 
-@csrf_exempt
+# @csrf_exempt
+@login_required
+@is_vle
 def vle_dashboard(request):
     context = {}
     # user = request.user
@@ -95,26 +97,41 @@ def vle_dashboard(request):
     # context['fosses_perc'] = get_foss_enroll_percent(vle)
     return render(request, 'csc/vle.html', context)
    
-
+@login_required
+@is_vle
 def courses(request):
   context = {}
   vles = VLE.objects.filter(user=request.user)
   for vle in vles:
 
     individual_foss = {}
-    # for item in individual_csc_foss:
-    #   students = Student_Foss.objects.filter(csc_foss=item.id).count()
-    #   individual_foss[item.spoken_foss.foss] = {'total_students':students}
-
-
     fosses = FossCategory.objects.filter(available_for_jio=True)
     indi_students = Student_certificate_course.objects.filter(cert_category__code='INDI', student__in=Student.objects.filter(vle_id=vle.id)).values_list('student_id')
     
     for item in fosses:
       students = Student_Foss.objects.filter(csc_foss=item.id, student__in=indi_students).count()
       individual_foss[item.foss] = {'total_students':students}
-
+ 
     context['individual_foss'] = individual_foss
+    vle = VLE.objects.filter(user=request.user)[0]
+    vle_students = [x.id for x in Student.objects.filter(vle_id=vle.id)]
+    courses = CertifiateCategories.objects.exclude(code__in=['INDI'])
+    if request.GET.get('course_search'):
+      search_term = request.GET.get('search_term')
+      q_code = Q(certificate_category__code__icontains=search_term)
+      q_title = Q(certificate_category__title__icontains=search_term)
+      q_foss  = Q(foss__foss__icontains=search_term)
+      courses = [x.certificate_category for x in CategoryCourses.objects.filter(q_code|q_title|q_foss)]
+    else:
+      courses = CertifiateCategories.objects.exclude(code__in=['INDI'])
+    d = {}
+    for course in courses:
+      fosses = [x['foss__foss'] for x in CategoryCourses.objects.filter(certificate_category_id=course.id).values('foss__foss')]
+      # if course.code in d:
+      d[course] = fosses
+    print(f"\n\n{d}\n\n")
+    context['courses'] = d
+    
   return render(request,'csc/courses.html',context)
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -124,147 +141,110 @@ class GetFossOptionView(JSONResponseMixin, View):
 
   def post(self, request, *args, **kwargs):
     programme_type = self.request.POST.get('programme_type')
-    print(programme_type,"*****************")
     context = {}
-
     foss_option = "<option value=''>---------</option>"
-
-
     if programme_type == 'dca':
         fosses = FossCategory.objects.filter(csc_dca_programme=True, available_for_jio=True).order_by('foss')
     else:
         fosses = FossCategory.objects.filter(csc_dca_programme=False, available_for_jio=True).order_by('foss')
-
     for foss in fosses:
       foss_option += "<option value=" + str(foss.id) + ">" + str(foss.foss) + "</option>"
-
-    print(foss_option)
     context = {
       'spoken_foss_option' : foss_option,
     }
     return self.render_to_json_response(context)
 
-
+@login_required
 @is_vle
 def student_list(request):
   context={}
   vle = VLE.objects.filter(user=request.user).first()
   students = []
-  search = False
   course = request.GET.get('course')
   foss = request.GET.get('foss')
   name = request.GET.get('name')
-  dates = request.GET.get('dates')
-  print(f"\n\n{request.GET}")
-  print(f"{course},{foss},{name},{dates}")
-  
-    
-  
+  # dates = request.GET.get('dates')
   findividual = FossCategory.objects.filter(available_for_jio=True)
-  # findividual = FossCategory.objects.filter(programme_type='individual',vle=vle)
-
-
   context['foss_individual'] = [x for x in findividual]
-  # context['foss_individual'] = findividual
-  # for vle in vles:
-  # s = Student.objects.filter(vle_id=vle.id)
   indi_id = CertifiateCategories.objects.get(code="INDI").id
   indi_course = Student_certificate_course.objects.filter(student_id=OuterRef('id'),cert_category_id=indi_id)
   s = Student.objects.filter(vle_id=vle.id).annotate(indi=Exists(indi_course))
+  distinct_courses = set()
+  vle_courses = Student_certificate_course.objects.filter(student__in=s) 
+  # vle_courses = Student_certificate_course.objects.all()
+  for item in vle_courses:
+    # print(item.cert_category)
+    distinct_courses.add(item.cert_category)
+  context['distinct_courses'] = distinct_courses
+  distinct_foss = set()
+  vle_fosses = Student_Foss.objects.filter(student__in=s)
+  for item in vle_fosses:
+    distinct_foss.add(item.csc_foss)
+  l = list(distinct_foss)
+  l.sort(key=lambda x: x.foss.title())
+  context['distinct_foss'] = l
   print(s.query)
   # all_students = Student.objects.filter(vle_id=vle.id)
-  if name:
-    print(f"\n name")
+  if name!=None:
+    context['search_name'] = name
     s = s.filter(Q(user__first_name__icontains=name)|Q(user__last_name__icontains=name)|Q(user__email__icontains=name))
-  if course:
-    print(f"\n course - {course}")
+  if course!='0' and course!=None:
+    try:
+      context['search_course'] = CertifiateCategories.objects.get(id=course)
+    except Exception as e:
+      print(e)
     if CertifiateCategories.objects.get(id=course).code == 'INDI':
       context['is_indi'] = True
     try:
       s = s.filter(id__in=[x.student.id for x in Student_certificate_course.objects.filter(cert_category__id=course)])
     except Exception as e:
       print(e)
-      print(f"course except")
-  if foss:
-    print(f"\n foss")
+  if foss!='0' and foss!=None:
     try:
-      s = s.filter(id__in=[Student_Foss.objects.get(id=foss)])
-    except:
-      print(f"foss except")
+      context['search_foss'] = FossCategory.objects.get(id=foss)
+    except Exception as e:
+      print(e)
+    try:
+      s = s.filter(id__in=[x.student.id for x in Student_Foss.objects.filter(csc_foss=foss)])
+    except Exception as e:
+      print(e)
   if not (course or foss or name):
     context['is_indi'] = True
-    
+  
   # if dates:
-  #   print(f"\n dates")
   #   start = dates.split('-')[0].strip()
   #   end = dates.split('-')[0].strip()
-  #   print(f"\n\n\n\nstart - {start}, end - {end}")
-    
-  
-    
   #   if start==end:
-  #     print("\n\n equal dates")
   #     start_date = datetime.datetime.strptime(start, '%m/%d/%Y')
   #     start_date = start_date.date()
   #     s = s.filter(date_of_registration=start_date)
   #   else:
   #     start_date = datetime.datetime.strptime(start, '%m/%d/%Y').date()
   #     end_date = datetime.datetime.strptime(start, '%m/%d/%Y').date()
-      
-  #     print("\n\n not equal dates")
   #     s = s.filter(date_of_registration__gte=start,date_of_registration_lte=end_date)
-      
-  print(f"\n\ns - {s}\n\n")
   for item in s:
-    # print(type(item.indi))
-    if item.indi:
-      # print(item.id)
-      pass
     students.append(item)
   context['students'] = students
   context['students'] = s
-  # print(f"\ncontext['students']")
-  # print(f"{context['students']}")
-  vle_courses = Student_certificate_course.objects.filter(student__in=s)
-  distinct_courses = set()
-  for item in vle_courses:
-    # print(item.cert_category)
-    distinct_courses.add(item.cert_category)
-  context['distinct_courses'] = distinct_courses
-  vle_fosses = Student_Foss.objects.filter(student__in=s)
-  # print(f"\n\nvle_fosses *** {vle_fosses}\n\n")
-  distinct_foss = set()
-  for item in vle_fosses:
-    distinct_foss.add(item.csc_foss)
-  l = list(distinct_foss)
-  l.sort(key=lambda x: x.foss.title())
-  context['distinct_foss'] = l
-  # print(f"distinct_courses ******* {distinct_courses}")
+  
   return render(request,'csc/students_list.html',context)
 
 @csrf_exempt
 def assign_foss(request):
-  print(f"\n\nPOST******************************************")
-  print(request.POST)
   vle = VLE.objects.get(user=request.user)
   students = request.POST.getlist('student[]')
-  
   fosses = request.POST.getlist('foss[]')
-  
-
-  # f = FossCategory.objects.filter(id__in=[int(x) for x in fosses]).values_list('foss')
   f = FossCategory.objects.filter(foss__in=[x for x in fosses]).values_list('foss')
   foss_name = ', '.join([x[0] for x in f])
   for student in students:
     #check if student has individual
     for foss in fosses:
-      print(f"foss in for ***** {foss}\n")
       try:
         f = FossCategory.objects.get(foss=foss)
         s = Student.objects.get(id=int(student))
         c = CertifiateCategories.objects.get(code='INDI')
         scc = Student_certificate_course.objects.get(student=s,cert_category=c)
-        Student_Foss.objects.create(student=s,csc_foss=f,csc_cert_course=scc)
+        Student_Foss.objects.create(student=s,csc_foss=f,cert_category=scc.cert_category,foss_start_date=datetime.date.today())
       except Exception as e:
         print(e)
     
@@ -298,10 +278,6 @@ def student_profile(request,id):
   s_categories = Student_certificate_course.objects.filter(student=student)
   
   for s_cat in s_categories:
-    print("_______________________")
-    print(s_cat.cert_category)
-    print("_______________________")
-
     if s_cat.cert_category.code=="INDI":
       #indi code
       cat_fosses = FossCategory.objects.filter(
@@ -313,18 +289,9 @@ def student_profile(request,id):
         )
     s_fosses=[] #list fosses in category
     for cf in cat_fosses:
-
-      print(cf.foss)
       s_fosses.append(cf.foss)
-      print("******")
-      print(s_fosses)
-
 
     stu_cat_foss[(s_cat.cert_category.code+" - "+s_cat.cert_category.title)]=s_fosses
-
-  print(stu_cat_foss,"########################")
- 
-
   context['s_categories'] = s_categories
   context['stu_cat_foss'] = stu_cat_foss
   
@@ -468,12 +435,10 @@ class TestUpdateView(UpdateView):
       form.fields['tdate'].widget = widgets.DateInput(attrs={'type': 'date'})
       form.fields['ttime'].widget = widgets.DateInput(attrs={'type': 'time'})
       t = str(self.get_object().ttime).split(' ')[0]
-      print(f"t ------ {t}")
       form.fields['ttime'].initial = t
       return form
 
   def get_context_data(self, **kwargs):
-    print(f"1 **".ljust(50,'-'))
     context = super().get_context_data(**kwargs)
     vle = VLE.objects.filter(user=self.request.user).first()
     id = vle.id
@@ -485,8 +450,6 @@ class TestUpdateView(UpdateView):
     test = self.get_object()
     students = [x.student for x in StudentTest.objects.filter(test = test)]
     context['students'] = students
-    print(f"test - {test}")
-    print(f"students ---- {students}")
     return context
 
 def invigilators(request):
@@ -624,14 +587,9 @@ def review_invigilation_request(request):
 
 def get_stats(request):
   data = {}
-  print("4 ------- ")
   data['upcoming_tests'] = get_upcoming_test_stats()
-  print("5 ------- ")
   data['course_type_offered'] = get_courses_offered_stats()
-  print("6 ------- ")
   data['course_count_result'] = get_programme_stats()
-  print("7 ------- ")
-  
   return JsonResponse(data)
 
 def mark_attendance(request,id):

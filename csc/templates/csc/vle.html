@@ -103,12 +103,16 @@ body{
           </div>
         </div>
         
-        <div class="col-12">
+        <div class="col-12 mt-2">
           
             <span class="me-2"><i class="fas fa-map-marker-alt p-icons d-inline-block mr-5"></i></span>
             <span class="me-2">{{vle.csc.address | title}}, {{vle.csc.block}}, {{ vle.csc.city }}, {{ vle.csc.state }}</span></div>
           
         </div>
+        <div class="col-12 mt-2">
+          <span class="me-2"><i class="far fa-clipboard p-icons d-inline-block mr-5"></i> Plan: </span>
+          <span class="me-2">{{ vle.csc.plan }}</span>
+      </div>
           
       </div>
     </div>
@@ -186,16 +190,12 @@ body{
         
     </div>
     <div>
-      <div class="card">
+      {% comment %} <div class="card">
         <div class="card-header">
           Upcoming Tests
         </div>
         <div class="card-body">
-        
-          
           <div class="row">
-            
-    
               {% for key,value in upcoming_test_stats.items %}
               <div class="col-md-3">
               <div class="border p-2">
@@ -211,14 +211,26 @@ body{
               {% endfor %}
           </div>
         </div>
-      </div>
+      </div> {% endcomment %}
     </div>
     <div class="row mt-2 ">
-      <div class="col-md-3 ">
+      <div class="col-md-8 ">
         <div class="border p-2 bg-white">
-          <p class="heading text-center">Enrollment based on Programme Type </p>
-          <div class="text-xs d-flex justify-content-around"><div>DCA({{courses_offered_stats.dca}})</div><div>Individual({{courses_offered_stats.individual}})</div></div>
+          <p class="heading text-center">Enrollment based on Course Type </p>
+          <div class="text-xs d-flex justify-content-around">
+            {% comment %} <div>DCA({{courses_offered_stats.dca}})</div>
+            <div>Individual({{courses_offered_stats.individual}})</div> {% endcomment %}
+          </div>
           <canvas id="prg_type"></canvas>  
+          
+        </div>
+      <div clsss='col-6'>
+        <div >
+          <canvas id="myChart"></canvas>
+        </div>
+      
+          
+          
         </div>
       </div>
 

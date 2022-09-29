@@ -1,0 +1,107 @@
+{% extends 'spoken/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<section>
+<!-- <div class="d-flex justify-content-center align-items-center flex-column p-5" style="height: 100%;"> -->
+	<div class="row mt-5 pt-5 mx-2" >
+		<!-- <div class="col-md-6 offset-md-3 col-lg-4 offset-lg-4 alert alert-info w-100 text-center" role="alert">
+		  Please use Spoken Tutorial login details 
+		</div> -->
+		{% include 'spokenlogin/messages.html' %} 
+		<div class="col-md-6 offset-md-3 col-lg-4 offset-lg-4">
+			<h1 class="text-left pb-2" style="font-size: 1.5rem;color: #0D47A1;width: 100%;border-bottom: 2px solid #0D47A1;">Login</h1>
+			<form action="{% url 'login' %}" method="post" style="width: 100%;">
+			  {% csrf_token %}
+			  {{ form|crispy  }}
+			  <button type="submit" id="submit" class="btn " style="background: #0D47A1;color: #fff; font-weight: bold;width: 100%;">Login</button>
+			</form>
+			<hr>
+			<div>
+				<p>Need help? <a target="_blank" class="login-help" href="https://process.spoken-tutorial.org/index.php/Software-Training#Contacts_For_Training">Please contact your training manager. </a> </p>
+			</div>
+			<div class="mt-5 alert alert-info w-100 text-center" role="alert">
+				<b>Note for VLE : </b>If you are a <b>VLE</b> and didn't receive a password/or forgot your password for Spoken Tutorial - CSC, 
+				<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+					Launch demo modal
+				  </button> -->
+				  <a data-toggle="modal" data-target="#exampleModal" style="color: #0D47A1">
+					<b style="text-decoration: underline;">Please click here</b>
+				  </a>
+			  </div>
+			{% comment %} <!-- will be used in later versions for registering spoken team & employers -->
+			<div class="text-left " style="width: 100%;">
+				<p>Not a user ?</p>
+				<a href="{% url 'register' %}" class="btn " style="background: #003d33;color: #fff; font-weight: bold;width: 50%;">Register</a>
+			</div>
+		</div>
+			{% endcomment %}
+		</div>
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+			  <div class="modal-content">
+				<div class="modal-header">
+				  <p class="modal-title" id="exampleModalLabel">Please enter your email registered with CSC.</p>
+				  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				  </button>
+				</div>
+				<div class="modal-body">
+					<div id="vle_status">
+
+					</div>
+				  <div>
+					<label for="new_vle_id">Email</label>
+					<div class="form-group">
+						<input type="email" class="form-control" id="new_vle_id" aria-describedby="emailHelp">
+						<button id="check_vle_email" class="btn mt-2">Submit</button>
+					</div>
+				  <div>
+				</div>
+				<div class="modal-footer">
+				
+				</div>
+			  </div>
+			</div>
+		  </div>
+</section>
+
+
+
+{% endblock %}
+
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script>
+	$(document).ready(function(){       
+		$( "#check_vle_email" ).click(function() {
+		data = {}
+		data['email'] = $("#new_vle_id").val();
+		url = '/csc/check_vle_email/';
+		$.ajax({
+                url : url,
+                type: "POST",
+                data : data,
+                success: function(data, textStatus, jqXHR)
+                {
+                    console.log(data);
+                    console.log(data['foss']);
+                    console.log(data);
+					if(data['status']==1){
+						$("#vle_status").text("A password has been sent to your mail!");
+					}else if (data['status']==2){
+						$("#vle_status").text("Some error occurred.Please try later.");
+					}else{
+						$("#vle_status").text("This email id is not registered with Spoken Tutorial.");
+					}
+                    
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    alert('error')
+                }
+            });
+    });
+	});
+</script>
+
+{% endblock %}

@@ -103,7 +103,7 @@ class StudentSerializer(serializers.ModelSerializer):
             if data['cert_category'] in existing_courses:
                 continue
             Student_certificate_course.objects.create(student=student, **data)
-            map_foss_to_student(instance)
+            map_foss_to_student(instance,fdate=data['programme_starting_date'])
 
         if has_user:
             s = UserSerializer(user_obj,data=user)

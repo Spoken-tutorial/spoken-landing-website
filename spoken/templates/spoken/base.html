@@ -52,9 +52,14 @@
 			{% if request.user|has_group:"VLE" %}
 			<a class="dropdown-item" href="{% url 'csc:vle_dashboard' %}">VLE Dashboard</a>
 			{% endif %}
+
+			{% if request.user|has_group:"STUDENT" %}
+			<a class="dropdown-item" href="{% url 'student:student_dashboard' %}">STUDENT Dashboard</a>
+			{% endif %}
 			
 			<a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
 		  </div>
+		  
 		</div>
 		 <li class="nav-item active">
 		  {{user.username}}

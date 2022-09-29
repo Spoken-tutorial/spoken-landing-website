@@ -55,7 +55,7 @@ def check_updated_vle(username,request):
             add_vle(item,csc)
             vle = VLE.objects.get(user__email=username)
             add_transaction(vle,csc,item['transcdate'])
-            messages.add_message(request,messages.INFO,'hello')
+            # messages.add_message(request,messages.INFO,'hello')
             return vle.user
     else: 
         # messages.add_message(request,messages.INFO,'hello')

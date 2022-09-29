@@ -102,8 +102,10 @@ def send_password_mail(user,password):
         IIT Bombay.
     """
     try:
-        print(f"sending mail .....{to_email},{password}")
-        send_mail(subject,message,from_email,[to_email],fail_silently=False)
+        print(f"sending mails .....{to_email},{password}")
+        # IMPORTANT ToDo: Uncomment
+        # send_mail(subject,message,from_email,[to_email],fail_silently=False)
+        print(f"mail sent success")
     except Exception as e:
         print("Error in sending mail")
         print(e)
@@ -143,7 +145,9 @@ def add_vle(item,csc):
                             email=item['email'],is_staff=0,is_active=1
                         )
         print(f"user for vle {item.get('email')} created")
-    password = ''.join([ random.choice(string.ascii_letters+string.digits) for x in range(8)])
+    # IMPORTANT ToDo: REMOVE static pwd
+    # password = ''.join([ random.choice(string.ascii_letters+string.digits) for x in range(8)])
+    password = 'admin@123' 
     enc_password = make_password(password)
     user.password = enc_password
     user.save()

@@ -1,5 +1,6 @@
-const colorList = ['rgb(216, 133, 163)','rgb(253, 187, 47)','rgb(230, 246, 157)','rgb(170, 222, 167)','rgb(100, 194, 166)','rgb(45, 135, 187)','rgb(155, 191, 224)','rgb(232, 160, 154)','rgb(251, 226, 159)','rgb(198, 214, 143)']
-
+const colorList = ['rgb(216, 133, 163)','rgb(253, 187, 47)','rgb(230, 246, 157)','rgb(170, 222, 167)','rgb(100, 194, 166)','rgb(45, 135, 187)','rgb(155, 191, 224)','rgb(232, 160, 154)','rgb(251, 226, 159)','rgb(198, 214, 143)','rgb(255, 170, 165)','rgb(203, 226, 176)','rgb(220, 214, 247)','rgb(234, 144, 133)','rgb(164, 212, 174)','rgb(213, 151, 206)',
+'rgb(72, 76, 127)','rgb(237, 154, 115)','rgb(222, 212, 115)','rgb(120, 176, 160)','rgb(92, 120, 147)','rgb(203, 155, 66)','rgb(215, 172, 212)','rgb(234, 138, 138)','rgb(66, 121, 150)','rgb(135, 142, 205)','rgb(42, 82, 138)','rgb(139, 79, 128)']
+console.log('a',colorList.length)
 // function draw_course_enroll_stats(courses,type,id){
 function draw_course_enroll_stats(courses,type,id){
     let labels = [];
@@ -37,38 +38,29 @@ function draw_course_enroll_stats(courses,type,id){
 function draw_prg_type_stats(d){
   console.log('printing d................')
   console.log(d)
-    const labels = [
-        'DCA',
-        'FDP01',
-        'FDP02',
-        'FDP03',
-        'FDP04',
-        'FDP05',
-        // 'FDP06',
-        // 'FDP07',
-        // 'FDP08',
-        // 'INDI',
-        // 'IT01',
-        // 'IT02',
-        // 'IT03',
-        // 'IT04'
-
-       ];
-    // data_points = [d['DCA'],d['FDP01'],d['FDP02'],d['FDP03'],d['FDP04'],d['FDP05'],['FDP06'],['FDP07'],['FDP08'],['INDI'],['IT01'],['IT02'],['IT03'],['IT04']];
-    data_points = [d['DCA'],d['FDP01'],d['FDP02'],d['FDP03'],d['FDP04'],d['FDP05']];
+  const labels = [];
+  const data_points = []
+  for (const course in d) {
+    console.log(`${course}: ${d[course]}`);
+    labels.push(course);
+    data_points.push(d[course]);
+  }
+  console.log(labels)
+    backgroundColors = [];
+    for (const i in colorList) {
+      backgroundColors.push(colorList[i]);
+    }
     const data = {
         labels: labels,
         datasets: [{
           label: 'Programme Type',
-          // backgroundColor: ['#ffecb5','#cff4fc'],
-          // backgroundColor: colorList.slice(labels.length),
-          backgroundColor:['rgb(216, 133, 163)','rgb(253, 187, 47)','rgb(230, 246, 157)','rgb(170, 222, 167)','rgb(100, 194, 166)','rgb(45, 135, 187)'],
+          backgroundColor:backgroundColors,
           borderColor: '#fff',
           data: data_points,
         }]
       };
     var config = {
-        type: 'pie',
+        type: 'bar',
         data: data,              
     };
     const myChart = new Chart(document.getElementById('prg_type'),config);
@@ -124,14 +116,11 @@ $(document).ready(function(){
                           cutoutPercentage: 80,
                     }            
                 };
-                const myChart = new Chart(document.getElementById('test_'+String(d['id'])),config);    
+                const myChart = new Chart(document.getElementById('test_'+String(d['id'])),config);   
+                
+                
             }
             draw_prg_type_stats(data['course_count_result']);
-            // alert(course_count_result)
-            console.log(course_count_result)
-            //To do ankita : for course student count graph
-            console.log("******************************")
-            console.log(data['course_type_offered'])
             // draw_course_enroll_stats(dca_students,'dca','dca_course');
             // draw_course_enroll_stats(individual_students,'individual','individual_course');            
         },

@@ -4,9 +4,12 @@ from multiprocessing import context
 from django.urls import reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
-from .models import Student, StudentTest, Student_Foss, Test, VLE, TestRequest, Vle_csc_foss
+from .models import CertifiateCategories, Student, StudentTest, Student_Foss, Test, VLE, TestRequest, Vle_csc_foss,CategoryCourses,FossCategory,Student_certificate_course
 from .utils import upcoming_foss_tests,check_student_test_status
 from .student_forms import RaiseTestRequestForm
+from django.contrib.auth.decorators import login_required
+from .decorators import is_student
+from django.db.models import Q
 
 TEST_WAITING_PERIOD = 10
 def student_tests(request):
@@ -47,30 +50,61 @@ def student_change_test_status(request):
         StudentTest.objects.create(test_id=id,student=student,status=status)  
     
     return HttpResponseRedirect(reverse('student:student_tests'))
-    
+
+@login_required
+@is_student
 def student_dashboard(request):
     context = {}
+    student = Student.objects.get(user=request.user)
+    sf = Student_Foss.objects.filter(student=student)
+    courses = [x.cert_category for x in sf]
+    indi = CertifiateCategories.objects.get(code='INDI')
+    fosses = [x.csc_foss for x in Student_Foss.objects.filter(student=student,cert_category__code='INDI').order_by('csc_foss__foss')]
+    d = {}
+    for course in courses:
+        d[course] = [x.foss.foss for x in CategoryCourses.objects.filter(certificate_category=course)]
+    try:
+        d.pop(indi)
+    except:
+        pass
+    context['courses'] = d
+    context['fosses'] = fosses
+    context['vle'] = student.vle_id.all()[0]
+    
     return render(request,'csc/student_dashboard.html',context)
 
+@login_required
+@is_student
 def student_courses(request):
     context = {}
     student = Student.objects.get(user = request.user)
     student_foss = Student_Foss.objects.filter(student=student)
     in_progress_foss_data = {}
     vles = []
-    for item in student_foss:
-        csc_foss = item.csc_foss
-        foss = csc_foss.spoken_foss
-        vle = csc_foss.vle
-        vles.append(vle)
-        upcoming_tests = upcoming_foss_tests(foss,vle)
-        applied = check_student_test_status(upcoming_tests,student)
-        in_progress_foss_data[foss] = {'applied' : applied, 'upcoming_tests' : upcoming_tests}
-
-    context['in_progress_foss_data'] = in_progress_foss_data
+    context = {}
+    # vles = VLE.objects.filter(user=request.user)
     
-    all_tests = Test.objects.filter(vle__in=vles)
-    already_applied_tests = [x.test for x in StudentTest.objects.filter(student=student)]    
+    individual_foss = {}
+    fosses = [x['foss'] for x in FossCategory.objects.filter(available_for_jio=True).values('foss')]
+    context['fosses'] = fosses
+    courses = CertifiateCategories.objects.exclude(code__in=['INDI'])
+    if request.GET.get('course_search'):
+        search_term = request.GET.get('search_term')
+        q_code = Q(certificate_category__code__icontains=search_term)
+        q_title = Q(certificate_category__title__icontains=search_term)
+        q_foss  = Q(foss__foss__icontains=search_term)
+        courses = [x.certificate_category for x in CategoryCourses.objects.filter(q_code|q_title|q_foss)]
+        
+    else:
+        courses = CertifiateCategories.objects.exclude(code__in=['INDI'])
+    d = {}
+    for course in courses:
+        fosses = [x['foss__foss'] for x in CategoryCourses.objects.filter(certificate_category_id=course.id).values('foss__foss')]
+        # if course.code in d:
+        d[course] = fosses
+    print(f"\n\n{d}\n\n")
+    context['courses'] = d
+     
     return render(request,'csc/student_courses.html',context)   
 
 def student_tests(request):

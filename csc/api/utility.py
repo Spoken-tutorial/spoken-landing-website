@@ -1,3 +1,4 @@
+from datetime import datetime
 from email import message
 
 
@@ -10,8 +11,9 @@ from csc.models import Student_certificate_course,CategoryCourses,Student_Foss
 from django.db import IntegrityError
 
 def send_pwd_mail(u):
-    
-    pwd = ''.join(random.choices(string.ascii_letters,k=10))
+    # IMPORTANT ToDo: remove static pwd
+    # pwd = ''.join(random.choices(string.ascii_letters,k=10))
+    pwd = 'admin@123'
     u.set_password(pwd)
     u.save()
     from_email = settings.CONTACT_MAIL
@@ -33,15 +35,15 @@ def send_pwd_mail(u):
     # subject,
     # message,
     # from_email,
-    # ["ankitamk@gmail.com"],
-    # # [u.email],
+    # # ["ankitamk@gmail.com"],
+    # [u.email],
     # fail_silently=False,
     # )
     except Exception as e:
         print(e)
         print(f"Failed to send mail to user : {u.email}")
     
-def map_foss_to_student(student):
+def map_foss_to_student(student,fdate=datetime.today()):
     cert_courses = Student_certificate_course.objects.filter(student=student)
     print(f"\n\ncert_courses ***** {cert_courses}\n")
     l = []
@@ -49,6 +51,6 @@ def map_foss_to_student(student):
         fosses = CategoryCourses.objects.filter(certificate_category_id=course.cert_category_id).values('foss')
         for foss in fosses:
             try:
-                Student_Foss.objects.create(student=student,csc_cert_course=course,csc_foss_id=foss['foss'])
+                Student_Foss.objects.create(student=student,cert_category=course.cert_category,csc_foss_id=foss['foss'],foss_start_date=fdate)
             except IntegrityError as e:
-                pass
+                print(e)
