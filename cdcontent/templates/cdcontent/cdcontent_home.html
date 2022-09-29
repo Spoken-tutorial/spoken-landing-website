@@ -89,64 +89,7 @@
       //CSC API
         // const data = { username: 'example' };
 
-        const data = {
-          "certificate_course": [
-            {
-              "cert_category": "IT02",
-              "programme_starting_date": "2022-09-26"
-            }
-          ],
-          "user": {
-            "first_name": "Vijay",
-            "last_name": "Testing",
-            "email": "vijay_13@example.com"
-          },
-          "gender": "Male",
-          "dob": "1994-09-26",
-          "phone": "9999111111 ",
-          "edu_qualification": "BCA",
-          "vle_id": [
-            {
-              "user": {
-                "email": "vle_email@example.com"
-              }
-            }
-          ],
-          "state": 29,
           
-          "district": 481,
-          "pincode": "328001",
-          "address": "Address Here",
-          "date_of_registration": "2022-09-26",
-          "category": "Gen",
-          "occupation": "Software Eng."
-        }
-        
-
-        fetch('http://127.0.0.1:8000/csc/api/v1/students/', {
-        method: 'POST', // or 'PUT'
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization' : 'Token 77a9de406af6e268b2f669d41d14a04176438c27'
-        },
-        body: JSON.stringify(data),
-        })
-        .then((response) => 
-          {
-            console.log(response.status)
-            return response.json())
-          }
-        
-        .then((data) => {
-            alert('Success:');
-            console.log('success');
-            console.log(data);
-        })
-        .catch((error) => {
-            alert('error');
-            console.error('Error:', error);
-        });   
 });
 
 // if ($.cookie('modal_status') != '1'){
