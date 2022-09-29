@@ -103,8 +103,7 @@ def send_password_mail(user,password):
     """
     try:
         print(f"sending mails .....{to_email},{password}")
-        # IMPORTANT ToDo: Uncomment
-        # send_mail(subject,message,from_email,[to_email],fail_silently=False)
+        send_mail(subject,message,from_email,[to_email],fail_silently=False)
         print(f"mail sent success")
     except Exception as e:
         print("Error in sending mail")
@@ -116,7 +115,7 @@ def send_log_mail(message):
     from_email = getattr(settings, "NO_REPLY_MAIL", "no-reply@spoken-tutorial.org")
     to_email = "web-query@spoken-tutorial.org"
     try:
-        # send_mail(subject,message,from_email,to_email,fail_silently=False)
+        send_mail(subject,message,from_email,to_email,fail_silently=False)
         print(f"sending mail .....{to_email},{message}")
     except:
         print("Unable to send csc update mail to web-team")
@@ -146,8 +145,8 @@ def add_vle(item,csc):
                         )
         print(f"user for vle {item.get('email')} created")
     # IMPORTANT ToDo: REMOVE static pwd
-    # password = ''.join([ random.choice(string.ascii_letters+string.digits) for x in range(8)])
-    password = 'admin@123' 
+    password = ''.join([ random.choice(string.ascii_letters+string.digits) for x in range(8)])
+    
     enc_password = make_password(password)
     user.password = enc_password
     user.save()
