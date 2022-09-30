@@ -26,8 +26,8 @@ class Main extends React.Component {
             this.setState({
               resource: res.data
             });
-          })
-        }
+        })
+}
   }
   
   
@@ -164,6 +164,17 @@ class Main extends React.Component {
           </article>
          )): ""}
          </Tab>
+
+         <Tab label="Additional learning Resources">
+            {this.state.resource ? this.state.resource.additional_learning.map(item => (
+            <div class="tags has-addons res">
+              <a href={item.data[3]} target="_blank">
+                <i class="fas fa-external-link-alt resIcon"></i>
+                <span >{item.head}</span>
+                </a>
+            </div>)):""}
+         </Tab>
+
        </Tabs>
       </div>
         </div>
