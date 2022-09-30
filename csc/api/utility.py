@@ -1,5 +1,6 @@
 from datetime import datetime
 from email import message
+from urllib import request
 
 
 from django.contrib.auth.models import User
@@ -9,9 +10,9 @@ from django.conf import settings
 import random, string
 from csc.models import Student_certificate_course,CategoryCourses,Student_Foss
 from django.db import IntegrityError
+from csc.utils import is_user_vle, is_user_student
 
 def send_pwd_mail(u):
-    # IMPORTANT ToDo: remove static pwd
     pwd = ''.join(random.choices(string.ascii_letters,k=10))
     
     u.set_password(pwd)
@@ -19,24 +20,48 @@ def send_pwd_mail(u):
     
     from_email = getattr(settings, "NO_REPLY_MAIL", "no-reply@spoken-tutorial.org")
     subject = "Login credentials for Spoken Tutorial - CSC"
-    message = f"""
-        Dear Student,
+    if is_user_student(u):
+        message = f"""
+            Dear {u.get_full_name()},
+            Thank you for registering under Spoken Tutorial(IIT Bombay) courses.
+            Below are the login details for Spoken Tutorial Dashboard 
+            Link to Login: https://spoken-tutorial.in/login/
 
-        Please find below the login credentials for Spoken Tutorial - CSC Portal:
-        username : {u.username}
-        password : {pwd}
+            username : {u.username}
+            password : {pwd}
 
-        Regards,
-        Manager
-        Spoken Tutorial | IIT Bombay
-    """
+            Regards,
+            Manager
+            Spoken Tutorial
+            """
+    if is_user_vle(u):
+        message = f"""
+            Dear {u.get_full_name()},
+            Welcome to IIT Bombay Spoken Tutorial Program. We are happy to be partnered with CSC Academy to
+            empower youth from all over the country via VLEs.
+            Please use the below Login details for the Spoken Tutorial Dashboard:
+            Link to Login: https://spoken-tutorial.in/login/
+
+            username : {u.username}
+            password : {pwd}
+
+            Please click the following training link to know the process of 
+            Student Registration:
+            Course Allotment :
+            
+            In case of any query, please feel free to contact at animation-hackathon@cscacademy.org.
+            
+            Regards,
+            Manager
+            Spoken Tutorial
+            """
+    
     try:
         print(f"/n/nSending mail ; username,pwd : {u.username},{pwd}".ljust(40,'*'))
         send_mail(
     subject,
     message,
     from_email,
-    # ["ankitamk@gmail.com"],
     [u.email],
     fail_silently=False,
     )

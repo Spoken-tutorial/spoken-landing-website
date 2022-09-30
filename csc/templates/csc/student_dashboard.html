@@ -103,19 +103,19 @@ body{
           </div>
         </div>
         
-        <div class="col-md-4">
+        {% comment %} <div class="col-md-4">
           <div class="d-flex">
             <span class="me-2"><i class="fas fa-phone-square-alt p-icons d-inline-block mr-5"></i></span>
-            <span class="me-2">{{ vle.phone }}</span>
+            <span class="me-2">{{ user.student }}</span>
           </div>
-        </div>
+        </div> {% endcomment %}
         
-        <div class="col-12 mt-2">
+        {% comment %} <div class="col-12 mt-2">
           
             <span class="me-2"><i class="fas fa-map-marker-alt p-icons d-inline-block mr-5"></i></span>
-            <span class="me-2">{{vle.csc.address | title}}, {{vle.csc.block}}, {{ vle.csc.city }}, {{ vle.csc.state }}</span></div>
+            <span class="me-2">{{user.student.address | title}}, {{ user.student.city }}, {{ user.student.state }}</span></div>
           
-        </div>
+        </div> {% endcomment %}
           
       </div>
     </div>
@@ -205,7 +205,9 @@ body{
                     <div class="card-body">
                       {% comment %} <h6 class="card-title">Special title treatment</h6> {% endcomment %}
                       {% for item in val %}
-                        <p class="card-text foss-name">{{item}}</p>
+                        <p class="card-text ">
+                          <a class="foss-name" href="{% url 'tutorial_search' %}?search_foss={{ item.split|join:"+" }}&search_language=English">{{item}}</a>
+                        </p>
                       {% endfor %}
                     </div>
                   </div>
@@ -238,9 +240,10 @@ body{
             <div class="row">
                 {% for key in fosses %}
                   <div class="col-3 ">
-                    <div class="border rounded p-2">
-                      <b>{{key}}</b>
-                    </div>
+                        <div class="border rounded p-2">
+                          <a class="foss-name" href="{% url 'tutorial_search' %}?search_foss={{ key.split|join:"+" }}&search_language=English">
+                          {{key}}</a>
+                      </div>
                   </div>
                 {% endfor %}
             </div>

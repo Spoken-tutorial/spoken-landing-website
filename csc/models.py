@@ -1,5 +1,6 @@
 
 from __future__ import unicode_literals
+from email.policy import default
 from django.db import models
 from django.contrib.auth.models import User
 from django.forms import ChoiceField
@@ -7,6 +8,7 @@ from spokenlogin.models import *
 from model_utils import Choices
 from cms.models import State, District, City
 from django.forms import widgets
+from datetime import date
 
 REJECTED = 0
 APPROVED = 1
@@ -78,13 +80,13 @@ class CSC(models.Model):
                 ('School Level Subscription','School Level Subscription')]
     
     csc_id = models.CharField(max_length=50) # id provided by csc
-    institute = models.CharField(max_length=255)
+    institute = models.CharField(max_length=255,null=True,blank=True)
     state = models.CharField(max_length=100) 
-    city = models.CharField(max_length=100) 
+    city = models.CharField(max_length=100,null=True,blank=True) 
     district = models.CharField(max_length=100) 
-    block = models.CharField(max_length=100) 
-    address = models.CharField(max_length=255) 
-    pincode = models.CharField(max_length=6) 
+    block = models.CharField(max_length=100,null=True,blank=True) 
+    address = models.CharField(max_length=255,null=True,blank=True) 
+    pincode = models.CharField(max_length=6,null=True,blank=True) 
     # plan = models.CharField(choices=CSC_PLAN,max_length=100)
     plan = models.CharField(max_length=255)
     activation_status = models.BooleanField(default=True) # If the csc is inactivated for some reason ; payment not done
@@ -144,17 +146,17 @@ class Vle_csc_foss(models.Model):
 class Student(models.Model):
     student_id = models.CharField(max_length=255)
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    gender = models.CharField(max_length=10,blank=True)
-    dob = models.DateField(blank=True)
+    gender = models.CharField(max_length=10,blank=True,null=True)
+    dob = models.DateField(blank=True,null=True)
     phone = models.CharField(max_length=32,blank=True)
-    edu_qualification = models.CharField(max_length=255,blank=True)
+    edu_qualification = models.CharField(max_length=255,blank=True,null=True)
     vle_id = models.ManyToManyField(VLE) #if student joins another csc due to location change
     state = models.ForeignKey(State,on_delete=models.CASCADE,blank=True,null=True) 
     city = models.ForeignKey(City,on_delete=models.CASCADE,blank=True,null=True) 
     district = models.ForeignKey(District,on_delete=models.CASCADE,blank=True,null=True) 
-    pincode = models.CharField(max_length=6,blank=True) 
-    address = models.CharField(max_length=255,blank=True)
-    date_of_registration = models.DateField()
+    pincode = models.CharField(max_length=6,blank=True,null=True) 
+    address = models.CharField(max_length=255,blank=True,null=True)
+    date_of_registration = models.DateField(default=date.today())
     occupation = models.CharField(max_length=255,blank=True,null=True)
     category = models.CharField(max_length=255,blank=True,null=True)
 

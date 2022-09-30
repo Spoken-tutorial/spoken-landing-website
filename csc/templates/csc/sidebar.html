@@ -45,6 +45,7 @@
             <li class="nav-item">
                 <a class="nav-link scroll_link " href="{% url 'csc:student_list' %}" ><i class="fas fa-user-graduate sb-icon"></i>Students</a>
                 <a class="nav-link scroll_link " href="{% url 'home' %}"><i class="fas fa-home sb-icon" ></i>Home<span class="sr-only">(current)</span></a>
+                <a class="nav-link scroll_link " href="{% url 'tutorial_search' %}?search_foss=Advanced+Cpp&search_language=English"><i class="fas fa-book-open sb-icon" ></i>Tutorials</a>
                 {% comment %} <a class="nav-link scroll_link " href="https://spoken-tutorial.in/"><i class="fas fa-home sb-icon" ></i>Home<span class="sr-only">(current)</span></a> {% endcomment %}
             </li>
 
@@ -89,6 +90,7 @@
                 <a class="nav-link scroll_link " href="{% url 'student:student_dashboard'%}"><i class="fas fa-user sb-icon"></i>Student Dashboard<span class="sr-only">(current)</span></a>
                 <a class="nav-link scroll_link " href="{% url 'csc:courses' %}" ><i class="fas fa-book-open sb-icon"></i>Courses</a>
                 <a class="nav-link scroll_link " href="{% url 'home' %}"><i class="fas fa-home sb-icon" ></i>Home<span class="sr-only">(current)</span></a>
+                <a class="nav-link scroll_link " href="{% url 'tutorial_search' %}?search_foss=Advanced+Cpp&search_language=English"><i class="fas fa-book-open sb-icon" ></i>Tutorials</a>
             </li>
             
             {% comment %} <li class="nav-item"><a class="nav-link scroll_link scroll_link" href="{% url 'student:student_tests' %}">Tests</a></li> {% endcomment %}

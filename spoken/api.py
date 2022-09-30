@@ -1,9 +1,10 @@
+from django.urls import reverse
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .utils import *
 from logs.models import TutorialProgress,CourseProgress
-
+from csc.utils import is_user_vle,is_user_student
 class TutorialSearchAPI(APIView):
     swagger_schema = None
     """
@@ -46,6 +47,10 @@ class TutorialSearchAPI(APIView):
                     except:
                         context["time_completed"] = 0
                         context["video_status"] = False
+        if is_user_vle(request.user):
+            context["is_csc_vle"] = is_user_vle(request.user)
+        if is_user_student(request.user):
+            context["is_csc_student"] = is_user_student(request.user)
         context["foss_lang_list"] = get_all_foss_lang()
         return Response(context)
     
