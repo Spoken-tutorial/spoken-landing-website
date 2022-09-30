@@ -102,7 +102,7 @@ def send_password_mail(user,password):
             password : {password}
 
             Please click the following training link to know the process of 
-            Student registration Instructions : <a href="https://docs.google.com/document/d/1z8-s4sSl7viPqJ8WAFeeNmoJUVLRPv2L9jLOrfN6ln0/edit?usp=sharing">Click Here</a>
+            Student Registration Instructions : <a href="https://docs.google.com/document/d/1z8-s4sSl7viPqJ8WAFeeNmoJUVLRPv2L9jLOrfN6ln0/edit?usp=sharing">Click Here</a>
             Course Allotment Instructions : <a href="https://docs.google.com/document/d/1Mv23iijOVuS6eCcHCgYKbbxopjk_SkSfExXW-61G2AQ/edit?usp=sharing">Click Here</a>
             
             In case of any query, please feel free to contact at animation-hackathon@cscacademy.org.
