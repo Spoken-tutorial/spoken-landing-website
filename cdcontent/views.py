@@ -15,8 +15,10 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.template.context_processors import csrf
 
+from django.contrib.auth.decorators import login_required
 # Spoken Tutorial Stuff
 from cdcontent.forms import *
+from csc.decorators import is_vle
 from .models import Language, FossCategory,Level,Question,Answer
 # Create your views here.
 def zipdir(src_path, dst_path, archive):
@@ -346,7 +348,9 @@ def internal_computation(request, user_type):
     elif user_type == 'general':
         return response
 
-@csrf_exempt
+# @csrf_exempt
+@login_required
+@is_vle
 def home(request):
     if request.method == 'POST':
         form = CDContentForm(request.POST)

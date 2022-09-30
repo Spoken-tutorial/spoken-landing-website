@@ -64,7 +64,13 @@ body{
 .progress{
   height: 0.25rem;
 }
-
+.inner-header{
+  background-color:rgba(255, 165, 0,0.1)!important;
+  color:black;
+}
+.foss-name{
+  color:rgba(0,0,0,0.8);
+}
 </style>
 <link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
 <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
@@ -88,31 +94,40 @@ body{
             <span class="me-2"><i class="fas fa-university p-icons d-inline-block mr-5"></i></span>
             <span class="me-2"><strong>CSC ID: </strong> {{ vle.csc.csc_id }}</span>
           </div>
-          <div>
-            <span class="me-2"><i class="fas fa-map-marker-alt p-icons d-inline-block mr-5"></i></span>
-            <span class="me-2">{{ vle.csc.city }}, {{ vle.csc.state }}</span></div>
         </div>
+          
         <div class="col-md-4 ">
           <div class="d-flex">
               <span class="me-2"><i class="fas fa-envelope p-icons d-inline-block mr-5"></i></span>
               <span class="me-2">{{ user.email }}</span>
           </div>
-            <div class="d-flex">
-              <span class="me-2"><i class="fas fa-phone-square-alt p-icons d-inline-block mr-5"></i></span>
-              <span class="me-2">{{ vle.phone }}</span></div>
-          </div>
         </div>
+        
+        {% comment %} <div class="col-md-4">
+          <div class="d-flex">
+            <span class="me-2"><i class="fas fa-phone-square-alt p-icons d-inline-block mr-5"></i></span>
+            <span class="me-2">{{ user.student }}</span>
+          </div>
+        </div> {% endcomment %}
+        
+        {% comment %} <div class="col-12 mt-2">
+          
+            <span class="me-2"><i class="fas fa-map-marker-alt p-icons d-inline-block mr-5"></i></span>
+            <span class="me-2">{{user.student.address | title}}, {{ user.student.city }}, {{ user.student.state }}</span></div>
+          
+        </div> {% endcomment %}
+          
       </div>
     </div>
 
   </div>
 <div >
+  
     <!-- <div class="col-md-3">
       {% include "sidebar.html" %}
     </div> -->
     <div >
-      <div class="row">
-
+      {% comment %} <div class="row">
         <!-- Earnings (Monthly) Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-1 shadow h-100 py-2">
@@ -172,22 +187,34 @@ body{
                     </div>
                 </div>
             </div>
-        </div>
+        </div> {% endcomment %}
     
         
     </div>
     <div class="mb-3">
         <div class="card">
           <div class="card-header">
-            Courses - In Progress
+            Courses
           </div>
           <div class="card-body">
-          
-            
             <div class="row">
+              {% for key,val in courses.items %}
+                <div class="col-md-6 mb-2">
+                  <div class="card" style="height:100%;">
+                    <p class="card-header inner-header">{{key.code}} : {{key.title}}</p>
+                    <div class="card-body">
+                      {% comment %} <h6 class="card-title">Special title treatment</h6> {% endcomment %}
+                      {% for item in val %}
+                        <p class="card-text ">
+                          <a class="foss-name" href="{% url 'tutorial_search' %}?search_foss={{ item.split|join:"+" }}&search_language=English">{{item}}</a>
+                        </p>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
               
-      
-                {% for key,value in upcoming_test_stats.items %}
+                {% comment %} {% for key,value in upcoming_test_stats.items %}
                 <div class="col-md-3">
                 <div class="border p-2">
                   <div class="test_info">
@@ -199,22 +226,37 @@ body{
                   <canvas id="test_{{value.id}}"></canvas>
                 </div>
               </div>
+                {% endfor %} {% endcomment %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-header">
+            Individual FOSS
+          </div>
+          <div class="card-body">
+            <div class="row">
+                {% for key in fosses %}
+                  <div class="col-3 ">
+                        <div class="border rounded p-2">
+                          <a class="foss-name" href="{% url 'tutorial_search' %}?search_foss={{ key.split|join:"+" }}&search_language=English">
+                          {{key}}</a>
+                      </div>
+                  </div>
                 {% endfor %}
             </div>
           </div>
         </div>
       </div>
-    <div>
+    {% comment %} <div>
       <div class="card">
         <div class="card-header">
           Upcoming Tests
         </div>
         <div class="card-body">
-        
-          
           <div class="row">
-            
-    
               {% for key,value in upcoming_test_stats.items %}
               <div class="col-md-3">
               <div class="border p-2">
@@ -231,7 +273,7 @@ body{
           </div>
         </div>
       </div>
-    </div>
+    </div> {% endcomment %}
    
     <div>
       

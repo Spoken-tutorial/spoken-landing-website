@@ -77,10 +77,10 @@ def home(request):
 
     # return HttpResponse("Hello, world. You're at the spoken landing page.")
     group = [x.name for x in request.user.groups.all()]
-    if 'VLE' in group:
-        return HttpResponseRedirect(reverse('csc:vle_dashboard'))
-    if 'STUDENT' in group:
-        return HttpResponseRedirect(reverse('csc:student_dashboard'))
+    # if 'VLE' in group:
+    #     return HttpResponseRedirect(reverse('csc:vle_dashboard'))
+    # if 'STUDENT' in group:
+    #     return HttpResponseRedirect(reverse('student:student_dashboard'))
     navs = Nav.objects.filter(status=1)
     products = Products.objects.all().order_by('order')
     now = timezone.now()

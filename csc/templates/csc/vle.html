@@ -87,22 +87,36 @@ body{
             <span class="me-2"><i class="fas fa-university p-icons d-inline-block mr-5"></i></span>
             <span class="me-2"><strong>CSC ID: </strong> {{ vle.csc.csc_id }}</span>
           </div>
-          <div>
-            <span class="me-2"><i class="fas fa-map-marker-alt p-icons d-inline-block mr-5"></i></span>
-            <span class="me-2">{{ vle.csc.city }}, {{ vle.csc.state }}</span></div>
         </div>
+          
         <div class="col-md-4 ">
           <div class="d-flex">
               <span class="me-2"><i class="fas fa-envelope p-icons d-inline-block mr-5"></i></span>
               <span class="me-2">{{ user.email }}</span>
           </div>
-            <div class="d-flex">
-              <span class="me-2"><i class="fas fa-phone-square-alt p-icons d-inline-block mr-5"></i></span>
-              <span class="me-2">{{ vle.phone }}</span></div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="d-flex">
+            <span class="me-2"><i class="fas fa-phone-square-alt p-icons d-inline-block mr-5"></i></span>
+            <span class="me-2">{{ vle.phone }}</span>
           </div>
         </div>
+        
+        <div class="col-12 mt-2">
+          
+            <span class="me-2"><i class="fas fa-map-marker-alt p-icons d-inline-block mr-5"></i></span>
+            <span class="me-2">{{vle.csc.address | title}}, {{vle.csc.block}}, {{ vle.csc.city }}, {{ vle.csc.state }}</span></div>
+          
+        </div>
+        <div class="col-12 mt-2">
+          <span class="me-2"><i class="far fa-clipboard p-icons d-inline-block mr-5"></i> Plan: </span>
+          <span class="me-2">{{ vle.csc.plan }}</span>
+      </div>
+          
       </div>
     </div>
+    
 
   </div>
 <div >
@@ -132,7 +146,7 @@ body{
         </div>
     
         <!-- Earnings (Monthly) Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
+        {% comment %} <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-2 shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -147,10 +161,10 @@ body{
                     </div>
                 </div>
             </div>
-        </div>
+        </div> {% endcomment %}
     
         <!-- Earnings (Monthly) Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
+        {% comment %} <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-3 shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -171,21 +185,17 @@ body{
                     </div>
                 </div>
             </div>
-        </div>
+        </div> {% endcomment %}
     
         
     </div>
     <div>
-      <div class="card">
+      {% comment %} <div class="card">
         <div class="card-header">
           Upcoming Tests
         </div>
         <div class="card-body">
-        
-          
           <div class="row">
-            
-    
               {% for key,value in upcoming_test_stats.items %}
               <div class="col-md-3">
               <div class="border p-2">
@@ -201,19 +211,31 @@ body{
               {% endfor %}
           </div>
         </div>
-      </div>
+      </div> {% endcomment %}
     </div>
     <div class="row mt-2 ">
-      <div class="col-md-3 ">
+      <div class="col-md-8 ">
         <div class="border p-2 bg-white">
-          <p class="heading text-center">Enrollment based on Programme Type </p>
-          <div class="text-xs d-flex justify-content-around"><div>DCA({{courses_offered_stats.dca}})</div><div>Individual({{courses_offered_stats.individual}})</div></div>
+          <p class="heading text-center">Enrollment based on Course Type </p>
+          <div class="text-xs d-flex justify-content-around">
+            {% comment %} <div>DCA({{courses_offered_stats.dca}})</div>
+            <div>Individual({{courses_offered_stats.individual}})</div> {% endcomment %}
+          </div>
           <canvas id="prg_type"></canvas>  
+          
+        </div>
+      <div clsss='col-6'>
+        <div >
+          <canvas id="myChart"></canvas>
+        </div>
+      
+          
+          
         </div>
       </div>
 
       
-      <div class="col-4 mt-2 ">
+      {% comment %} <div class="col-4 mt-2 ">
         <div class="border p-2 bg-white">
           <p class="heading text-center">Enrollment for DCA Courses </p>
           <canvas id="dca_course"></canvas>  
@@ -226,7 +248,7 @@ body{
         </div>
       </div>
     </div>
-    <div>
+    <div> {% endcomment %}
       
     </div>
     <div class="row mt-4">

@@ -4,11 +4,13 @@
 {% block content %}
 
 <form role="form" id="main_cddownload" method="post" enctype="multipart/form-data" class="cdcontentform form-horizontal">
-  <div class="row well bs-component" style="margin-top: 20px;">
-  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-    <div class="alert alert-danger" role="alert">
+  <div class="row well bs-component p-5" style="margin-top: 20px;">
+  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+    {% comment %} <div class="alert alert-danger" role="alert">
     <strong>Note:</strong> The maximum file size to download is 1 GB.
-    </div>
+    </div> {% endcomment %}
+    <p style="color:#013A6B;font-size:1.2rem">Download CD Content</p>
+    <hr>
     <fieldset>
     {% csrf_token %}
     <div class="form-group">
@@ -16,8 +18,8 @@
         {{ form.selected_foss.errors }}
     </div>
     </div>
-    <div class="form-group">
-    <label for="id_foss_category" class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label">FOSS Category:</label>
+    <div class="form-group mb-3">
+    <label for="id_foss_category" class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label"><b>FOSS Category:</b></label>
     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
         {% render_field form.foss_category class+="form-control foss_category" tabindex="1" %}
         {{ form.foss_category.errors }}
@@ -25,16 +27,16 @@
         {% render_field form.selected_foss class+='selected_foss' %}
     </div>
     </div>
-    <div class="form-group">
-    <label for="id_level" class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label">Level:</label>
+    <div class="form-group mb-3">
+    <label for="id_level" class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label"><b>Level:</b></label>
     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
         {% render_field form.level class+="form-control level" tabindex="2" %}
         {{ form.level.errors }}
         <small>Please select the Level</small>
     </div>
     </div>
-    <div class="form-group">
-    <label for="id_language" class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label">Languages: <span class='ajax-refresh ajax-refresh-language'><i class="fa fa-2 fa-refresh fa-spin"></i></span></label>
+    <div class="form-group mb-3">
+    <label for="id_language" class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label"><b>Languages:</b> <span class='ajax-refresh ajax-refresh-language'><i class="fa fa-2 fa-refresh fa-spin"></i></span></label>
     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
         {% render_field form.language class+="form-control language" tabindex="3" %}
         {{ form.language.errors }}
@@ -83,8 +85,11 @@
           $('.level').attr("disabled", "disabled");
           $('.language').attr("disabled", "disabled");
       }
-      
-   
+
+      //CSC API
+        // const data = { username: 'example' };
+
+          
 });
 
 // if ($.cookie('modal_status') != '1'){

@@ -4,8 +4,8 @@ from django.contrib.auth.models import User, Group
 
 from rest_framework import serializers
 
-from csc.models import Student, Student_certificate_course,CertifiateCategories, VLE, CSC, Transaction
-from csc.api.utility import send_pwd_mail
+from csc.models import Student, Student_certificate_course,CertifiateCategories, VLE, CSC, Transaction,CategoryCourses,Student_Foss
+from csc.api.utility import send_pwd_mail,map_foss_to_student
 
 from csc.utils import getFirstName,getLastName
 
@@ -78,6 +78,9 @@ class StudentSerializer(serializers.ModelSerializer):
         student_group = Group.objects.get(name='STUDENT') 
         student_group.user_set.add(u)
         send_pwd_mail(u)
+        #map courses
+        map_foss_to_student(student)
+        
         return student
 
     def update(self,instance,validated_data):
@@ -100,6 +103,7 @@ class StudentSerializer(serializers.ModelSerializer):
             if data['cert_category'] in existing_courses:
                 continue
             Student_certificate_course.objects.create(student=student, **data)
+            map_foss_to_student(instance,fdate=data['programme_starting_date'])
 
         if has_user:
             s = UserSerializer(user_obj,data=user)

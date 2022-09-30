@@ -14,6 +14,8 @@ class App extends Component {
     this.handleSubmit = this.handleChange.bind(this);
     this.saveComplete = this.saveComplete.bind(this);
     this.getTutorialProgress = this.getTutorialProgress.bind(this);
+    this.csc_dashboard = '';
+    this.student_dashboard = '';
     this.state = {
       error: null,
       isLoaded: false,
@@ -30,7 +32,9 @@ class App extends Component {
       time_completed:0,
       total_duration:0,
       is_authenticated:false,
-      courseProgress:null
+      courseProgress:null,
+      is_csc_vle:false,
+      is_csc_student:false
     };
     
   }
@@ -56,7 +60,9 @@ class App extends Component {
             total_duration:result['total_duration'],
             isLoaded: true,
             is_authenticated: result['is_authenticated'] ? result['is_authenticated'] : false,
-            courseProgress: result['courseProgress']
+            courseProgress: result['courseProgress'],
+            is_csc_vle: result['is_csc_vle'] ? result['is_csc_vle'] : false,
+            is_csc_student: result['is_csc_student'] ? result['is_csc_student'] : false
           });
         },
         // Note: it's important to handle errors here
@@ -210,11 +216,20 @@ class App extends Component {
             <div class="dropdown">
               <button class="button submitStyle dropbtn"><i class="fas fa-user"></i> <i class="fas fa-chevron-down"></i></button>
               <div class="dropdown-content">
+                {
+                  this.state.is_csc_vle ? <a href='/csc/vle/'>CSC Dashboard</a> : ''
+                }
+                {
+                  this.state.is_csc_student ? <a href='/csc/student'>CSC Dashboard</a> : ''
+                }
               {is_authenticated ?  
                 <>
-                <a href="/dashboard">Dashboard</a> <a href="/logout">Logout</a>
+                <a href="/dashboard">Dashboard</a> 
+                <a href="/logout">Logout</a>
+
                 </>
                 :  <a href={`${process.env.SERVER_API_URL}`+"login"}>Login</a>}
+                
               </div>
           </div>
         </div>
