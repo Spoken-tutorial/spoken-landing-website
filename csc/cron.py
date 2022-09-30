@@ -92,6 +92,7 @@ def send_password_mail(user,password):
     to_email = user.email
     message = f"""
             Dear {user.get_full_name()},
+            
             Welcome to IIT Bombay Spoken Tutorial Program. We are happy to be partnered with CSC Academy to
             empower youth from all over the country via VLEs.
             Please use the below Login details for the Spoken Tutorial Dashboard:
@@ -101,13 +102,13 @@ def send_password_mail(user,password):
             password : {password}
 
             Please click the following training link to know the process of 
-            Student Registration:
-            Course Allotment :
+            Student registration Instructions : <a href="https://docs.google.com/document/d/1z8-s4sSl7viPqJ8WAFeeNmoJUVLRPv2L9jLOrfN6ln0/edit?usp=sharing">Click Here</a>
+            Course Allotment Instructions : <a href="https://docs.google.com/document/d/1Mv23iijOVuS6eCcHCgYKbbxopjk_SkSfExXW-61G2AQ/edit?usp=sharing">Click Here</a>
             
             In case of any query, please feel free to contact at animation-hackathon@cscacademy.org.
             
-            Regards,
-            Manager
+            Thanks & Regards,
+            Team,
             Spoken Tutorial
             """
     try:
