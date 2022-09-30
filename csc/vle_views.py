@@ -257,44 +257,12 @@ def student_profile(request,id):
   initial={'fname': student.user.first_name , 'lname': student.user.last_name, 'state' :student.state}
   form = StudentForm(instance=student,initial=initial)
   context['form'] = form
-  if request.method == 'POST':
-    initial={'fname': student.user.first_name , 'lname': student.user.last_name,'state':student.state}
-    form = StudentForm(request.POST,instance=student,initial=initial)
-    if form.is_valid():
-      user = User.objects.get(email=student.user.email)
-      user.first_name = form.cleaned_data['fname']
-      user.last_name = form.cleaned_data['lname']
-      user.save()
-      form.save()
-      messages.add_message(request, messages.SUCCESS, 'Student data updated. Refresh for viewing updated data.')
-  
-  dca_foss = []
-  individual_foss = []
-  
-  stu_cat_foss ={} #students cert-category and fosses dict
-
-  
-  #certificate packages taken by students
   s_categories = Student_certificate_course.objects.filter(student=student)
-  
-  for s_cat in s_categories:
-    if s_cat.cert_category.code=="INDI":
-      #indi code
-      cat_fosses = FossCategory.objects.filter(
-        id__in=Student_Foss.objects.filter(cert_category=s_cat.cert_category).values_list('csc_foss'))
-    else:
-
-      cat_fosses = FossCategory.objects.filter(
-        id__in=CategoryCourses.objects.filter(certificate_category=s_cat.cert_category).values_list('foss')
-        )
-    s_fosses=[] #list fosses in category
-    for cf in cat_fosses:
-      s_fosses.append(cf.foss)
-
-    stu_cat_foss[(s_cat.cert_category.code+" - "+s_cat.cert_category.title)]=s_fosses
-  context['s_categories'] = s_categories
-  context['stu_cat_foss'] = stu_cat_foss
-  
+  d = {}
+  for category in s_categories:
+    fosses = [x.csc_foss.foss for x in Student_Foss.objects.filter(student=student,cert_category=category.cert_category)]
+    d[category.cert_category] = fosses
+  context['courses'] = d
   return render(request,'csc/student_profile.html',context)
 
 @csrf_exempt

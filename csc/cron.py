@@ -90,17 +90,26 @@ def send_password_mail(user,password):
     subject = "Login credentials for Spoken Tutorial :"
     from_email = getattr(settings, "NO_REPLY_MAIL", "no-reply@spoken-tutorial.org")
     to_email = user.email
-    message = """
-        Your login information for Spoken Tutorial is :
-        username : {to_email}
-        password : {password}
-        Login link : "https://spoken-tutorial.in/login/"
+    message = f"""
+            Dear {user.get_full_name()},
+            Welcome to IIT Bombay Spoken Tutorial Program. We are happy to be partnered with CSC Academy to
+            empower youth from all over the country via VLEs.
+            Please use the below Login details for the Spoken Tutorial Dashboard:
+            Link to Login: https://spoken-tutorial.in/login/
 
-        Best Wishes,
-        Admin
-        Spoken Tutorials
-        IIT Bombay.
-    """
+            username : {user.username}
+            password : {password}
+
+            Please click the following training link to know the process of 
+            Student Registration:
+            Course Allotment :
+            
+            In case of any query, please feel free to contact at animation-hackathon@cscacademy.org.
+            
+            Regards,
+            Manager
+            Spoken Tutorial
+            """
     try:
         print(f"sending mails .....{to_email},{password}")
         send_mail(subject,message,from_email,[to_email],fail_silently=False)

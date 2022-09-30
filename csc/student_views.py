@@ -59,7 +59,7 @@ def student_dashboard(request):
     sf = Student_Foss.objects.filter(student=student)
     courses = [x.cert_category for x in sf]
     indi = CertifiateCategories.objects.get(code='INDI')
-    fosses = [x.csc_foss for x in Student_Foss.objects.filter(student=student,cert_category__code='INDI').order_by('csc_foss__foss')]
+    fosses = [x.csc_foss.foss for x in Student_Foss.objects.filter(student=student,cert_category__code='INDI').order_by('csc_foss__foss')]
     d = {}
     for course in courses:
         d[course] = [x.foss.foss for x in CategoryCourses.objects.filter(certificate_category=course)]
