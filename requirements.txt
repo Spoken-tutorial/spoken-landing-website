@@ -14,7 +14,7 @@ django-import-export==2.0.2
 django-model-utils==4.0.0
 django-mysql==3.4.0
 django-rest-swagger==2.2.0
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 drf-yasg==1.21.3
 et-xmlfile==1.1.0
 idna==2.10
