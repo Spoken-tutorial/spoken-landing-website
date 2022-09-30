@@ -1,0 +1,222 @@
+{% extends 'csc_base.html'%}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+<style>
+    .tb-header{
+        color:  var(--footer-color);
+        font-size: .875rem;
+    }
+    .tb-data{
+        font-size: .875rem;
+    }
+    .name a{
+        color:  var(--footer-color)!important;
+        text-decoration: none;
+    }
+    .f-sm{
+        font-size: .875rem;
+    }
+    .f-name{
+        color: rgba(0,0,0,0.5);
+    }
+    .c-btn{
+        background-color:#F19584!important;
+        border-color:#F19584;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div>
+    <div>
+        <div>
+            <form method="GET">
+                <div class="row">
+                    <div class="col-md-3 col-6 mb-3">
+                        <label for="category_select" class="form-label" ><b>Course</b></label>
+                        <select class="form-select" aria-label="Default select example" name="course" id="category_select">
+                            <option value="0">Select All</option>
+                        {% for item in distinct_courses%}
+                            <option value="{{item.id}}"><span>{{item.code}}</span> - <span>{{item.title}}</span></option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    
+                    <div class="col-md-3  col-6 mb-3">
+                        <label for="foss_select" class="form-label" ><b>Foss</b></label>
+                        <select class="form-select" aria-label="Default select example" name="foss" id="foss_select">
+                            <option value="0">Select All</option>
+                        {% for item in distinct_foss%}
+                            <option value="{{item.id}}"><span>{{item.foss}}</span></option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                      <div class="col-md-3  col-6 mb-3">
+                        <label for="name" class="form-label" ><b>Name/Email</b></label>
+                        <input type="text" class="form-control" id="name" aria-describedby="nameEmail" name="name">
+                        <div id="emailHelp" class="form-text">Search by student name or email</div>
+                      </div>
+                      {% comment %} <div class="col-md-3  col-6 ">
+                        <label for="name" class="form-label" >Registration Date Range</label>
+                        <input  class="form-control" id="dates" aria-describedby="nameEmail" name="dates" >
+                      </div> {% endcomment %}
+
+                </div>
+                  <button type="submit" class="btn btn-primary c-btn">Submit</button>
+            </form>
+        </div>
+        <hr>
+        <div>
+            {% if is_indi %}
+            <button class="btn btn-warning" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas" >
+                Assign FOSS
+            </button>
+            {% endif %}
+            
+        </div>
+        <div>
+            <p class="f-name fs-sm ">* Click on student name below to view student details.</p>
+            <hr>
+            <p>Search results for : {{search_foss}}, {{search_course}}, {{search_name}}</p>
+            <hr>
+        </div>
+        <div>
+            
+        </div>
+        <table id="example" class="table table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th class="tb-header"> <span><i class="fas fa-user"></i></span> Name</th>
+                    <th class="tb-header"> <span><i class="fas fa-envelope"></i> </span> Email</th>
+                    <th class="tb-header"><span><i class="fas fa-phone-square-alt"></i></span> Contact</th>
+                    <th class="tb-header"><span><i class="far fa-calendar"></i></span> Registration Date</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr class="tb-data">
+                    <td >
+                        <span class="form-check"><input class="form-check-input messageCheckbox" type="checkbox" value="{{student.id}}" id="{{student.id}}" name="check_student" {% if not student.indi %}disabled {% else %}style="border:2px solid green; "{% endif %}></span>
+                    </td>
+                    <td class="name">
+                        <a href="{% url 'csc:student_profile' id=student.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Click to edit student details">{{student.user.first_name | title}} {{student.user.last_name | title}}</a>
+                    </td>                    
+                    <td>{{student.user.email}} </td>                    
+                    <td>{{student.phone}}</td>                    
+                    <td>{{student.date_of_registration}}</td>                    
+                </tr>
+                {% endfor %}                                
+                <tbody>
+            </table>
+    </div>
+    
+</div>
+<div>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas-header">
+          <!-- <h5 class="offcanvas-title" id="offcanvasExampleLabel">FOSS</h5> -->
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div>
+                <!-- <p>Total students selected : <span id="student_count"></span></p> -->
+            </div>
+         
+         
+          <hr>
+          <div>
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-info">Individual FOSS</li>
+                {% for foss in foss_individual %}
+                    <li class="list-group-item">
+                        <div class="form-check">
+                            <input class="form-check-input checkFoss" type="checkbox" value="{{foss}}" id="foss_{{foss.id}}" name="check_foss" >
+                            <span>{{foss.foss}}</span>
+                        </div>   
+                    </li>                
+                {% endfor %}
+              </ul>
+            
+        </div>
+          <button type="button" class="btn btn-success mt-5" onclick="assign_foss()" id="btn-assign">Assign FOSS</button>
+          
+        </div>
+      </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+{% comment %} <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script> {% endcomment %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> -->
+
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable({
+            "pageLength": 150
+        }); 
+        $('#dates').daterangepicker({
+            startDate: '08/01/2022', 
+            endDate: '12/31/2023'
+        });
+});
+
+
+
+function assign_foss(){      
+    var checkStudent = [];
+    var checkFoss = [];
+    $('input[name=check_student]').each(function () {
+    if(this.checked){
+        console.log(this);
+        checkStudent.push(this.value);
+    }     
+    });
+    if(checkStudent.length==0){
+        alert("Please select students to assign FOSS");
+    }else{
+            $('input[name=check_foss]').each(function () {
+                if(this.checked){
+                console.log(this);
+                checkFoss.push(this.value);
+                }     
+            });
+            if(checkFoss.length==0){
+                alert("Please select FOSS");
+            }else{
+                data = {student:checkStudent,foss:checkFoss}
+                url = '/csc/assign_foss/'
+
+                $.ajax({
+                    url : url,
+                    type: "POST",
+                    data : data,
+                    success: function(data, textStatus, jqXHR)
+                    {
+                        console.log(data);
+                        console.log(data['foss']);
+                        console.log(data);
+                        alert('FOSS assigned successfully.\nFOSS assigned :' + data['foss'] +'\nTotal Students : '+ data['student_count'])
+                    },
+                    error: function (jqXHR, textStatus, errorThrown)
+                    {
+                        alert('e')
+                    }
+                });
+            }  
+}
+}
+  </script>
+{% endblock %}

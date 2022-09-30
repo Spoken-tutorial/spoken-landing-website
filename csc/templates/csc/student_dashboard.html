@@ -1,0 +1,324 @@
+{% extends "csc_base.html" %}
+{% load static %}
+{% load crispy_forms_tags%}
+{% block title%} CSC - VLE Dashboard {% endblock title%}
+{% block css %}
+<style>
+body{
+  background-color: #F1F2F5;
+}
+.card-header{
+  background-color:#013A6B!important;
+  color: #fff;
+}
+.p-icons{
+  color : #013A6B;
+}
+.test_info{
+  
+  font-size: 0.85rem;
+  color: rgba(0,0,0,0.5);
+}
+.fa-calendar-day,.fa-clipboard{
+  color: #013A6B;
+  margin-right: 6px;
+}
+.border-1{
+  border-left:  0.25rem solid #4e73df!important;
+} 
+.border-2{
+  border-left:  0.25rem solid #377D71!important;
+} 
+.border-3{
+  border-left:  0.25rem solid #36b9cc!important;
+} 
+.border-4{
+  border-left:  0.25rem solid #f6c23e!important;
+} 
+.text-xs{
+  font-size: 0.85rem;
+}
+.fa-users{
+  color: #4e73df;
+  opacity: 0.4;
+}
+.fa-clipboard-list{
+  color: #377D71;
+  opacity: 0.4;
+}
+.fa-award{
+  color: #36b9cc;
+  opacity: 0.4;
+}
+.heading{
+  color: #013A6B;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+.bg-white{
+  background: #fff;
+}
+.test_title{
+  color: #013A6B!important;
+}
+.progress{
+  height: 0.25rem;
+}
+.inner-header{
+  background-color:rgba(255, 165, 0,0.1)!important;
+  color:black;
+}
+.foss-name{
+  color:rgba(0,0,0,0.8);
+}
+</style>
+<link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
+<script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
+
+{% endblock %}
+
+
+{% block content%}
+
+
+<div>
+  <div class="card mb-3">
+    <div class="card-header">
+      <div><i class="fas fa-user-circle mr-2">  </i>  <span>{{ user.first_name | title }} {{ user.last_name | title }}</span></div>
+      
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="d-flex">
+            <span class="me-2"><i class="fas fa-university p-icons d-inline-block mr-5"></i></span>
+            <span class="me-2"><strong>CSC ID: </strong> {{ vle.csc.csc_id }}</span>
+          </div>
+        </div>
+          
+        <div class="col-md-4 ">
+          <div class="d-flex">
+              <span class="me-2"><i class="fas fa-envelope p-icons d-inline-block mr-5"></i></span>
+              <span class="me-2">{{ user.email }}</span>
+          </div>
+        </div>
+        
+        {% comment %} <div class="col-md-4">
+          <div class="d-flex">
+            <span class="me-2"><i class="fas fa-phone-square-alt p-icons d-inline-block mr-5"></i></span>
+            <span class="me-2">{{ user.student }}</span>
+          </div>
+        </div> {% endcomment %}
+        
+        {% comment %} <div class="col-12 mt-2">
+          
+            <span class="me-2"><i class="fas fa-map-marker-alt p-icons d-inline-block mr-5"></i></span>
+            <span class="me-2">{{user.student.address | title}}, {{ user.student.city }}, {{ user.student.state }}</span></div>
+          
+        </div> {% endcomment %}
+          
+      </div>
+    </div>
+
+  </div>
+<div >
+  
+    <!-- <div class="col-md-3">
+      {% include "sidebar.html" %}
+    </div> -->
+    <div >
+      {% comment %} <div class="row">
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-1 shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                              Total students enrolled</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_students_enrolled}}</div>
+                        </div>
+                        <div class="col-auto">
+                            <!-- <i class="fas fa-calendar fa-2x text-gray-300"></i> -->
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-2 shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total tests completed</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_tests_completed}}</div>
+                        </div>
+                        <div class="col-auto">
+                          <i class="fas fa-clipboard-list fa-2x "></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-3 shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total certificates
+                            </div>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{total_certificates_issued}}</div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                          <i class="fas fa-award fa-2x"></i>
+                          
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> {% endcomment %}
+    
+        
+    </div>
+    <div class="mb-3">
+        <div class="card">
+          <div class="card-header">
+            Courses
+          </div>
+          <div class="card-body">
+            <div class="row">
+              {% for key,val in courses.items %}
+                <div class="col-md-6 mb-2">
+                  <div class="card" style="height:100%;">
+                    <p class="card-header inner-header">{{key.code}} : {{key.title}}</p>
+                    <div class="card-body">
+                      {% comment %} <h6 class="card-title">Special title treatment</h6> {% endcomment %}
+                      {% for item in val %}
+                        <p class="card-text ">
+                          <a class="foss-name" href="{% url 'tutorial_search' %}?search_foss={{ item.split|join:"+" }}&search_language=English">{{item}}</a>
+                        </p>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+              
+                {% comment %} {% for key,value in upcoming_test_stats.items %}
+                <div class="col-md-3">
+                <div class="border p-2">
+                  <div class="test_info">
+                    <p ><a href="{% url 'csc:update_test' pk=value.id %}" class="test_title"><i class="far fa-clipboard"></i> {{key}} <i class="fas fa-location-arrow"></i></a></p>
+                    <p><i class="fas fa-calendar-day"></i>{{value.date}} / {{value.time}}</p>
+                    <p>Approved : {{value.approved}}</p>
+                    <p>Rejected : {{value.rejected}}</p>
+                  </div>
+                  <canvas id="test_{{value.id}}"></canvas>
+                </div>
+              </div>
+                {% endfor %} {% endcomment %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-header">
+            Individual FOSS
+          </div>
+          <div class="card-body">
+            <div class="row">
+                {% for key in fosses %}
+                  <div class="col-3 ">
+                        <div class="border rounded p-2">
+                          <a class="foss-name" href="{% url 'tutorial_search' %}?search_foss={{ key.split|join:"+" }}&search_language=English">
+                          {{key}}</a>
+                      </div>
+                  </div>
+                {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% comment %} <div>
+      <div class="card">
+        <div class="card-header">
+          Upcoming Tests
+        </div>
+        <div class="card-body">
+          <div class="row">
+              {% for key,value in upcoming_test_stats.items %}
+              <div class="col-md-3">
+              <div class="border p-2">
+                <div class="test_info">
+                  <p ><a href="{% url 'csc:update_test' pk=value.id %}" class="test_title"><i class="far fa-clipboard"></i> {{key}} <i class="fas fa-location-arrow"></i></a></p>
+                  <p><i class="fas fa-calendar-day"></i>{{value.date}} / {{value.time}}</p>
+                  <p>Approved : {{value.approved}}</p>
+                  <p>Rejected : {{value.rejected}}</p>
+                </div>
+                <canvas id="test_{{value.id}}"></canvas>
+              </div>
+            </div>
+              {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div> {% endcomment %}
+   
+    <div>
+      
+    </div>
+   
+  </div>
+</div>
+
+<div class="container" style="padding-top:9%;" id="main">
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="text/javascript" src="{% static '/spoken/csc.js' %}"></script>
+<script>
+    
+    $(document).ready(function(){
+      if($('#id_programme_type').val() == '') {
+        $('#id_spoken_foss').val('');
+        $('#id_spoken_foss').prop('disabled', 'disabled');      
+      }
+    $('#id_programme_type').on('change', function(){
+        programme_type = $(this).val();
+        programme_type_name = $(this).children("option").filter(":selected").text();
+        $('#id_spoken_foss').html('<option>---------</option>');
+        if(programme_type != ''){
+            $.ajax({
+                url: "/csc/get-foss-option/",
+                type: "POST",
+                data: {
+                    programme_type: programme_type,
+                },
+                beforeSend: function() {
+                },
+                success: function(data) {
+                    if(data && data['spoken_foss_option']) {
+                        $('#id_spoken_foss').prop('disabled', false);
+                    $('#id_spoken_foss').html(data['spoken_foss_option']);
+                    
+                    }
+                 
+                }
+            });
+        }
+    });
+  });
+  </script>
+{% endblock %}

@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+from django.contrib.messages import constants as messages
 """
 Django settings for spoken_main_website project.
 
@@ -27,6 +28,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG")
 
+
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
@@ -48,6 +50,12 @@ INSTALLED_APPS = [
     'csc',
     'django_crontab',
     'django_ers',
+    'cms',
+    'cdcontent',
+    'rest_framework.authtoken',
+    'drf_yasg',
+    'widget_tweaks',
+    # 'rest_framework_swagger',
 
 ]
 
@@ -68,7 +76,9 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR, 'templates'),
-                os.path.join(BASE_DIR, 'spoken', 'templates', 'spoken'),],
+                os.path.join(BASE_DIR, 'spoken', 'templates', 'spoken'),
+                os.path.join(BASE_DIR, 'csc', 'templates', 'csc'),
+                ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -115,6 +125,14 @@ DATABASES = {
         'PASSWORD': os.getenv("ERS_DB_PASS"),
         'HOST': os.getenv("ERS_DB_HOST"),
         'PORT':'',
+    },
+    'forums': {	
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.	
+        'NAME': os.getenv("FDB"),                      # Or path to database file if using sqlite3.	
+        'USER': os.getenv("FDB_USER"),	
+        'PASSWORD': os.getenv("FDB_PASS"),
+        'HOST': os.getenv("FDB_DB_HOST"),                  # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.	
+        'PORT': '',                  # Set to empty string for default.	
     },
 
 }
@@ -173,6 +191,7 @@ GOOGLE_RECAPTCHA_SITE_KEY = os.getenv("GOOGLE_RECAPTCHA_SITE_KEY")
 SAML_FOLDER = os.path.join(BASE_DIR, 'saml')
 
 AUTHENTICATION_BACKENDS = [
+    'csc.backends.CSCBackend',
     'spokenlogin.backends.SpokenBackend',
     'sso.backends.SSOBackend',
     'django.contrib.auth.backends.ModelBackend'
@@ -195,7 +214,13 @@ else:
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES':[
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
     ]
+
 }
 
 LOGIN_URL='/login/'
@@ -228,3 +253,19 @@ URL_FETCH_VLE = os.getenv("URL_FETCH_VLE")
 CRONJOBS = [
     ('8 13 * * *', 'csc.cron.update_vle_data')
 ]
+SWAGGER_SETTINGS = {
+    "SECURITY_DEFINITIONS":{
+        "Token": {"type": "apiKey", "name": "Authorization",
+          "in": "header"},
+          "Basic": {"type": "basic"},
+    }
+}
+
+MESSAGE_TAGS = {
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+
+}
+CSC_SUBSCRIPTION_PERIOD = 100

@@ -34,3 +34,7 @@ def get_formatted_year(start,end):
 	else:
 		formatted_date=start.strftime("%d")+' '+start.strftime("%b")+' '+start.strftime("%Y")+' - '+end.strftime("%d")+' '+end.strftime("%b")+' '+end.strftime("%Y")
 	return formatted_date
+
+@register.filter(name='has_group') 
+def has_group(user, group_name):
+	return user.groups.filter(name=group_name).exists() 

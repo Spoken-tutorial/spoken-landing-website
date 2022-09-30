@@ -24,7 +24,7 @@ def get_payload(instance):
                 }
             },  
             "object": {
-                "id": "https://spoken-tutorial.in/spoken/tutorial-search/?search_foss={}&search_language={}".format(instance.foss, instance.language),
+                "id": "https://beta.spoken-tutorial.in/spoken/tutorial-search/?search_foss={}&search_language={}".format(instance.foss, instance.language),
                 "definition": {
                 "name": {
                     "en-US": "Spoken-Tutorial-"+instance.foss.replace(' ', '-')+"-"+instance.language

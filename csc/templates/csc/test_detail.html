@@ -1,0 +1,96 @@
+{% extends 'csc_base.html'%}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+<style>
+    .fa-check-circle{
+        color: green;
+    }
+    .fa-times-circle,.fa-trash-alt{
+        color: maroon;
+    }
+   
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="mt-5 pt-5">
+
+    <div class="container">
+        
+        <div class="row">
+            <div class="col-md-8">
+                <div class="mt-5">
+                    {% if messages %}
+                    <ul class="messages" style="padding-left: 0!important;">
+                        {% for message in messages %}
+                        <li style="list-style: none;">
+                            <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">
+                                {{ message }}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        {% if test.test_name %}<strong>{{test.test_name | title}}</strong>{% else %}<strong>{{test.foss | title}} Test</strong>{% endif %}
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered ">
+                          <thead></thead> 
+                            <tbody>
+                                <tr>
+                                    <th >FOSS</th>
+                                    <td colspan="2">{{test.foss | title }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date</th>
+                                    <td colspan="2">{{test.tdate}}, {{test.ttime}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Published</th>
+                                    <td colspan="2">{% if test.publish %}<i class="far fa-check-circle"></i>{% else %}<i class="far fa-times-circle"></i>{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Note (For Students)</th>
+                                    <td colspan="3">{{test.note_student|default_if_none:"-" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Note (For Invigilator)</th>
+                                    <td colspan="2">{{test.note_invigilator|default_if_none:"-" }}</td>
+                                </tr>
+                            </tbody>
+                    </table>
+                    </div>
+                  </div>
+            </div>
+
+        </div>
+    </div>
+    
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> -->
+
+<script>
+    $(document).ready(function () {
+        
+});
+
+</script>
+{% endblock %}
+
+
+
+

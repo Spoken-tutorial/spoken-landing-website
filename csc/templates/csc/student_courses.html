@@ -1,0 +1,191 @@
+{% extends 'csc_base.html'%}
+{% load crispy_forms_tags%}
+{% load helper %}
+{% block css %}
+<style>
+    .tb-header{
+        color:  var(--footer-color);
+        font-size: .875rem;
+        
+    }
+    .tb-data{
+        font-size: .875rem;
+    }
+    .nav-link{
+        color: var(--footer-color);
+    }
+    .c-btn{
+        background-color:#F19584!important;
+        border-color:#F19584;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="container">
+    <div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true"><b>Certificate Courses</b></button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false"><b>Individual Courses</b></button>
+            </li>
+            {% comment %} <li class="nav-item" role="presentation">
+              <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Contact</button>
+            </li> {% endcomment %}
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active py-3" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div>
+                    <form>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label"><b>Search Courses</b></label>
+                            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="search_term">
+                            <div id="emailHelp" class="form-text">Search by course code, title or foss</div>
+                            <input type="hidden" id="course_search" name="course_search" value="course_search">
+                          </div>
+                          <button type="submit" class="btn btn-primary c-btn" >Search</button>
+                          <hr>
+                          <button type="submit" class="btn btn-primary c-btn">View all courses</button>
+                    </form>
+                </div>
+                <div class="row py-3">
+
+                    {% for key,value in courses.items %}
+                        <div class="col-md-3 mb-2">
+                            <div class="card d-flex flex-column" style="height:100%;">
+                                <div class="card-header" style="background:#004a91 !important;color:#fff">
+                                  {{key.code}}
+                                </div>
+                                <div class="card-body">
+                                  <h6 class="card-title">{{key.title}}</h6>
+                                  <div class="card-text" >
+                                    {% for foss in value %}
+                                        <p style="color:rgba(0,0,0,0.6)">{{foss}}</p>
+                                    {% endfor %}
+                                  </div>
+                                  
+                                </div>
+                                <div class="border-top p-2">
+                                    {% comment %} <p class="align-self-end">Enrolled : {{key.count}}</p> {% endcomment %}
+                                </div>
+                              </div>
+                        </div>
+                    {% empty %}
+                        <div>
+                            <p>No results found.</p>
+                        </div>
+                    {% endfor%}
+                </div>
+            </div>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                
+                <table id="tb-individual" class="table table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th class="tb-header"> <span><i class="far fa-file-code"></i></span> Course</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for foss in fosses %}
+                        <tr class="tb-data">
+                            <td>{{forloop.counter}}</td>                    
+                            <td>{{foss}}</td>                    
+                        </tr>
+                        {% endfor %}                                
+                    <tbody>
+                </table>
+                
+                
+            </div>
+            {% comment %} <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div> {% endcomment %}
+          </div>
+    </div>
+    
+    
+    {% comment %} <div>
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">              
+             <!--  <button class="nav-link" id="nav-dca-tab" data-bs-toggle="tab" data-bs-target="#nav-dca" type="button" role="tab" aria-controls="nav-dca" aria-selected="true">DCA FOSS</button> -->
+              <button class="nav-link" id="nav-individual-tab" data-bs-toggle="tab" data-bs-target="#nav-individual" type="button" role="tab" aria-controls="nav-individual" aria-selected="false">Individual FOSS</button>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active py-5" id="nav-course" role="tabpanel" aria-labelledby="nav-course-tab">   </div>
+
+            <div class="tab-pane fade py-5" id="nav-individual" role="tabpanel" aria-labelledby="nav-individual-tab">
+                <div class="alert alert-info" role="alert">Individual FOSS</div>
+                <div>
+                    <table id="tb-individual" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th class="tb-header"> <span><i class="far fa-file-code"></i></span> Course</th>
+                                <th class="tb-header"> <span><i class="fas fa-user"></i> </span> Current Enrollment</th>
+                                <th class="tb-header"><span><i class="fas fa-check-square"></i></span> Certificates Issued</th>
+                                <th class="tb-header"><span><i class="fas fa-users"></i></span>Total Enrollment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for key,value in individual_foss.items %}
+                            <tr class="tb-data">
+                                <td >
+                                <span class="form-check"><input class="form-check-input messageCheckbox" type="checkbox" value="{{student.id}}" id="{{student.id}}" name="check_student" ></span>
+                                </td>
+                                <td>{{key}}</td>                  
+                                <td>{{value.total_students}}</td>                    
+                                <td></td>                    
+                                <td>{{value.total_students}}</td>                     
+                            </tr>
+                            {% endfor %}                                
+                        <tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+        </div>        
+    </div>  {% endcomment %}
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<script>
+    const colorList = ['rgb(244, 122, 31)','rgb(253, 187, 47)','rgb(55, 123, 43)','rgb(122, 193, 66)','rgb(0, 124, 195)','rgb(0, 82, 155)','rgb(246, 109, 68)','rgb(254, 174, 101)','rgb(230, 246, 157)','rgb(170, 222, 167)','rgb(170, 222, 167)','rgb(45, 135, 187)','rgb(230, 246, 157)','rgb(170, 222, 167)','rgb(100, 194, 166)','rgb(45, 135, 187)','rgb(155, 191, 224)','rgb(232, 160, 154)','rgb(251, 226, 159)','rgb(198, 214, 143)']
+    
+
+    $(document).ready(function () {
+        
+        $('#tb-individual').DataTable({
+            "pageLength": 50
+        }); 
+        show_foss_enrollment();
+
+
+    });
+
+    function show_foss_enrollment(){
+        var f = []
+        var e = []
+        var labels = [];
+        var stat_data = {
+            labels: [],
+            datasets: [{
+                label: 'Students enrolled',                
+                data: [],
+                backgroundColor: ['rgb(255, 99, 132)','rgb(54, 162, 235)','rgb(255, 205, 86)','rgb(255, 99, 132)','rgb(255, 99, 132)'],
+                hoverOffset: 4             
+      }],      
+    };
+    
+}
+
+</script>
+{% endblock %}

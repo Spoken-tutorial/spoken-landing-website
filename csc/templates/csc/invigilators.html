@@ -1,0 +1,284 @@
+{% extends 'csc_base.html'%}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+<style>
+.footer-wrapper {
+        display: none;
+}
+.tab-pane{
+    margin-top: 18px;
+}
+.form-group{
+    margin-top: 8px;
+    margin-top: 8px;
+}
+.f-sm{
+        font-size: .875rem;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="container py-2">
+    <div >
+        {{ form.non_field_errors }}
+        {% include "_error_msg.html" %}
+        <!-- {% if messages %}
+        <ul class="messages" style="padding-left: 0!important;">
+            {% for message in messages %}
+            <li style="list-style: none;">
+                <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">
+                    {{ message }}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %} -->
+    </div>
+
+    <div>
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <button class="nav-link active" id="nav-add-tab" data-bs-toggle="tab" data-bs-target="#nav-add" type="button" role="tab" aria-controls="nav-add" aria-selected="true">Add</button>
+              <button class="nav-link" id="nav-list-tab" data-bs-toggle="tab" data-bs-target="#nav-list" type="button" role="tab" aria-controls="nav-list" aria-selected="false">View</button>
+              <button class="nav-link" id="nav-acccepted-tab" data-bs-toggle="tab" data-bs-target="#nav-acccepted" type="button" role="tab" aria-controls="nav-acccepted" aria-selected="false">Invigilators-Acccepted</button>
+              <button class="nav-link" id="nav-pending-tab" data-bs-toggle="tab" data-bs-target="#nav-pending" type="button" role="tab" aria-controls="nav-pending" aria-selected="false">Invigilators-Rejected</button>
+            </div>
+          </nav>
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-add" role="tabpanel" aria-labelledby="nav-add-tab">
+                
+                <div class="row">
+                    <div class="col-6">
+                        {{ form.non_field_errors }}
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                {{ form.email.errors }}
+                                {{ form.email | as_crispy_field }}
+                            </div>
+                            <div id="form_data" style="display: none;">
+                                <div class="mb-3">
+                                    {{ form.fname.errors }}
+                                    {{ form.fname | as_crispy_field }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form.lname.errors }}
+                                    {{ form.lname | as_crispy_field }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form.phone.errors }}
+                                    {{ form.phone | as_crispy_field }}
+                                </div>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-warning" id="btn_verify_email">Proceed</button>
+                            </div>
+                            <div id="add_existing_div" style="display:none;">
+                                <p>Invigilator with the above email already exists, but not added to your invigilator list. Click below to add.</p>
+                                <button type="button" class="btn btn-warning" id="add_existing" >Add Invigilator to CSC</button>
+                            </div>
+
+                            <input type="submit" value="Submit" class="btn btn-success mt-3" id="btn_submit" style="display: none;">
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-pane fade" id="nav-list" role="tabpanel" aria-labelledby="nav-list-tab">
+                {% if invigilators %}
+                <table class="table table-bordered" id='tb_i'>
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Contact #</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in invigilators %}
+                        <tr>
+                            <td scope="row" class="f-sm">{{item.user.first_name | title}} {{item.user.last_name | title}}</td>
+                            <td scope="row" class="f-sm">{{item.user.email}}</td>
+                            <td scope="row" class="f-sm">{{item.phone}}</td>
+                            
+                          </tr>
+                        {% endfor %}
+                    </tbody>
+                  </table>
+                {% else %}
+                <div class="alert alert-secondary" role="alert">
+                    No invigilators added.
+                  </div>
+                {% endif %}
+                
+            </div>
+            <div class="tab-pane fade" id="nav-acccepted" role="tabpanel" aria-labelledby="nav-acccepted-tab">...</div>
+            <div class="tab-pane fade" id="nav-pending" role="tabpanel" aria-labelledby="nav-pending-tab">...</div>
+          </div>
+        
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script> -->
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> -->
+<!-- <script type="text/javascript" src="{% static 'main.js' %}"></script> -->
+
+<script>
+    $(document).ready(function(){       
+        
+        $('#tb_i').DataTable();   
+        var elem = document.getElementById("btn_verify_email")
+        elem.addEventListener("click",verify_email);
+    });
+
+    function verify_email(){
+        const USER_AND_INVIGIlATOR = 1
+        const USER_NOT_INVIGIlATOR = 2
+        const NOT_USER = 0
+        const MULTIPLE_USER = 3
+        const USER_AND_OWN_INVIGIlATOR = 4
+        
+        const email = document.getElementById("id_email").value;
+        let result = 100;
+        data = {email:email}
+        url = '/csc/verify_invigilator_email/'
+        $.ajax({
+        url : url,
+        type: "GET",
+        data : data,
+        success: function(data, textStatus, jqXHR)
+        {
+            console.log(typeof data['status']);
+            console.log(data['status']);
+            const btn_proceed = document.getElementById("btn_verify_email")
+            const btn_submit = document.getElementById("btn_submit")
+            const add_existing = document.getElementById("add_existing")
+            const add_existing_div = document.getElementById("add_existing_div")
+            
+
+            
+            const form_data = document.getElementById("form_data")
+            const email_input = document.getElementById("id_email")
+            btn_proceed.style.display='none';
+            
+            if(data['status']==NOT_USER){
+                // show screen to add user details, create user & invigilator
+                console.log('NOT_USER');
+                form_data.style.display = 'block';
+                // email_input.disabled = true;
+                email_input.setAttribute('readonly', true);
+                // btn_proceed.style.display='none';
+                btn_submit.style.display='block';
+
+            }else if(data['status']==USER_AND_INVIGIlATOR){
+                alert('USER_AND_INVIGIlATOR');
+                let fname = document.getElementById('id_fname')
+                let lname = document.getElementById('id_lname')
+                let phone = document.getElementById('id_phone')
+                fname.value = data['fname'];
+                lname.value = data['lname'];
+                fname.setAttribute('readonly', true);
+                lname.setAttribute('readonly', true);
+                phone.value = data['phone'];
+                phone.setAttribute('readonly', true);
+                // prepopulate data; give option to add invi
+                form_data.style.display = 'block';
+                add_existing_div.style.display='block';
+                result = USER_AND_INVIGIlATOR;
+                
+            }else if(data['status']==USER_NOT_INVIGIlATOR){
+                console.log('data is 2');
+                // prepopulate data; give option to create invi
+                form_data.style.display = 'block';
+                add_existing_div.style.display='block';
+                let fname = document.getElementById('id_fname')
+                let lname = document.getElementById('id_lname')
+                fname.value = data['fname'];
+                lname.value = data['lname'];
+                fname.setAttribute('readonly', true);
+                lname.setAttribute('readonly', true);
+                result = USER_AND_INVIGIlATOR
+                // add_invigilator(result)  
+            }else if(data['status']==MULTIPLE_USER){
+                // show error
+                alert('Multiple users found with this email. Please contact Spoken Tutorial Admin.')
+            }else if(data['status']==USER_AND_OWN_INVIGIlATOR) {
+                alert('USER_AND_OWN_INVIGIlATOR');
+                let fname = document.getElementById('id_fname')
+                let lname = document.getElementById('id_lname')
+                let phone = document.getElementById('id_phone')
+                fname.value = data['fname'];
+                lname.value = data['lname'];
+                fname.setAttribute('readonly', true);
+                lname.setAttribute('readonly', true);
+                phone.value = data['phone'];
+                phone.setAttribute('readonly', true);
+                btn_proceed.style.display='block';
+                alert(`Invigilator ${email} is already added in your list.`);
+
+            }
+            
+            
+        },
+        error: function (jqXHR, textStatus, errorThrown)
+        {
+            alert('e')
+        }
+        });
+
+
+       
+
+    }
+
+    function add_invigilator(data){
+        alert('add_invigilator called')
+        console.log(data);
+        // data = {}
+        url = '/csc/add_invigilator/'
+        $.ajax({
+                url : url,
+                type: "POST",
+                data : data,
+                success: function(data, textStatus, jqXHR)
+                {
+                    console.log(data);
+                    console.log(data['foss']);
+                    console.log(data);
+                    alert('scccess1')
+                    add_existing_div.style.display='block';
+
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    alert('e1')
+                }
+            });
+       }
+
+    $( "#add_existing" ).click(function() {
+        alert( "Handler for .click() called." );
+        let data = {}
+        alert(data);
+        data['invigilator_email'] = document.getElementById('id_email').value;
+        alert(data['invigilator_email']);
+        data['phone'] = document.getElementById('id_phone').value;
+        alert(data['phone']);
+        data['flag'] = true
+        alert('calling add_invigilator')
+        add_invigilator(data);
+    });
+
+    
+
+</script>
+{% endblock %}
+

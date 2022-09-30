@@ -1,0 +1,8 @@
+<div>
+    {% for message in messages %}
+        <div>
+          <div class="alert alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{% endif %}{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}success{% endif %}" role="alert">
+            {{ message|safe }}
+        </div>
+        {% endfor %}
+</div>
