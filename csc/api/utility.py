@@ -11,7 +11,7 @@ import random, string
 from csc.models import Student_certificate_course,CategoryCourses,Student_Foss
 from django.db import IntegrityError
 from csc.utils import is_user_vle, is_user_student
-
+from django.template.loader import render_to_string
 def send_pwd_mail(u):
     pwd = ''.join(random.choices(string.ascii_letters,k=10))
     
@@ -47,8 +47,8 @@ def send_pwd_mail(u):
             password : {pwd}
 
             Please click the following training link to know the process of 
-            Student Registration Instructions : <a href="https://docs.google.com/document/d/1z8-s4sSl7viPqJ8WAFeeNmoJUVLRPv2L9jLOrfN6ln0/edit?usp=sharing">Click Here</a>
-            Course Allotment Instructions : <a href="https://docs.google.com/document/d/1Mv23iijOVuS6eCcHCgYKbbxopjk_SkSfExXW-61G2AQ/edit?usp=sharing">Click Here</a>
+            Student Registration Instructions : https://docs.google.com/document/d/1z8-s4sSl7viPqJ8WAFeeNmoJUVLRPv2L9jLOrfN6ln0/edit?usp=sharing
+            Course Allotment Instructions : https://docs.google.com/document/d/1Mv23iijOVuS6eCcHCgYKbbxopjk_SkSfExXW-61G2AQ/edit?usp=sharing
             
             In case of any query, please feel free to contact at animation-hackathon@cscacademy.org.
             
@@ -56,7 +56,8 @@ def send_pwd_mail(u):
             Team,
             Spoken Tutorial
             """
-    
+    path = 'vle_mail_template.html'
+    html_content = render_to_string(path, {'full_name':u.get_full_name(),'username':u.username,'password':pwd})
     try:
         print(f"/n/nSending mail ; username,pwd : {u.username},{pwd}".ljust(40,'*'))
         send_mail(
@@ -65,6 +66,7 @@ def send_pwd_mail(u):
     from_email,
     [u.email],
     fail_silently=False,
+    html_message = html_content
     )
     except Exception as e:
         print(e)
