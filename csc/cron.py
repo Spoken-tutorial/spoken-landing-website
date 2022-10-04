@@ -13,6 +13,7 @@ from django.db.models import Q
 from django.core.mail import send_mail
 from django.contrib.auth.models import Group
 from .utils import get_tenure_end_date
+from django.template.loader import render_to_string
 
 def update_vle_data(): #CRON TASK
     url = getattr(settings, "URL_FETCH_VLE", "http://exam.cscacademy.org/shareiitbombayspokentutorial")
@@ -102,8 +103,8 @@ def send_password_mail(user,password):
             password : {password}
 
             Please click the following training link to know the process of 
-            Student Registration Instructions : <a href="https://docs.google.com/document/d/1z8-s4sSl7viPqJ8WAFeeNmoJUVLRPv2L9jLOrfN6ln0/edit?usp=sharing">Click Here</a>
-            Course Allotment Instructions : <a href="https://docs.google.com/document/d/1Mv23iijOVuS6eCcHCgYKbbxopjk_SkSfExXW-61G2AQ/edit?usp=sharing">Click Here</a>
+            Student Registration Instructions : https://docs.google.com/document/d/1z8-s4sSl7viPqJ8WAFeeNmoJUVLRPv2L9jLOrfN6ln0/edit?usp=sharing
+            Course Allotment Instructions : https://docs.google.com/document/d/1Mv23iijOVuS6eCcHCgYKbbxopjk_SkSfExXW-61G2AQ/edit?usp=sharing
             
             In case of any query, please feel free to contact at animation-hackathon@cscacademy.org.
             
@@ -111,9 +112,11 @@ def send_password_mail(user,password):
             Team,
             Spoken Tutorial
             """
+    path = 'vle_mail_template.html'
+    html_content = render_to_string(path, {'full_name':user.get_full_name(),'username':user.username,'password':password})
     try:
         print(f"sending mails .....{to_email},{password}")
-        send_mail(subject,message,from_email,[to_email],fail_silently=False)
+        send_mail(subject,message,from_email,[to_email],fail_silently=False,html_message=html_content)
         print(f"mail sent success")
     except Exception as e:
         print("Error in sending mail")
