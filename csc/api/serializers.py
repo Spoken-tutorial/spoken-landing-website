@@ -220,6 +220,7 @@ class VLECSCSerializer(serializers.ModelSerializer):
             if "email" in user_data:
                 user_obj.username = user_data['email']
                 user_obj.email = user_data['email']
+                send_pwd_mail(user_obj)
                 
             if "name" in user_data:
                 user_obj.first_name = getFirstName(user_data['name'])
