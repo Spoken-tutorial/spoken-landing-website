@@ -1,5 +1,6 @@
 
 from __future__ import unicode_literals
+from audioop import reverse
 from email.policy import default
 from django.db import models
 from django.contrib.auth.models import User
@@ -9,6 +10,7 @@ from model_utils import Choices
 from cms.models import State, District, City
 from django.forms import widgets
 from datetime import date
+from django.template.defaultfilters import slugify
 
 REJECTED = 0
 APPROVED = 1
@@ -205,17 +207,20 @@ class Invigilator(models.Model):
 
 class Test(models.Model):
     foss = models.ForeignKey(FossCategory,on_delete=models.CASCADE)
+    # mdlfoss = models.ForeignKey(FossCategory,on_delete=models.CASCADE)
     tdate = models.DateField()
     ttime = models.TimeField()
-    # invigilator = models.ManyToManyField(Invigilator,blank=True,null=True)
-    publish = models.BooleanField()
+    invigilator = models.ManyToManyField(Invigilator,blank=True,null=True)
+    publish = models.BooleanField(default=True)
+    vle = models.ForeignKey(VLE,on_delete=models.CASCADE,null=True,blank=True)
+    note_student = models.TextField(blank=True,null=True)
+    note_invigilator = models.TextField(blank=True,null=True)
+    status = models.BooleanField(default=False)
+    # test_name = models.CharField(max_length=252,blank=True,null=True)
+    participant_count = models.IntegerField(null=True,blank=True)
     slug = models.SlugField(max_length=40)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    vle = models.ForeignKey(VLE,on_delete=models.CASCADE)
-    note_student = models.TextField(blank=True,null=True)
-    note_invigilator = models.TextField(blank=True,null=True)
-    test_name = models.CharField(max_length=252,blank=True,null=True)
     #ToDO : Add status ; to mark if completed or cancellled
 
     # class Meta:
@@ -223,13 +228,16 @@ class Test(models.Model):
     #         'tdate':widgets.DateInput(attrs={'type': 'date'})
     #     }
     def get_absolute_url(self):
-        return f"{self.foss}"
+        # return f"{self.foss}"
+        return reverse("detail_test",kwargs={"slug": self.slug})
 
     def __str__(self):
-        if self.test_name:
-            return self.test_name
-        else:
-            return f"{self.foss} - {self.tdate}"
+        return f"{self.foss} - {self.tdate}"
+    
+    def save(self, *args, **kwargs):  # new
+        if not self.slug:
+            self.slug = slugify(self.id)
+        return super().save(*args, **kwargs)
 
 class InvigilationRequest(models.Model):
     invigilator = models.ForeignKey(Invigilator,on_delete=models.CASCADE)
@@ -256,3 +264,24 @@ class TestRequest(models.Model):
 
     def __str__(self):
         return f"{self.id}"
+    
+class CSCTestAtttendance(models.Model):
+    test = models.ForeignKey(Test, on_delete=models.PROTECT )
+    student = models.ForeignKey(Student, on_delete=models.PROTECT )
+    mdluser_firstname = models.CharField(max_length = 100)
+    mdluser_lastname = models.CharField(max_length = 100)
+    mdluser_id = models.PositiveIntegerField()
+    mdlcourse_id = models.PositiveIntegerField(default=0)
+    mdlquiz_id = models.PositiveIntegerField(default=0)
+    mdlattempt_id = models.PositiveIntegerField(default=0)
+    status = models.PositiveSmallIntegerField(default=0)
+    mdlgrade = models.DecimalField(max_digits=12, decimal_places=5, default=0.00)
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now = True)
+    class Meta(object):
+        verbose_name = "Test Attendance"
+        unique_together = (("test", "mdluser_id"))
+    
+    
+    
+    
