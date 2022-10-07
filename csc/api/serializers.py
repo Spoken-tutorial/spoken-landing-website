@@ -109,6 +109,13 @@ class StudentSerializer(serializers.ModelSerializer):
             s = UserSerializer(user_obj,data=user)
             if s.is_valid():
                 s.save()
+            # if 'email' in user:
+            #     send_pwd_mail(user_obj)
+            if "email" in user:
+                user_obj.username = user['email']
+                user_obj.email = user['email']
+                user_obj.save()
+                send_pwd_mail(user_obj)
         for item in vle_ids:
             student.vle_id.add(*vle_ids)
 
@@ -220,6 +227,8 @@ class VLECSCSerializer(serializers.ModelSerializer):
             if "email" in user_data:
                 user_obj.username = user_data['email']
                 user_obj.email = user_data['email']
+                user_obj.save()
+                send_pwd_mail(user_obj)
                 
             if "name" in user_data:
                 user_obj.first_name = getFirstName(user_data['name'])
