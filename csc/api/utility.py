@@ -24,7 +24,7 @@ def send_pwd_mail(u):
         message = f"""
             Dear {u.get_full_name()},
             Thank you for registering under Spoken Tutorial(IIT Bombay) courses.
-            Below are the login details for Spoken Tutorial Dashboard 
+            Below are the login details for Spoken Tutorial Dashboard. 
             Link to Login: https://spoken-tutorial.in/login/
 
             username : {u.username}
@@ -34,6 +34,7 @@ def send_pwd_mail(u):
             Team,
             Spoken Tutorial
             """
+        path = 'student_mail_template.html'
     if is_user_vle(u):
         message = f"""
             Dear {u.get_full_name()},
@@ -56,7 +57,7 @@ def send_pwd_mail(u):
             Team,
             Spoken Tutorial
             """
-    path = 'vle_mail_template.html'
+        path = 'vle_mail_template.html'
     html_content = render_to_string(path, {'full_name':u.get_full_name(),'username':u.username,'password':pwd})
     try:
         print(f"/n/nSending mail ; username,pwd : {u.username},{pwd}".ljust(40,'*'))
