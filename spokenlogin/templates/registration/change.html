@@ -1,0 +1,20 @@
+<h1>Change Password</h1>
+<br>
+<div>
+  <form method="post" action="">
+    {% csrf_token %}
+    <div>
+      <label for="fname">New Password</label>
+      <input type="password" id="new" name="new" required />
+    </div>
+    <br/>
+    <div>
+      <label for="fname">Confirm Password</label>
+      <input type="password" id="confirm" name="confirm" required />
+    </div>
+    <br/>
+    <div>
+      <button type="submit">Submit</button>
+    </div>
+  </form>
+</div>

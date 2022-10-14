@@ -14,12 +14,13 @@
 			  {% csrf_token %}
 			  {{ form|crispy  }}
 			  <button type="submit" id="submit" class="btn " style="background: #0D47A1;color: #fff; font-weight: bold;width: 100%;">Login</button>
+			  <a class="login-help" href="/reset_password">Forgotten password?</a>
 			</form>
 			<hr>
 			<div>
 				<p>Need help? <a target="_blank" class="login-help" href="https://process.spoken-tutorial.org/index.php/Software-Training#Contacts_For_Training">Please contact your training manager. </a> </p>
 			</div>
-			<div class="mt-5 alert alert-info w-100 text-center" role="alert">
+			{% comment %}<div class="mt-5 alert alert-info w-100 text-center" role="alert">
 				<b>Note for VLE : </b>If you are a <b>VLE</b> and didn't receive a password/or forgot your password for Spoken Tutorial - CSC, 
 				<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
 					Launch demo modal
