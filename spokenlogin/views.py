@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from csc.api.utility import send_pwd_mail
 
@@ -9,4 +9,5 @@ def password(request):
         email = request.POST['email']
         user = User.objects.get(username=email)
         send_pwd_mail(user)
+        return redirect('/')
     return render(request, 'registration/password.html')
