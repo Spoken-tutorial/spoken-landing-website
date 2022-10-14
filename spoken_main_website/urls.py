@@ -43,5 +43,5 @@ urlpatterns = [
     
     path('change', auth_views.PasswordChangeView.as_view(template_name='registration/change.html'), name='change'),
     path('change_done', auth_views.PasswordChangeDoneView.as_view(template_name='registration/done.html'), name='done'),
-    path('password/', views.password),
+    path('password/', views.password, name='password')
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

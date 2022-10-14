@@ -72,7 +72,7 @@ def send_pwd_mail(u):
     fail_silently=False,
     html_message = html_content
     )
-    print('***************mail send******')
+        print("***************mail send******")
     except Exception as e:
         print(e)
         print(f"Failed to send mail to user : {u.email}")
