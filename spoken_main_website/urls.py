@@ -41,7 +41,6 @@ urlpatterns = [
     
     path('accounts/', include('django.contrib.auth.urls')),
     
-    path('change', auth_views.PasswordChangeView.as_view(template_name='registration/change.html'), name='change'),
-    path('change_done', auth_views.PasswordChangeDoneView.as_view(template_name='registration/done.html'), name='done'),
+    path('change/', views.change, name='change'),
     path('password/', views.password, name='password')
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
