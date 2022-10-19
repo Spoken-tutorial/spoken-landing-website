@@ -14,7 +14,7 @@ def password(request):
             messages.add_message(request, messages.SUCCESS, 'Password Mail Sent Successfully.')
             return redirect('/accounts/login')
         except User.DoesNotExist:
-            messages.add_message(request, messages.WARNING, 'User Does Not Exist.')
+            messages.add_message(request, messages.ERROR, 'User Does Not Exist.')
             return redirect('/accounts/login')
     return render(request, 'registration/password.html')
 
@@ -25,11 +25,11 @@ def change(request):
         new = request.POST['new']
         confirm = request.POST['confirm']
         if new != confirm:
-            messages.add_message(request, messages.SUCCESS, 'Password did not match.')
+            messages.add_message(request, messages.ERROR, 'Password did not match.')
         elif len(new) < 8:
-            messages.add_message(request, messages.SUCCESS, 'Password should be 8 characters long.')
+            messages.add_message(request, messages.ERROR, 'Password should be 8 characters long.')
         elif not str(new).isalnum():
-            messages.add_message(request, messages.SUCCESS, 'Password should contain only numbers and letters.')
+            messages.add_message(request, messages.ERROR, 'Password should contain only numbers and letters.')
         else:
             user.set_password(new)
             user.save()
