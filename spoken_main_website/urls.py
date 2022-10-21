@@ -36,10 +36,14 @@ urlpatterns = [
     path('csc/student/', include('csc.student_urls', namespace='student')),
     path('csc/', include('csc.vle_urls', namespace='csc')),
     path('csc/api/v1/', include('csc.api.urls')),
+    path('csc/stats/', include('csc.stats.urls')),
     path('cms/api/v1/', include('cms.api.urls')),
     path('cdcontent/', include('cdcontent.urls')),
     
     path('accounts/', include('django.contrib.auth.urls')),
+    # path('masquerade/', include('masquerade.urls')),
+    
+    
     
     path('change/', views.change, name='change'),
     path('password/', views.password, name='password')
