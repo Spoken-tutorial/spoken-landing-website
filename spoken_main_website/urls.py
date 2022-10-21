@@ -20,6 +20,7 @@ from spoken import views as spoken_views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from spokenlogin import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -39,4 +40,7 @@ urlpatterns = [
     path('cdcontent/', include('cdcontent.urls')),
     
     path('accounts/', include('django.contrib.auth.urls')),
+    
+    path('change/', views.change, name='change'),
+    path('password/', views.password, name='password')
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
