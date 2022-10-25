@@ -1,0 +1,24 @@
+{% extends 'spoken/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container mt-5 pt-5 mx-2">
+    {% include 'spokenlogin/messages.html' %}
+    <div class="container my-5">
+    <h3>Change Password</h3>
+    </div>
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            <div class="container my-3">
+                <label for="new">New Password</label>
+                <input type="password" name="new" id="new">
+            </div>
+            <div class="container my-3">
+                <label for="confirm">Confirm Password</label>
+                <input type="password" name="confirm" id="confirm">
+            </div>
+            <button type="submit">Change Password</button>
+        </form>
+    </div>
+</div> 
+{% endblock %}

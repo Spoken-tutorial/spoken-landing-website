@@ -1,0 +1,316 @@
+{% extends "stats/stats_base.html" %}
+{% load static %}
+{% block custom_style %}
+<style>
+    #vle_stats{
+        border-left: 5px solid orange;
+        color: #013A6B;
+        font-weight: bold;
+    }
+</style>
+{% endblock custom_style %}
+{% block content  %}
+<div class="border border-2 p-2 white-bg">
+    <h6 class="mt-2"> Search VLE</h6>
+    <hr>
+    <form>
+        <div class="row py-3">
+            <div class="col-3 mb-3" name="name">
+                <label for="name" class="form-label fw-bold">VLE Name/Email</label>
+                <input type="text" class="form-control" id="name" name="name">
+            </div>
+            <div class="col-3 mb-3" name="name">
+                <label for="csc_id" class="form-label fw-bold">CSC ID</label>
+                <input type="text" class="form-control" id="csc_id" aria-describedby="csc_id" name="csc_id">
+            </div>
+            <div class="col-3 mb-3">
+                <label for="state" class="form-label fw-bold">State</label>
+                <select class="form-select" name="state" id="state">
+                    <option value="">Select state</option>
+                    {% for state in states %}
+                        <option value="{{state.name}}">{{state.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-3 mb-3">
+                <label for="district" class="form-label fw-bold">District</label>
+                <select class="form-select" name="district" id="district">
+                    <option value="">Select district</option>
+                    {% for district in districts %}
+                        <option value="{{district.name}}">{{district.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-4 mb-3">
+                <button type="submit" value="Filter" class="btn btn-primary">Filter</button>
+                <button type="submit" value="Filter" class="btn btn-primary">Clear Filter</button>
+            </div>
+            
+            
+        </div>
+    </form>
+</div>
+
+    
+
+<div class="row">
+    <div class="col-12">
+        {% if query_str.name  or query_str.csc_id or query_str.state or query_str.district  %}
+        
+        <div class="alert alert-success my-2" role="alert">
+            <span style="color: #013A6B;" class="fw-bold">Showing Search Results For : </span>
+                {% for item,val in query_str.items %}
+                    {% if val %}
+                        {% if forloop.last %}
+                            <span> {{item}} : {{val}}  </span>
+                        {% else %}
+                            <span> {{item}} : {{val}} | </span>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+    <div>
+    <div class="pagination col-12 my-2">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+    
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    <table class="table table-bordered col-12">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">CSC ID</th>
+            <th scope="col">State</th>
+            <th scope="col">District</th>
+            <th scope="col">Plan</th>
+            <th scope="col">Date of Joining</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+            {% for vle in object_list %}
+             <tr>
+                <td>{{forloop.counter}}</td>
+                <td> <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions" class="canvas" id="canvas_{{vle.id}}">
+                    {{vle.user.get_full_name | title}}
+                    </a>
+                </td>
+                <td>{{vle.csc.csc_id}}</td>
+                <td>{{vle.csc.state}}</td>
+                <td>{{vle.csc.district}}</td>
+                <td>{{vle.csc.plan}}</td>
+                <td>{{vle.user.date_joined}}</td>
+                
+              </tr>
+            {% endfor %}
+          
+          
+        </tbody>
+      </table>
+      <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title sm-header" id="offcanvasWithBothOptionsLabel" >VLE Details</h5>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="card">
+                <p class="card-header sm-header">Profile</p>
+                <div class="card-body">
+                    <div class="col-12">
+                        <p ><i class="far fa-user-circle c-icon"></i><span id="vle_name" class="d-inline-block" style="margin-left: 10px;"></span></p>
+                    </div>
+                    <div class="col-6">
+                        <p><i class="fas fa-phone-alt c-icon"></i><span id="vle_phone" class="d-inline-block" style="margin-left: 10px;"></span></p>
+                    </div>
+                    <div class="col-6">
+                        <p><i class="fas fa-envelope c-icon"></i><span id="vle_email" class="d-inline-block" style="margin-left: 10px;"></span></p>
+                    </div>
+                    <div class="col-12">
+                        <p><i class="fas fa-university c-icon"></i> CSC ID:<span id="csc_insti_id" class="d-inline-block" style="margin-left: 10px;"></span></p>
+                    </div>
+                    <div class="col-12">
+                        <p><i class="fas fa-map-marker-alt c-icon"></i><span id="csc_address" class="d-inline-block" style="margin-left: 10px;"></span></p>
+                    </div>
+                    <div class="col-12">
+                        <p>
+                            <span id="pr_district"></span>, <span id="pr_state"></span> - Pincode : <span id="pin"></span>
+                        </p>
+                    </div>
+                    <div class="col-12">
+                        <p>
+                            <i class="fas fa-users c-icon"></i><span class="d-inline-block" style="margin-left: 10px;">Total Students :</span> <span id="total_students"></span>
+                        </p>
+                    </div>
+                </div>
+              </div>
+          <div class="row">
+            <div class="col-12">
+                <div class="card mt-3">
+                    <p class="card-header sm-header">Students</p>
+                    <div class="card-body">
+                        <table id="tb_students" class="table table-bordered">
+                            <tr>
+                              <th>Name</th>
+                              <th>Email</th>
+                            </tr>
+                          </table>
+                    </div>
+                  </div>                  
+            </div>
+            <div class="col-12">
+                <div class="card mt-3">
+                    <p class="card-header sm-header">Student-Course</p>
+                    <div class="card-body">
+                        <table id="tb_courses" class="table table-bordered" >
+                            <tr>
+                              <th>Code</th>
+                              <th>Course Title</th>
+                              {% comment %} <th>Students</th> {% endcomment %}
+                            </tr>
+                          </table> 
+                    </div>
+                  </div>
+                                 
+            </div>
+            <div class="col-12">
+                <div class="card mt-3">
+                    <p class="card-header sm-header">Student-FOSS</p>
+                    <div class="card-body">
+                        <table id="tb_fosses" class="table table-bordered">
+                            <tr>
+                              <th>FOSS</th>
+                              {% comment %} <th>Students</th> {% endcomment %}
+                            </tr>
+                          </table>
+                    </div>
+                  </div>                  
+            </div>
+            <div class="col-12">
+                <div class="card mt-3">
+                    <p class="card-header sm-header">Student-FOSS (Individual FOSS Only)</p>
+                    <div class="card-body">
+                        <table id="indi_fosses" class="table table-bordered">
+                            <tr>
+                              <th>FOSS (Individual FOSS Only)</th>
+                              {% comment %} <th>Students</th> {% endcomment %}
+                            </tr>
+                          </table>  
+                    </div>
+                  </div>                
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+{% endblock content  %}
+
+{% block js_script %}
+    <script>
+        $(document).ready(function () {
+            
+        });
+        $( ".canvas" ).click(function(event) {
+            const vle_id = this.id.split("_")[1];
+            data = {vle_id : vle_id}
+            url = '/csc/stats/ajax_vle_detail/'
+            $.ajax({
+                url : url,
+                type: "GET",
+                data : data,
+                success: function(data, textStatus, jqXHR)
+                {
+                    console.log("Success in fetching vle details");
+                    
+                    document.getElementById("vle_name").innerHTML = data['name'];
+                    document.getElementById("vle_phone").innerHTML = data['phone'];
+                    document.getElementById("vle_email").innerHTML = data['email'];
+                    document.getElementById("csc_insti_id").innerHTML = data['csc_id'];
+                    document.getElementById("csc_address").innerHTML = data['address'];
+                    document.getElementById("pr_state").innerHTML = data['state'];
+                    document.getElementById("pr_district").innerHTML = data['district'];
+                    document.getElementById("pin").innerHTML = data['pin'];
+                    document.getElementById("total_students").innerHTML = data['total_students'];
+                    
+                    $("#tb_students tr").remove(); 
+                    var tb_students = document.getElementById("tb_students");
+                    console.log(data['students'])
+                    for(item of data['students']){
+                    
+                        let rowCount = tb_students.rows.length;
+                        var row = tb_students.insertRow(rowCount);
+                        var cell0 = row.insertCell(0);
+                        cell0.innerHTML = item['user__first_name']+ ' ' + item['user__last_name'];
+                        var cell1 = row.insertCell(1);
+                        cell1.innerHTML = item['user__email'];
+                        
+                    }
+                    $("#tb_courses tr").remove();
+                    var tb_courses = document.getElementById("tb_courses");
+                    for(item of data['courses']){
+                        
+                        let rowCount = tb_courses.rows.length;
+                        var row = tb_courses.insertRow(rowCount);
+                        var cell0 = row.insertCell(0);
+                        cell0.innerHTML = item['cert_category__code']
+                        var cell1 = row.insertCell(1);
+                        cell1.innerHTML = item['cert_category__title']
+                        
+                    }
+                    $("#tb_fosses tr").remove();
+                    var tb_fosses = document.getElementById("tb_fosses");
+                    for(item of data['fosses']){
+                    
+                        let rowCount = tb_fosses.rows.length;
+                        var row = tb_fosses.insertRow(rowCount);
+                        var cell0 = row.insertCell(0);
+                        cell0.innerHTML = item['csc_foss__foss']
+                        
+                    }
+                    $("#indi_fosses tr").remove();
+                    var tb_indi_fosses = document.getElementById("indi_fosses");
+                    console.log("data['indi_fosses']")
+                    console.log(data['indi_fosses'])
+                    if(data['indi_fosses'].length==0){
+                        console.log("zero");
+                        let rowCount = tb_indi_fosses.rows.length;
+                        var row = tb_indi_fosses.insertRow(rowCount);
+                        
+                        
+                    }else{
+                        console.log("non zero");
+                        for(item of data['indi_fosses']){
+                            console.log("for non zero");
+                            let rowCount = tb_indi_fosses.rows.length;
+                            var row = tb_indi_fosses.insertRow(rowCount);
+                            var cell0 = row.insertCell(0);
+                            cell0.innerHTML = item['csc_foss__foss']
+                            
+                        }
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    console.log("Error in fetching vle details");
+                }
+            });
+            
+            
+        });
+        
+    </script>
+{% endblock js_script %}
+

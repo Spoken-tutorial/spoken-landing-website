@@ -1,0 +1,310 @@
+
+{% extends "stats/stats_base.html" %}
+{% load static %}
+
+{% block custom_style %}
+<style>
+  #dashboard{
+    border-left: 5px solid orange;
+    color: #013A6B;
+    font-weight: bold;
+  }
+  h6{
+    color:#495057!important;
+  }
+  .count{
+    background: #ffffff!important;
+    border: 1px solid firebrick;
+  }
+  .pie{
+    width: 320px!important;
+    height: 320px!important;
+  }
+  .pie-wrapper{
+    background: #ffffff!important;
+  }
+  .sm-text{
+    font-size: 14px;
+
+  }
+  .accordion-button{
+    padding: 0.5rem 0.5rem;
+  }
+  .accordion-collapse{
+    height: 300px;
+    overflow: scroll;
+  }
+  .accordion-body{
+    padding: 0.25rem 0.25rem;
+  }
+  .white-bg{
+    background: #ffffff!important;
+  }
+ 
+</style>
+{% endblock  %}
+    {% block content  %}
+    <div class="row border rounded white-bg">
+      <div class=" col-md-3 col-sm-6  p-2 ">
+        <div class="border rounded p-3 count">
+          <p class="font-size-xs text-uppercase">Total VLE Registered</p>
+          <p class="fs-3">{{total_vles}}</p>
+        </div>
+      </div>
+      <div class=" col-md-3 col-sm-6 p-2 ">
+        <div class="border rounded p-3 count">
+          <p class="font-size-xs text-uppercase">Total Students Registered</p>
+          <p class="fs-3">{{total_students}}</p>
+        </div>
+          
+        </div>
+        <div class=" col-md-3 col-sm-6  p-2 ">
+          <div class="border rounded p-3 count">
+            <p class="font-size-xs text-uppercase">Total FOSS</p>
+          <p class="fs-3">{{total_foss}}</p>
+          </div>
+          
+        </div>
+        <div class=" col-md-3 col-sm-6  p-2 ">
+          <div class="border rounded p-3 count">
+            <p class="font-size-xs text-uppercase">Total Certificate Courses</p>
+          <p class="fs-3">{{total_certificate_course}}</p>
+          </div>
+        </div>
+    </div>
+    <div class="row">
+      <div class=" col p-2">
+        <div class="pie-wrapper row border rounded">
+          <div class="col-md-4">
+            <canvas id="student_gender" class="pie"></canvas>
+          </div>
+          <div class="col-md-4">
+            <canvas id="student_category" class="pie"></canvas>
+          </div>
+          <div class="col-md-4">
+            <canvas id="student_occupation" class="pie"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="row white-bg border">
+      <div class="col-md-12 pt-3">
+        <div class="accordion" id="accordionExample">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <span class="sm-text">Student-Certificate Course Distribution </span>
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="sm-text">#</th>
+                      <th scope="col" class="sm-text">Code</th>
+                      <th scope="col" class="sm-text">Title</th>
+                      <th scope="col" class="sm-text">Student Count</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in cert_count_tb %}
+                    <tr>
+                      <td class="sm-text">{{forloop.counter}}</td>
+                      <td class="sm-text">{{item.cert_category__code}}</td>
+                      <td class="sm-text">{{item.title}}</td>
+                      <td class="sm-text">{{item.count}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-9 p-3">
+          <canvas id="student_course" ></canvas>
+      </div>
+    </div>
+
+    <div class="row white-bg border mt-2">
+      <div class="col-md-12 pt-3">
+        <div class="accordion" id="accordionFoss">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFoss">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFoss" aria-expanded="true" aria-controls="collapseFoss">
+                Student-FOSS Distribution Table 
+              </button>
+            </h2>
+            <div id="collapseFoss" class="accordion-collapse collapse show" aria-labelledby="headingFoss" data-bs-parent="#accordionFoss">
+              <div class="accordion-body">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">FOSS</th>
+                      <th scope="col">Student Count</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in foss_count_tb %}
+                    <tr>
+                      <td>{{forloop.counter}}</td>
+                      <td>{{item.csc_foss__foss}}</td>
+                      <td>{{item.count}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 p-3">
+        <div class="row">
+          <div class="col-6">
+            <canvas id="student_foss_1" style="width: 100%;" class="border rounded p-2 my-2"></canvas>
+          </div>
+          <div class="col-6">
+            <canvas id="student_foss_2" style="width: 100%;" class="border rounded p-2 my-2"></canvas>
+          </div>
+          <div class="col-6">
+            <canvas id="student_foss_3" style="width: 100%;" class="border rounded p-2 my-2"></canvas>
+          </div>
+          <div class="col-6">
+            <canvas id="student_foss_4" style="width: 100%;" class="border rounded p-2 my-2"></canvas>
+          </div>
+          <div class="col-8">
+            <canvas id="student_foss_5" style="width: 100%;" class="border rounded p-2 my-2"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row white-bg border mt-2">
+      <div class="col-md-12 pt-3">
+        <div class="accordion" id="accordionIndiFoss">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFoss">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseIndiFoss" aria-expanded="true" aria-controls="collapseIndiFoss">
+                Student-FOSS Distribution Table (Individual FOSS ONLY)
+              </button>
+            </h2>
+            <div id="collapseIndiFoss" class="accordion-collapse collapse show" aria-labelledby="headingFoss" data-bs-parent="#accordionIndiFoss">
+              <div class="accordion-body">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">FOSS</th>
+                      <th scope="col">Student Count</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in student_indi_foss %}
+                    <tr>
+                      <td>{{forloop.counter}}</td>
+                      <td>{{item.csc_foss__foss}}</td>
+                      <td>{{item.count}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 p-3">
+        <div class="row">
+          <div class="col-6">
+            <canvas id="student_indi_foss_1" style="width: 100%;" class="border rounded p-2 my-2"></canvas>
+          </div>
+          <div class="col-6">
+            <canvas id="student_indi_foss_2" style="width: 100%;" class="border rounded p-2 my-2"></canvas>
+          </div>
+          <div class="col-6">
+            <canvas id="student_indi_foss_3" style="width: 100%;" class="border rounded p-2 my-2"></canvas>
+          </div>
+          <div class="col-6">
+            <canvas id="student_indi_foss_4" style="width: 100%;" class="border rounded p-2 my-2"></canvas>
+          </div>
+          <div class="col-8">
+            <canvas id="student_indi_foss_5" style="width: 100%;" class="border rounded p-2 my-2"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+      
+      
+        <div class="row white-bg border mt-2">
+          <div class="col-md-8">
+            <canvas id="csc_state" style="width: 100%;"></canvas>
+          </div>
+          <div class="col-md-4">
+            <div style="width: 100%;">
+              <div class="accordion" id="accordionState">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingState">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseState" aria-expanded="true" aria-controls="collapseFoss">
+                      CSC - State Distribution
+                    </button>
+                  </h2>
+                  <div id="collapseState" class="accordion-collapse collapse show" aria-labelledby="headingState" data-bs-parent="#accordionState">
+                    <div class="accordion-body">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">State</th>
+                            <th scope="col">CSC Count</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for item in csc_state %}
+                          <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{item.state}}</td>
+                            <td>{{item.count}}</td>
+                          
+                          </tr>
+                          {% endfor %}
+                          
+                          
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                
+               
+              </div>
+            </div>
+          </div>
+        </div>
+       
+        
+    
+  
+
+           
+      
+    
+    {% endblock content  %}
+
+    {% block js_script %}
+    <script type="text/javascript" src="{% static '/spoken/stats.js' %}"></script>
+    <script>
+      $( document ).ready(function() {
+        
+
+    });
+
+    </script>
+    {% endblock js_script %}
+

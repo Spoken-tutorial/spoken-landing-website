@@ -56,7 +56,13 @@
 			{% if request.user|has_group:"STUDENT" %}
 			<a class="dropdown-item" href="{% url 'student:student_dashboard' %}">STUDENT Dashboard</a>
 			{% endif %}
+
+			{% if request.user|has_group:"CSC-TEAM" %}
+			<a class="dropdown-item" href="{% url 'stats_dashboard' %}">STATISTICS</a>
+			{% endif %}
 			
+			<a class="dropdown-item" href="{% url 'change' %}">Change Password</a>
+
 			<a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
 		  </div>
 		  
