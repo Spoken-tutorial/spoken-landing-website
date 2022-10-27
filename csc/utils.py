@@ -1,3 +1,4 @@
+from django.db.models import OuterRef,Exists, Count
 from genericpath import exists
 from tokenize import group
 import datetime
@@ -99,3 +100,7 @@ def get_tenure_end_date(tdate):
     print(f"end_date ****** {str(end_date)}")
     return end_date
     
+def get_valid_students_for_test(vle,test):
+    foss = test.foss
+    students = Student.objects.filter(vle_id=vle.id,student_foss__csc_foss_id=foss.id).annotate(assigned=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test)))
+    return students

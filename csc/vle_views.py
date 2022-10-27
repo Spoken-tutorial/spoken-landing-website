@@ -43,7 +43,7 @@ from django.conf import settings
 import requests
 from .cron import add_vle,add_transaction
 from mdl.models import *
-from .models import OPEN_TEST, CLOSE_TEST
+from .models import OPEN_TEST
 from django.db.models import Count, Exists, OuterRef
 
 STUDENT_ENROLLED_FOR_TEST = 0
@@ -669,76 +669,80 @@ def test(request):
   return render(request,'csc/test.html',context)
   
 def test_assign(request):
+  print(f"1.1 assigned_students ************************ ")
   context = {}
   vle = VLE.objects.get(user=request.user)
-  tests = Test.objects.filter(vle=vle,status=OPEN_TEST)
+  students = [x['id'] for x in Student.objects.filter(vle_id=vle.id).values('id')]
+  valid_foss_for_tests = [x['csc_foss'] for x in Student_Foss.objects.filter(student_id__in=students).values('csc_foss').distinct()]
+  tests = Test.objects.filter(vle=vle,status=OPEN_TEST,foss_id__in=valid_foss_for_tests)
   context['tests'] = tests
-  
-  
+
   test = request.POST.get('test')
-  if test:
-    test = int(test)
+  print(f"1.2 test ************************ {test}")
+  if test and test!='0':
+    context['test'] = test
+    try:
+      test = tests.get(id=int(test))
+      context['test'] = test
+      foss = test.foss
+      # students = Student.objects.filter(vle_id=vle.id,student_foss__csc_foss_id=foss.id).annotate(assigned=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test)))
+      context['students'] = get_valid_students_for_test(vle,test)
+    except Exception as e:
+      print(e)
+  else:
+    return render(request,'csc/test_assign.html',context)
   
-  context['test'] = test
-  try:
-    # test = Test.objects.get(id=test)
-    test = tests.get(id=test)
-    print(f"\ntest ********************* {test}")
-    foss = test.foss
-    students = Student.objects.filter(vle_id=vle.id,student_foss__csc_foss_id=foss.id).annotate(assigned=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test)))
-    print(f"\n\n{str(students.query)}")
-    context['students'] = students
-  except Exception as e:
-    print(e)
-  if request.method == 'POST':
-    print(f"METHOD IS POST ******************************************")
-    print(f"foss ****************************************** {foss}")
-    
+  
+  if request.method == 'POST' and request.POST.get('action_type') == 'add_students':
     assigned_students = request.POST.getlist('students')
-    
+    print(f"1 assigned_students ************************ {assigned_students}")
     try:
       fossMdlCourse = CSCFossMdlCourses.objects.filter(foss=foss)[0] #ToDo Change
+      mdlcourse_id = fossMdlCourse.mdlcourse_id
+      mdlquiz_id = fossMdlCourse.mdlquiz_id
+      for email in assigned_students:
+        print(f"email ************************ {email}")
+        user = User.objects.get(Q(username=email) | Q(email=email))
+        student = Student.objects.get(user=user)
+        try:
+          mdluser=MdlUser.objects.get(email=email)
+          print(f"got MdlUser ************************ {email}")
+        except MdlUser.DoesNotExist:
+          mdluser = MdlUser.objects.create(username=email,firstname=user.first_name,lastname=user.last_name,email=email)
+          mdluser = MdlUser.objects.get(email=email)
+          print(f"created & got MdlUser ************************ {email}")
+        except MdlUser.MultipleObjectsReturned as e:
+          print(f"multiple MdlUser ************************ {email}")
+          mdluser=MdlUser.objects.filter(email=email)[0]
+          print(e)
+        try:
+          # ta = CSCTestAtttendance.objects.create(test=test,student=student,mdluser_firstname=user.first_name,mdluser_lastname=user.last_name,mdluser_id=mdluser.id,mdlcourse_id=mdlcourse_id,status=0,mdlquiz_id=mdlquiz_id)
+          ta = CSCTestAtttendance.objects.create(test=test,student=student,mdluser_id=mdluser.id,mdlcourse_id=mdlcourse_id,status=0,mdlquiz_id=mdlquiz_id)
+        except IntegrityError as e:
+          print(f"IntegrityError ************************ ")
+          print(e)
+        if request.POST.get('action_type') == 'add_students':
+          print(f"\n\naction type is add_students **************************** ")
+          nta = CSCTestAtttendance.objects.filter(test=test).exclude(student__user__email__in=assigned_students)
+          print(f"nta ************************ {nta}")
+          for item in nta:
+            item.delete()
+        else:
+          print(f"\n\n action type is NOT add_students **************************** ")
     except Exception as e:
-      print(f"Error while fetching FossMdlCourses : {e}")
-      messages.error(request,"No test assigned for the selected foss.")
+      print(f"****Error while fetching FossMdlCourses : {e}")
+      messages.error(request,"No test in moodle for the selected foss.Please contact support.")
       return render(request,'csc/test_assign.html',context)
-      
-    mdlcourse_id = fossMdlCourse.mdlcourse_id
-    mdlquiz_id = fossMdlCourse.mdlquiz_id
+    
+    
     mdlattempt_id=1
-    for email in assigned_students:
-      user = User.objects.get(Q(username=email) | Q(email=email))
-      student = Student.objects.get(user=user)
-      try:
-        mdluser=MdlUser.objects.get(email=email)
-        print(f"\n\nGot MdlUser  ********************* {mdluser}")
-      except MdlUser.DoesNotExist:
-        mdluser = MdlUser.objects.create(username=email,firstname=user.first_name,lastname=user.last_name,email=email)
-        mdluser = MdlUser.objects.get(email=email)
-        print(f"\n\nCreated MdlUser  ********************* {mdluser.id}")
-      except MdlUser.MultipleObjectsReturned as e:
-        print(f"\n1  ********************* ")
-        mdluser=MdlUser.objects.filter(email=email)[0]
-        print(f"\n\nMultiple returned  ********************* {mdluser}")
-        print(e)
+    
       
       #check for status : if student attempts test multiple times; multiple enteries will be created
-      print(f"\n2  ********************* ")
-      try:
-        print(f"\n3  ********************* ")
-        ta = CSCTestAtttendance.objects.create(test=test,student=student,mdluser_firstname=user.first_name,mdluser_lastname=user.last_name,mdluser_id=mdluser.id,mdlcourse_id=mdlcourse_id,status=0,mdlquiz_id=mdlquiz_id)
-      except IntegrityError as e:
-        print(f"\n4  ********************* ")
-        print(e)
+      
         
     # delete unchecked ones
-    if request.POST.get('action_type') == 'add_students':
-      print(f"\n\n action type is add_students **************************** ")
-      nta = CSCTestAtttendance.objects.filter(test=test).exclude(student__user__email__in=assigned_students)
-      for item in nta:
-        item.delete()
-    else:
-      print(f"\n\n action type is NOT add_students **************************** ")
+    
     # print(f"\n\nnta****************************{nta}")
     
           

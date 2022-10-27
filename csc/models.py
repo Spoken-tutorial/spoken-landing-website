@@ -18,7 +18,9 @@ PROGRAMME_TYPE_CHOICES = Choices(
     ('', ('-- None --')),('dca', ('DCA Programme')), ('individual', ('Individual Course'))
     )
 OPEN_TEST=0
-CLOSE_TEST=1
+TEST_ONGOING=2
+TEST_COMPLETED_BY_STUDENT=3
+TEST_CLOSED_BY_VLE=4
 
 class FossSuperCategory(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -275,8 +277,8 @@ class TestRequest(models.Model):
 class CSCTestAtttendance(models.Model):
     test = models.ForeignKey(Test, on_delete=models.PROTECT )
     student = models.ForeignKey(Student, on_delete=models.PROTECT )
-    mdluser_firstname = models.CharField(max_length = 100)
-    mdluser_lastname = models.CharField(max_length = 100)
+    # mdluser_firstname = models.CharField(max_length = 100)
+    # mdluser_lastname = models.CharField(max_length = 100)
     mdluser_id = models.PositiveIntegerField()
     mdlcourse_id = models.PositiveIntegerField(default=0)
     mdlquiz_id = models.PositiveIntegerField(default=0)

@@ -119,7 +119,11 @@ class TestForm(forms.ModelForm):
         super(TestForm, self).__init__(*args, **kwargs)
         a = type(FOSSVLEView.objects.filter(vle_id=vle.id))
         print(f"TYPE : FOSSVLEView.objects.filter(vle_id=vle.id) : {a }")
-        self.fields['foss'].queryset = FOSSVLEView.objects.filter(vle_id=vle.id).values('foss').distinct()
+        students = Student.objects.filter(vle_id=vle.id)
+        # self.fields['foss'].queryset = FOSSVLEView.objects.filter(vle_id=vle.id).values('foss').distinct()
+        fosses = Student_Foss.objects.filter(student_id__in=students).values('csc_foss').distinct()
+        self.fields['foss'].queryset = FossCategory.objects.filter(id__in=[x['csc_foss'] for x in fosses]).order_by('foss')
+        
         # q = set()
         # for item in FOSSVLEView.objects.filter(vle_id=vle.id):
         #     if item.foss not in q:

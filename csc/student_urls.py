@@ -16,6 +16,10 @@ urlpatterns = [
     path('apply_for_test/', apply_for_test, name="apply_for_test"),
     
     
+    path('download_certificate/', download_certificate, name="download_certificate"),
+    
+    
+    
    
     
 ]
