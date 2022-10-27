@@ -1,0 +1,86 @@
+{% extends 'csc_base.html'%}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+<style>
+.footer-wrapper {
+        display: none;
+}
+.tab-pane{
+    margin-top: 18px;
+}
+.form-group{
+    margin-top: 8px;
+    margin-top: 8px;
+}
+.f-sm{
+        font-size: .875rem;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <p class="sm-header">Invigilators</p>
+        <hr>
+        {% if messages %}
+                <ul class="messages" style="padding-left: 0!important;">
+                    {% for message in messages %}
+                    <li style="list-style: none;">
+                        <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">
+                            {{ message }}
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+        <div>
+            <table class="table table-bordered" id="tb_invi">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Edit</th>
+                    
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for item in invigilators %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{item.user.get_full_name}}</td>
+                        <td>{{item.user.email}}</td>
+                        <td>{{item.phone}}</td>
+                        <td><a href="{% url 'csc:update_invigilator' item.id %}"><i class="far fa-edit sb-icon"></i></a></td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function(){       
+      $('#tb_invi').DataTable(); 
+       
+    });
+
+   
+</script>
+{% endblock %}
+

@@ -5,7 +5,7 @@ from django.urls import reverse
 from re import template
 from django.contrib.auth.views import LoginView
 from django.views.generic import *
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from .utils import *
 from csc.models import *
 from spokenlogin.models import *
@@ -27,6 +27,7 @@ from django.views.generic.edit import CreateView
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.urls import reverse_lazy
 from django.forms.models import model_to_dict
+from django.shortcuts import render, redirect
 
 import logging
 
@@ -507,7 +508,7 @@ def verify_invigilator_email(request):
       data['status'] = NOT_USER
   return JsonResponse(data)
 
-@csrf_exempt
+# @csrf_exempt
 def add_invigilator(request):
   vle = VLE.objects.filter(user=request.user).first()
   try:
@@ -783,11 +784,11 @@ def invigilator(request):
   form_empty = InvigilatorForm()
   context['form_empty']=form_empty
   
-  if request.POST.get("delete"):
-    invi=request.POST.get("invi")
-    i=Invigilator.objects.get(id=invi)
-    i.delete()
-    return render(request,'csc/invigilator.html',context)
+  # if request.POST.get("delete"):
+  #   invi=request.POST.get("invi")
+  #   i=Invigilator.objects.get(id=invi)
+  #   i.delete()
+  #   return render(request,'csc/invigilator.html',context)
   
   form = InvigilatorForm()
   add = request.POST.get('add')
@@ -805,23 +806,48 @@ def invigilator(request):
     if add:
       form = InvigilatorForm(request.POST)
       if form.is_valid():
-        u=form.save(commit=False)
-        u.username = form.cleaned_data['email']
-        u.save()
+        email = form.cleaned_data['email']
         phone=form.cleaned_data['phone']
+        check_user = User.objects.filter(Q(email=email) | Q(username=email))
+        if check_user:
+          check_user_invi = Invigilator.objects.filter(user=check_user[0],vle=vle)
+          if check_user_invi:
+            messages.add_message(request,messages.ERROR,f'Invigilator with email {email} already exists in your account.No changes have been made.')
+            return render(request,'csc/invigilator.html',context)
+          else:
+            invi=Invigilator.objects.create(user=check_user[0],phone=phone,vle=vle)
+            messages.add_message(request,messages.INFO,f'User with email {email} already exists in the system & has been assigned to you as an invigilator.')
+            return render(request,'csc/invigilator.html',context)
+        
+        print(f"1 ************************************************* ")
+        u=form.save(commit=False)
+        print(f"2 ************************************************* ")
+        u.username = email
+        print(f"3 ************************************************* ")
+        
+        u.save()
+        
+        
+        print(f"4 ************************************************* ")
+        
+        print(f"5 ************************************************* ")
         invi=Invigilator.objects.create(user=u,phone=phone,vle=vle)
+        messages.add_message(request,messages.SUCCESS,f'Invigilator with email {email} is added.')
+        print(f"6 ************************************************* ")
     if edit:
       invi = request.POST.get('invi_id')
       invi_obj = Invigilator.objects.get(id=invi)
+      context['invi_id']=invi_obj.id
       i = model_to_dict(invi_obj.user)
       i['phone'] = invi_obj.phone
       form = InvigilatorForm(request.POST,instance=invi_obj.user)
       if form.is_valid():
         u=form.save(commit=False)
-        u.username = form.cleaned_data['email']
+        # u.username = form.cleaned_data['email']
         u.save()
         invi_obj.phone=form.cleaned_data['phone']
         invi_obj.save()
+        messages.add_message(request,messages.SUCCESS,f'Invigilator details updated successfully.')
       else:
         print(f"\n\n 11 errors*********************\n{form.errors}")      
   context['form'] = form
@@ -831,3 +857,110 @@ def invigilator(request):
     
     
   return render(request,'csc/invigilator.html',context)
+
+
+def create_invigilatordelete_invigilator(request):
+  data = {}
+  try:
+    
+    invi=request.GET.get("invi")
+    print(f"invi ************************ {invi}")
+    i=Invigilator.objects.get(id=invi)
+    print(f"i ************************ {i}")
+    email = i.user.email
+    i.delete()
+    messages.add_message(request,messages.SUCCESS,f'Invigilator {email} deleted successfully.')
+    data['status'] = 1
+  except:
+    data['status'] = 0
+  # return redirect('/csc/invigilator')
+  return JsonResponse(data)
+
+# invigilator views
+
+def create_invigilator(request):
+  context ={}
+  vle = VLE.objects.get(user=request.user)
+  form = InvigilatorForm(request.POST or None)
+  context['form'] = form
+  if form.is_valid():
+    email = form.cleaned_data['email']
+    first_name = form.cleaned_data['first_name']
+    last_name = form.cleaned_data['last_name']
+    phone = form.cleaned_data['phone']
+    try:
+      user = User.objects.get(email=email)
+      messages.add_message(request,messages.SUCCESS,f'User with this email {email} already exists & assigned to you as an Invigilator.')
+    except User.DoesNotExist:
+      user = User.objects.create(username=email,email=email,first_name=first_name,last_name=last_name)
+      messages.add_message(request,messages.SUCCESS,f'User email {email} is assigned to you as an Invigilator.')
+    except User.MultipleObjectsReturned:
+      user = User.objects.filter(email=email)[0]
+      messages.add_message(request,messages.SUCCESS,f'User with this email {email} already exists & assigned to you as an Invigilator.')
+    try:
+      Invigilator.objects.create(user=user,vle=vle,phone=phone)
+      print(f"1 ****************************** ")
+    except IntegrityError:
+      print(f"2 ****************************** ")
+      messages.add_message(request,messages.ERROR,f'User with this email {email} has already been assigned to you as an Invigilator.')
+      print(f"3 ****************************** ")
+    except Exception as e:
+      print(f"4 ****************************** ")
+  return render(request,'csc/create_invigilator.html',context)
+  
+def view_invigilators(request):
+  context = {}
+  vle = VLE.objects.get(user=request.user)
+  invigilators = Invigilator.objects.filter(vle=vle)
+  context['invigilators'] = invigilators
+  return render(request,'csc/list_invigilators.html',context)
+
+def update_invigilator(request,id):
+  context = {}
+  print(f"id ********************* {id}")
+  invi = get_object_or_404(Invigilator, id = id)
+  # form = InvigilatorForm(request.POST or None)
+  if request.method == 'GET':
+    data = {'phone': invi.phone, 'first_name': invi.user.first_name,'last_name': invi.user.last_name,'email': invi.user.email}
+    form = InvigilatorForm(initial=data)
+    form.fields['email'].disabled = True 
+    context['form']  = form
+  else:
+    
+    
+    form = InvigilatorForm(request.POST)
+    print(f"Form ****************************** {form}")
+    if form.is_valid():
+      print(f"1 Form is valid ****************************** ")
+      phone = form.cleaned_data['phone']
+      first_name = form.cleaned_data['first_name']
+      last_name = form.cleaned_data['last_name']
+      invi.phone = phone
+      invi.save()
+      print(f"2 Phone ****************************** {phone}")
+      user = invi.user
+      user.first_name = first_name
+      user.last_name = last_name
+      user.save()
+      print(f"3 first_name ****************************** {first_name}")
+      print(f"4 last_name ****************************** {last_name}")
+    else:
+      print(f"4 error ****************************** {form.non_field_errors}")
+    data = {'phone': invi.phone, 'first_name': invi.user.first_name,'last_name': invi.user.last_name,'email': invi.user.email}
+    form = InvigilatorForm(initial=data)
+    form.fields['email'].disabled = True 
+    context['form']  = form
+  return render(request,'csc/update_invigilator.html',context)
+
+def delete_invigilator(request, id):
+  context ={}
+  obj = get_object_or_404(Invigilator, id = id)
+  if request.method =="POST":
+    obj.delete()
+    return redirect('csc:view_invigilators')
+  return render(request, "delete_view.html", context)
+
+class InvigilatorDeleteView(DeleteView):
+  model = Invigilator
+  success_url ="/"
+  template_name = "csc/invigilator_confirm_delete.html"

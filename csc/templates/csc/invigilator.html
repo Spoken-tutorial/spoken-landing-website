@@ -22,6 +22,17 @@
 
 {% block content %}
 <div class="container py-2">
+  {% if messages %}
+        <ul class="messages" style="padding-left: 0!important;">
+            {% for message in messages %}
+            <li style="list-style: none;">
+                <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">
+                    {{ message }}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
           <button class="nav-link active" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">List / Edit Invigilator</button>
@@ -50,9 +61,12 @@
                 {% csrf_token %}
                   <div class="row">
                     {% for field in form %}
-                    <div class="col-3">
-                      {{field|as_crispy_field}}
-                    </div>
+                      {% if field.label != 'Email address'%}
+                      <div class="col-3">
+                        {{field|as_crispy_field}}
+                      </div>
+                      {% endif %}
+                    
                      {% endfor %}
                   </div>
                 <input type="hidden" value="edit" name="edit">
@@ -80,12 +94,13 @@
                             <td scope="row" class="f-sm">{{item.user.email}}</td>
                             <td scope="row" class="f-sm">{{item.phone}}</td>
                             <td>
-                                <form method="POST" id="myform">
+                                {% comment %} <form method="POST" id="myform"> {% endcomment %}
                                     {% csrf_token %}
                                     <input type="hidden" value="delete" name="delete">
                                     <input type="hidden" value="{{item.id}}" name="invi">
-                                    <button class="remove-btn" form="myform" type="submit" onclick="return confirm('Are you sure you want to rollback deletion of candidate table?')" ><i class="fas fa-trash-alt"></i></button>
-                                  </form>
+                                    {% comment %} <button class="remove-btn" form="myform" type="submit" onclick="return confirm('Are you sure you want to delete selected invigilator?')" ><i class="fas fa-trash-alt"></i></button> {% endcomment %}
+                                    <button class="remove-btn"   onclick="return confirm('Are you sure you want to delete selected invigilator?')" id="{{item.id}}"><i class="fas fa-trash-alt"></i></button>
+                                  {% comment %} </form> {% endcomment %}
                             </td>
                             
                           </tr>
@@ -119,6 +134,27 @@
        
     });
 
+    $( ".remove-btn" ).click(function() {
+      alert('delete');
+      data = {}
+      data['invi'] = this.id
+      alert(this.id);
+      url = '/csc/delete_invigilator/'
+      $.ajax({
+          url : url,
+          type: "GET",
+          data : data,
+          success: function(data, textStatus, jqXHR)
+          {
+            alert('success')
+            location.reload();
+          },
+          error: function (jqXHR, textStatus, errorThrown)
+          {
+              alert('error')
+          }
+      });
+    });
 
 
 

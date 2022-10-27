@@ -34,6 +34,14 @@ urlpatterns = [
     path('add_invigilator/', add_invigilator, name="add_invigilator"),
     path('review_invigilation_request/', review_invigilation_request, name="review_invigilation_request"),
     path('add_invigilator_to_test/', add_invigilator_to_test, name="add_invigilator_to_test"),
+    # path('delete_invigilator/', delete_invigilator, name="delete_invigilator"),
+    
+    path('create_invigilator/', create_invigilator, name="create_invigilator"),
+    path('view_invigilators/', view_invigilators, name="view_invigilators"),
+    path('invigilators/<int:id>/', update_invigilator, name="update_invigilator"),
+    path('invigilators/delete/<int:id>/', InvigilatorDeleteView.as_view(), name="delete_invigilator"),
+    
+    
     url(
       r'^get-foss-option/', 
       GetFossOptionView.as_view()

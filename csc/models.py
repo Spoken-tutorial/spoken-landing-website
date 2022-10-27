@@ -211,6 +211,9 @@ class Invigilator(models.Model):
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} - {self.user.email}"
 
+    class Meta:
+        unique_together = [['user', 'vle']]
+        
 class Test(models.Model):
     foss = models.ForeignKey(FossCategory,on_delete=models.CASCADE)
     # mdlfoss = models.ForeignKey(FossCategory,on_delete=models.CASCADE)

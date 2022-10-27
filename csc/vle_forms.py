@@ -4,6 +4,7 @@ from django import forms
 from csc.models import *
 from spokenlogin.models import *
 
+from .utils import get_all_foss_for_vle
 
 class FossForm(forms.Form):
 	programme_type = forms.ChoiceField(required=True, choices=PROGRAMME_TYPE_CHOICES)
@@ -54,17 +55,22 @@ class StudentForm(forms.ModelForm):
 		}
 
 
-class InvigilatorForm(forms.ModelForm):
-    phone = forms.CharField(max_length=15,required=False)
-    class Meta:
-        model = User
-        fields = ['first_name','last_name','email','phone']
+# class InvigilatorForm(forms.ModelForm):
+#     phone = forms.CharField(max_length=15,required=False)
+#     class Meta:
+#         model = User
+#         fields = ['first_name','last_name','email','phone']
 	# email = forms.EmailField()
 	# fname = forms.CharField(max_length=120,label='First Name')
 	# lname = forms.CharField(max_length=120,label='Last Name')
 	# phone = forms.CharField(max_length=32,label='Contact Number')
  
-	
+class InvigilatorForm(forms.Form):
+    email = forms.EmailField(max_length=200,required=False)
+    first_name = forms.CharField(max_length=200,required=False)
+    last_name = forms.CharField(max_length=200,required=False)
+    phone = forms.CharField(max_length=20,required=False)
+    
 
 class InvigilationRequestForm(forms.Form):
 	
@@ -87,13 +93,9 @@ class InvigilationRequestForm(forms.Form):
 
 
 class TestForm(forms.ModelForm):
-    # tdate = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-    # ttime = forms.TimeField(widget=forms.DateInput(attrs={'type': 'time'}))
-    
     class Meta:
         model = Test
         fields = ['foss','tdate','ttime','note_student','note_invigilator','invigilator','publish']
-        # fields = ['foss','tdate','ttime','note_student','note_invigilator','publish']
         widgets = {
 			'note_student' : forms.Textarea(attrs={'rows':2, 'cols':15}),
 			'note_invigilator' : forms.Textarea(attrs={'rows':2, 'cols':15}),
@@ -109,31 +111,12 @@ class TestForm(forms.ModelForm):
 		}
         help_texts = {
 			'tdate' : 'Format : DD/MM/YYYY',
-			
 		}
     
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
         vle = VLE.objects.get(user=user)
-        print(f"ADDING FOSS ******************************************** {kwargs}")
         super(TestForm, self).__init__(*args, **kwargs)
-        a = type(FOSSVLEView.objects.filter(vle_id=vle.id))
-        print(f"TYPE : FOSSVLEView.objects.filter(vle_id=vle.id) : {a }")
-        students = Student.objects.filter(vle_id=vle.id)
-        # self.fields['foss'].queryset = FOSSVLEView.objects.filter(vle_id=vle.id).values('foss').distinct()
-        fosses = Student_Foss.objects.filter(student_id__in=students).values('csc_foss').distinct()
-        self.fields['foss'].queryset = FossCategory.objects.filter(id__in=[x['csc_foss'] for x in fosses]).order_by('foss')
-        
-        # q = set()
-        # for item in FOSSVLEView.objects.filter(vle_id=vle.id):
-        #     if item.foss not in q:
-        #         q.
-        
-        print(f"ADDING FOSS ******************************************** ")
-        
-    
-    # def __init__(self, *args, **kwargs):
-    #     super(TestForm, self).__init__(*args, **kwargs)
-        # self.fields['foss'].queryset = FossCategory.objects.filter(available_for_jio=True)
-        # self.fields['foss'].queryset = FOSSVLEView.objects.filter(vle_id=self.user)
-        
+        r = get_all_foss_for_vle(vle)
+        print(f"r ************* {len(r)}")
+        self.fields['foss'].queryset = get_all_foss_for_vle(vle)

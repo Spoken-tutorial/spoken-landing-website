@@ -121,3 +121,8 @@ def get_valid_students_for_test(vle,test):
     foss = test.foss
     students = Student.objects.filter(vle_id=vle.id,student_foss__csc_foss_id=foss.id).annotate(assigned=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test)))
     return students
+
+def get_all_foss_for_vle(vle):
+    students = Student.objects.filter(vle_id=vle.id)
+    fosses = Student_Foss.objects.filter(student_id__in=students).values('csc_foss').distinct()
+    return FossCategory.objects.filter(id__in=[x['csc_foss'] for x in fosses]).order_by('foss')
