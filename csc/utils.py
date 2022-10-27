@@ -24,7 +24,7 @@ def get_upcoming_test_stats():
     for test in tests:
         approved = StudentTest.objects.filter(test=test,status=APPROVED).count()
         rejected = StudentTest.objects.filter(test=test,status=REJECTED).count()
-        key = test.test_name if test.test_name else test.foss.foss
+        key = test.foss.foss
         d[key] = {'approved' : approved, 'rejected' : rejected,'date': test.tdate, 'time': test.ttime, 'id':test.id }
     return d
 

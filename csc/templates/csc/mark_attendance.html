@@ -50,12 +50,14 @@
                           <div class="card-text d-flex my-3">
                             <p class="me-5"><button class="btn btn-sm " id="btn_select_all" style="background-color: #90B77D">Select all </button></p>
                             <p class="me-5"><button class="btn btn-sm " id="btn_deselect_all"  style="background-color: #F29393">Deselect all </button></p>
-                            <p class="me-5"><button class="btn btn-sm btn-success" id="btn_mark_attendance">Mark attendance</button></p>
+                            <p class="me-5"><button class="btn btn-sm btn-success" id="btn_mark_attendance1" type="submit" form="mark_atten">Mark attendance</button></p>
                             <!-- <p>Total Students selected : <span id="students_selected"></span></p> -->
                           </div>
                         </div>
                       </div>
                 </div>
+                <form method='POST' id='mark_atten'>
+                    {% csrf_token %}
                 <table class="table table-bordered mt-5" id="tb_students">
                     <thead>
                       <tr>
@@ -69,21 +71,25 @@
                     </thead>
                     <tbody>
                      
-                      {% for item in students %}
+                      {% for student,status in students %}
                       
                         <tr >
                            
                             <td>{{forloop.counter}}</th>
-                            <td>{{item.student.user.get_full_name | title}}</td>
-                            <td>{{item.student.user.email}}</td>
-                            <td>{{item.student.phone}}</td>
+                            <td>{{student.user.get_full_name | title}}</td>
+                            <td>{{student.user.email}}</td>
+                            <td>{{student.phone}}</td>
                             <td> 
                                 <div class="form-check">
-                                    {% if item.test_status %}
+                                    
+                                        <input class="form-check-input att" type="checkbox" value="{{student.id}}" id="check_{{item.id}}" name="student_attendance" {% if status != 0 %}checked{% endif %}>
+                                    
+                                    
+                                    {% comment %} {% if item.test_status %}
                                     <input class="form-check-input att" type="checkbox" value="{{item.id}}" id="check_{{item.id}}" checked>                               
                                     {% else %}
                                     <input class="form-check-input att" type="checkbox" value="{{item.id}}" id="check_{{item.id}}" >                               
-                                    {% endif %}
+                                    {% endif %} {% endcomment %}
                                 </div>
                             </td>
                         
@@ -95,6 +101,7 @@
                       
                     </tbody>
                   </table>
+                </form>
             </div>
         </div>
         

@@ -54,11 +54,16 @@ class StudentForm(forms.ModelForm):
 		}
 
 
-class InvigilatorForm(forms.Form):
-	email = forms.EmailField()
-	fname = forms.CharField(max_length=120,label='First Name')
-	lname = forms.CharField(max_length=120,label='Last Name')
-	phone = forms.CharField(max_length=32,label='Contact Number')
+class InvigilatorForm(forms.ModelForm):
+    phone = forms.CharField(max_length=15,required=False)
+    class Meta:
+        model = User
+        fields = ['first_name','last_name','email','phone']
+	# email = forms.EmailField()
+	# fname = forms.CharField(max_length=120,label='First Name')
+	# lname = forms.CharField(max_length=120,label='Last Name')
+	# phone = forms.CharField(max_length=32,label='Contact Number')
+ 
 	
 
 class InvigilationRequestForm(forms.Form):
@@ -81,4 +86,50 @@ class InvigilationRequestForm(forms.Form):
 		self.fields['invigilators'].initial = l
 
 
-
+class TestForm(forms.ModelForm):
+    # tdate = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    # ttime = forms.TimeField(widget=forms.DateInput(attrs={'type': 'time'}))
+    
+    class Meta:
+        model = Test
+        fields = ['foss','tdate','ttime','note_student','note_invigilator','invigilator','publish']
+        # fields = ['foss','tdate','ttime','note_student','note_invigilator','publish']
+        widgets = {
+			'note_student' : forms.Textarea(attrs={'rows':2, 'cols':15}),
+			'note_invigilator' : forms.Textarea(attrs={'rows':2, 'cols':15}),
+   			'tdate' : forms.DateInput(attrs={'type': 'date'}),
+			'ttime' : forms.DateInput(attrs={'type': 'time'},format='%H:%M')
+		}
+        labels = {
+			'tdate' : 'Test Date',
+			'ttime' : 'Test Time',
+   			'note_student' : 'Note for student',
+			'note_invigilator' : 'Note for invigilator',
+			'invigilator' : 'Invigilators'
+		}
+        help_texts = {
+			'tdate' : 'Format : DD/MM/YYYY',
+			
+		}
+    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        vle = VLE.objects.get(user=user)
+        print(f"ADDING FOSS ******************************************** {kwargs}")
+        super(TestForm, self).__init__(*args, **kwargs)
+        a = type(FOSSVLEView.objects.filter(vle_id=vle.id))
+        print(f"TYPE : FOSSVLEView.objects.filter(vle_id=vle.id) : {a }")
+        self.fields['foss'].queryset = FOSSVLEView.objects.filter(vle_id=vle.id).values('foss').distinct()
+        # q = set()
+        # for item in FOSSVLEView.objects.filter(vle_id=vle.id):
+        #     if item.foss not in q:
+        #         q.
+        
+        print(f"ADDING FOSS ******************************************** ")
+        
+    
+    # def __init__(self, *args, **kwargs):
+    #     super(TestForm, self).__init__(*args, **kwargs)
+        # self.fields['foss'].queryset = FossCategory.objects.filter(available_for_jio=True)
+        # self.fields['foss'].queryset = FOSSVLEView.objects.filter(vle_id=self.user)
+        

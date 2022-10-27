@@ -36,11 +36,9 @@
                       <tbody>
                         {% for item in pending %}
                         <tr>
-                          <td>{% if item.test.test_name %}
-                            <span>{{item.test.test_name | title}}</span>
-                            {% else %}
+                          <td>
                             <span>{{item.test.foss | title}} Test</span>
-                            {% endif %}</td>
+                          </td>
                             
                             <td>{{ item.test.tdate }},{{ item.test.ttime }}</td>
                             <td>{{ item.test.vle }}</td>
@@ -69,11 +67,9 @@
                     <tbody>
                       {% for item in accepted %}
                       <tr>
-                        <td>{% if item.test.test_name %}
-                          <span>{{item.test.test_name | title}}</span>
-                          {% else %}
+                        <td>
                           <span>{{item.test.foss | title}} Test</span>
-                          {% endif %}</td>
+                          </td>
                           <td>{{ item.test.tdate }},{{ item.test.ttime }}</td>
                           <td>{{ item.test.vle }}</td>
                           <td>{{ item.test.vle.csc }}</td>
@@ -100,11 +96,9 @@
                     <tbody>
                       {% for item in rejected %}
                       <tr>
-                        <td>{% if item.test.test_name %}
-                          <span>{{item.test.test_name | title}}</span>
-                          {% else %}
+                        <td>
                           <span>{{item.test.foss | title}} Test</span>
-                          {% endif %}</td>
+                        </td>
                           <td>{{ item.test.tdate }},{{ item.test.ttime }}</td>
                           <td>{{ item.test.vle }}</td>
                           <td>{{ item.test.vle.csc }}</td>

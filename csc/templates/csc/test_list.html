@@ -1,276 +1,93 @@
 {% extends 'csc_base.html'%}
+{% load static %}
 {% load csc_tags %}
 {% block css %}
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
-<style>
-    .fa-check-circle{
-        color: green;
-    }
-    .fa-times-circle,.fa-trash-alt{
-        color: maroon;
-    }
-    #example_length, #example_paginate{
-        display: none;
-    }
-    .fa-edit{
-        color: midnightblue;
-    }
-</style>
+<link rel="stylesheet" type="text/css" href="{% static '/spoken/utility.css' %}">
+<style></style>
 {% endblock css %}
 
 {% block content %}
 <div>
     <div class="container">
-
-        <nav>
-            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-              <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Home</button>
-              <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Test Requests</button>
-              <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</button>
-            </div>
-          </nav>
-          <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active py-3" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                <div>
-                    <!-- <button type="button" class="btn btn-success">Create Test </button> -->
-                    <a class="btn btn-success" href="{% url 'csc:add_test' %}" role="button">Create Test</a>
-                </div>
-                <table class="table my-5" id="example">
+      <div>
+        <table class="table my-5 table-bordered" id="example">
                     
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th scope="col">FOSS</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Time</th>
-                                <th scope="col">Published</th>
-                                <th scope="col">Delete</th>
-                                <th scope="col">Edit</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for test in tests %}
-                            <tr>
-                                <td>
-                                    {% if test.test_name %}
-                                    <span>{{test.test_name | title}}</span>
-                                    {% else %}
-                                    <span>{{test.foss | title}} Test</span>
-                                    {% endif %}
-                                </td>
-                                <td>{{test.foss | title }}</td>
-                                <td>{{test.tdate}}</td>
-                                <td>{{test.ttime}}</td>
-                                <td>
-                                    {% if test.publish %}
-                                        <i class="far fa-check-circle"></i>
-                                    {% else %}    
-                                    <i class="far fa-times-circle"></i>
-                                    {% endif %}
-                                </td> 
-                                <td><a href="{% url 'csc:delete_test' test.id %}"><i class="far fa-trash-alt"></i></a></td>
-                                <td><a href="{% url 'csc:update_test' test.id %}"><i class="far fa-edit"></i></a></td>
-                                <td>{% if test.tdate|is_today %}
-                                    <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button> -->
+          <thead>
+              <tr>
+                  <th>Test</th>
+                  <th scope="col">FOSS</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Time</th>
+                  <th scope="col">Published</th>
+                  <th scope="col">Delete</th>
+                  <th scope="col">Edit</th>
+                  <th scope="col">Mark attendance</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for test in tests %}
+              <tr>
+                  <td>
+                      {% if test.test_name %}
+                      <span>{{test.test_name | title}}</span>
+                      {% else %}
+                      <span>{{test.foss | title}} Test</span>
+                      {% endif %}
+                  </td>
+                  <td>{{test.foss | title }}</td>
+                  <td>{{test.tdate}}</td>
+                  <td>{{test.ttime}}</td>
+                  <td>
+                      {% if test.publish %}
+                          <i class="far fa-check-circle"></i>
+                      {% else %}    
+                      <i class="far fa-times-circle"></i>
+                      {% endif %}
+                  </td> 
+                  <td><a href="{% url 'csc:delete_test' test.id %}"><i class="far fa-trash-alt"></i></a></td>
+                  <td><a href="{% url 'csc:update_test' test.id %}"><i class="far fa-edit"></i></a></td>
+                  <td>{% if test.tdate|is_today %}
+                      <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button> -->
 
-                                    <!-- <button class="btn btn-sm btn-warning attendance" id="att_{{test.id}}"></button> -->
-                                    <a href="{% url 'csc:mark_attendance' test.id %}" class="btn btn-sm btn-warning">attendance</a>
-                                    
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                </table>
-               
-            </div>
-            <div class="tab-pane fade py-3" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                <table class="table table-bordered" id="test_req">
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">email</th>
-                        <th scope="col">contact</th>
-                        <th scope="col">Course</th>
-                        <th scope="col">Raised on</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                     
-                      {% for item in test_req %}
-                      <tr>
-                        <td>{{forloop.counter}}</th>
-                        <td>{{item.student.user.get_full_name}}</td>
-                        <td>{{item.student.user.email}}</td>
-                        <td>{{item.student.phone}}</td>
-                        <td>{{item.foss.foss}}</td>
-                        <td>{{item.created}}</td>
-                      
-                     </tr>
-                      {% endfor %}
-                      
-                      
-                    </tbody>
-                  </table>
-            </div>
-            <div class="tab-pane fade py-3 table-bordered" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
-                <table class="table" id="tb-attendance">
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                      </tr>
-                     
-                    </tbody>
-                  </table>
-            </div>
-          </div>
+                      <!-- <button class="btn btn-sm btn-warning attendance" id="att_{{test.id}}"></button> -->
+                      <a href="{% url 'csc:mark_attendance' test.id %}" class="btn btn-sm btn-warning">attendance</a>
+                      {% else %}
+                      <span>NA</span>
+                      {% endif %}
+                  </td>
+              </tr>
+              {% endfor %}
+          </tbody>
+  </table>
+      </div>
         
     </div>
     <div>
-        {% if is_paginated %}
-        {% include "_pagination.html" %}
-    {% endif %}
+    
     </div>
     
     
 </div>
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-    <div class="offcanvas-header">
-      <h5 id="offcanvasRightLabel">Offcanvas right</h5>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <table class="table" id="tb_students">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-              </tr>
-              
-            </tbody>
-          </table>
-    </div>
-  </div>
+
 {% endblock %}
 
 {% block script %}
 
 
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+{% comment %} <script src="https://code.jquery.com/jquery-3.5.1.js"></script> {% endcomment %}
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
 
 <script>
     $(document).ready(function () {
-        $('#test_req').DataTable(); 
-        $('#tb-attendance').DataTable({
-            "pageLength": 200
-        }); 
-
-        $( ".attendance" ).click(function() {
-            alert( "Handler for attendance called." );
-            var test_id = this.id;
-            test_id = test_id.split('_')[1]
-            console.log(test_id);
-            data = {test_id : test_id}
-            url = '/csc/get_test_students/'
-            $.ajax({
-                url : url,
-                type: "POST",
-                data : data,
-                success: function(data, textStatus, jqXHR)
-                {
-                    alert('s');
-                    console.log(data);
-                   
-                    
-                },
-                error: function (jqXHR, textStatus, errorThrown)
-                {
-                    alert('e')
-                }
-            });
-
-            var myOffcanvas = document.getElementById('offcanvasRight');
-            var bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas);
-
-
-            bsOffcanvas.show();
-
-            // tb_students
-        });
-
         
+        $('#example').DataTable({
+            {% comment %} "pageLength": 200 {% endcomment %}
+        }); 
 });
 
-
-
-function assign_foss(){      
-    var checkStudent = [];
-    var checkFoss = [];
-    $('input[name=check_student]').each(function () {
-    if(this.checked){
-        console.log(this);
-        checkStudent.push(this.value);
-    }     
-    });
-    if(checkStudent.length==0){
-        alert("Please select students to assign FOSS");
-    }else{
-        $('input[name=check_foss]').each(function () {
-        if(this.checked){
-        console.log(this);
-        checkFoss.push(this.value);
-    }     
-    });
-    if(checkFoss.length==0){
-        alert("Please select FOSS");
-    }else{
-        data = {student:checkStudent,foss:checkFoss}
-    url = '/csc/assign_foss/'
-
-    $.ajax({
-    url : url,
-    type: "POST",
-    data : data,
-    success: function(data, textStatus, jqXHR)
-    {
-        console.log(data);
-        console.log(data['foss']);
-        console.log(data);
-        alert('FOSS assigned successfully.\nFOSS assigned :' + data['foss'] +'\nTotal Students : '+ data['student_count'])
-    },
-    error: function (jqXHR, textStatus, errorThrown)
-    {
-        alert('e')
-    }
-});
-    }  
-}
-}
   </script>
 {% endblock %}
 

@@ -1,3 +1,4 @@
+
 from django.db import IntegrityError
 from django.template import context
 from django.urls import reverse
@@ -25,6 +26,7 @@ from .decorators import is_vle
 from django.views.generic.edit import CreateView
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.urls import reverse_lazy
+from django.forms.models import model_to_dict
 
 import logging
 
@@ -40,6 +42,12 @@ from datetime import timedelta
 from django.conf import settings
 import requests
 from .cron import add_vle,add_transaction
+from mdl.models import *
+from .models import OPEN_TEST, CLOSE_TEST
+from django.db.models import Count, Exists, OuterRef
+
+STUDENT_ENROLLED_FOR_TEST = 0
+ATTENDANCE_MARKED = 1
 
 class JSONResponseMixin(object):
   """
@@ -95,6 +103,7 @@ def vle_dashboard(request):
     context['total_certificates_issued'] = StudentTest.objects.filter(status=4).count() #ToDo check condition
     
     # context['fosses_perc'] = get_foss_enroll_percent(vle)
+    # context['popular_indi_foss'] = Student_Foss.objects.filter(cert_category__code='INDI').annotate(count=Count())
     return render(request, 'csc/vle.html', context)
    
 @login_required
@@ -331,7 +340,8 @@ class TestListView(ListView):
 class TestCreateView(CreateView):
   model = Test
   template_name = 'csc/test_form.html'
-  fields = ['test_name','foss','tdate','ttime','note_student','note_invigilator','publish']
+  # fields = ['test_name','foss','tdate','ttime','note_student','note_invigilator','publish']
+  fields = ['foss','tdate','ttime','note_student','note_invigilator','publish']
   success_url = reverse_lazy('csc:list_test')
 
   def get_form(self, *args, **kwargs):
@@ -387,7 +397,8 @@ class TestUpdateView(UpdateView):
   model = Test
   template_name = 'csc/test_update_form.html'
   context_object_name = 'test'
-  fields = ('test_name','foss', 'tdate', 'ttime', 'note_student', 'note_invigilator', 'publish' )
+  # fields = ('test_name','foss', 'tdate', 'ttime', 'note_student', 'note_invigilator', 'publish' )
+  fields = ('foss', 'tdate', 'ttime', 'note_student', 'note_invigilator', 'publish' )
   
 
   def get_success_url(self):
@@ -565,7 +576,10 @@ def mark_attendance(request,id):
  
   test = Test.objects.get(id=id)
   # st = [x.student for x in StudentTest.objects.filter(test=test)]
-  st = StudentTest.objects.filter(test=test)
+  print("\n\n")
+  print(f"1********************************")
+  st = [(x.student,x.status) for x in CSCTestAtttendance.objects.filter(test=test)]
+  print(f"2********************************")
   context['test'] = test
   context['students'] = st
   total_enrolled = len(st)
@@ -575,6 +589,23 @@ def mark_attendance(request,id):
   context['attending'] = attending
   context['pending'] = pending
   
+  if request.method == 'POST':
+    print(f"3********************************")
+    student_attendance = request.POST.getlist('student_attendance')
+    print(f"student_attendance\n\n ************************ {student_attendance}")
+    #present
+    CSCTestAtttendance.objects.filter(test=test,student_id__in=student_attendance).update(status=1)
+    #absent
+    CSCTestAtttendance.objects.exclude(test=test,student_id__in=student_attendance).update(status=0)
+    st = [(x.student,x.status) for x in CSCTestAtttendance.objects.filter(test=test)]
+    context['students'] = st
+  
+  total_enrolled = CSCTestAtttendance.objects.filter(test=test).count()
+  pending = CSCTestAtttendance.objects.filter(test=test,status=STUDENT_ENROLLED_FOR_TEST).count()
+  attendance_marked = total_enrolled - pending
+  context['total_enrolled'] = total_enrolled
+  context['attending'] = attendance_marked
+  context['pending'] = pending
   return render(request,'csc/mark_attendance.html',context)
 
 @csrf_exempt
@@ -617,3 +648,182 @@ def check_vle_email(request):
     data['status'] = 2
     
   return JsonResponse(data)
+
+
+
+# Test related views start
+def test(request):
+  context = {}
+  form = TestForm(user=request.user)
+  if request.method == 'POST':
+    form = TestForm(request.POST,user=request.user)
+    if form.is_valid():
+      test_data=form.save(commit=False) 
+      vle = VLE.objects.filter(user=request.user)[0]
+      test_data.vle = vle
+      test_data.save()
+      form.save_m2m() 
+      messages.success(request,"Test added successfully.")
+  context['form'] = form
+  
+  return render(request,'csc/test.html',context)
+  
+def test_assign(request):
+  context = {}
+  vle = VLE.objects.get(user=request.user)
+  tests = Test.objects.filter(vle=vle,status=OPEN_TEST)
+  context['tests'] = tests
+  
+  
+  test = request.POST.get('test')
+  if test:
+    test = int(test)
+  
+  context['test'] = test
+  try:
+    # test = Test.objects.get(id=test)
+    test = tests.get(id=test)
+    print(f"\ntest ********************* {test}")
+    foss = test.foss
+    students = Student.objects.filter(vle_id=vle.id,student_foss__csc_foss_id=foss.id).annotate(assigned=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test)))
+    print(f"\n\n{str(students.query)}")
+    context['students'] = students
+  except Exception as e:
+    print(e)
+  if request.method == 'POST':
+    print(f"METHOD IS POST ******************************************")
+    print(f"foss ****************************************** {foss}")
+    
+    assigned_students = request.POST.getlist('students')
+    
+    try:
+      fossMdlCourse = CSCFossMdlCourses.objects.filter(foss=foss)[0] #ToDo Change
+    except Exception as e:
+      print(f"Error while fetching FossMdlCourses : {e}")
+      messages.error(request,"No test assigned for the selected foss.")
+      return render(request,'csc/test_assign.html',context)
+      
+    mdlcourse_id = fossMdlCourse.mdlcourse_id
+    mdlquiz_id = fossMdlCourse.mdlquiz_id
+    mdlattempt_id=1
+    for email in assigned_students:
+      user = User.objects.get(Q(username=email) | Q(email=email))
+      student = Student.objects.get(user=user)
+      try:
+        mdluser=MdlUser.objects.get(email=email)
+        print(f"\n\nGot MdlUser  ********************* {mdluser}")
+      except MdlUser.DoesNotExist:
+        mdluser = MdlUser.objects.create(username=email,firstname=user.first_name,lastname=user.last_name,email=email)
+        mdluser = MdlUser.objects.get(email=email)
+        print(f"\n\nCreated MdlUser  ********************* {mdluser.id}")
+      except MdlUser.MultipleObjectsReturned as e:
+        print(f"\n1  ********************* ")
+        mdluser=MdlUser.objects.filter(email=email)[0]
+        print(f"\n\nMultiple returned  ********************* {mdluser}")
+        print(e)
+      
+      #check for status : if student attempts test multiple times; multiple enteries will be created
+      print(f"\n2  ********************* ")
+      try:
+        print(f"\n3  ********************* ")
+        ta = CSCTestAtttendance.objects.create(test=test,student=student,mdluser_firstname=user.first_name,mdluser_lastname=user.last_name,mdluser_id=mdluser.id,mdlcourse_id=mdlcourse_id,status=0,mdlquiz_id=mdlquiz_id)
+      except IntegrityError as e:
+        print(f"\n4  ********************* ")
+        print(e)
+        
+    # delete unchecked ones
+    if request.POST.get('action_type') == 'add_students':
+      print(f"\n\n action type is add_students **************************** ")
+      nta = CSCTestAtttendance.objects.filter(test=test).exclude(student__user__email__in=assigned_students)
+      for item in nta:
+        item.delete()
+    else:
+      print(f"\n\n action type is NOT add_students **************************** ")
+    # print(f"\n\nnta****************************{nta}")
+    
+          
+    
+  return render(request,'csc/test_assign.html',context)
+
+
+def test_list(request):
+  context = {}
+  vle = VLE.objects.get(user=request.user)
+  tests = Test.objects.filter(vle=vle)
+  context['tests'] = tests
+  return render(request,'csc/test_list.html',context)
+
+def update_test(request,pk):
+  context = {}
+  if request.method == 'GET':
+    test = Test.objects.filter(id=pk)[0]
+    d = model_to_dict(test)
+    form = TestForm(initial=model_to_dict(test),user=request.user)
+    
+    
+  if request.method == 'POST':
+    t = Test.objects.get(id=pk)
+    form = TestForm(request.POST,instance=t,user=request.user)
+    if form.is_valid():
+      form.save()
+  
+  context['form'] = form
+  
+  return render(request,'csc/update_test.html',context)
+
+def invigilator(request):
+  context = {}
+  vle = VLE.objects.get(user=request.user)
+  invigilators = Invigilator.objects.filter(vle=vle)
+  context['invigilators']=invigilators
+  form_empty = InvigilatorForm()
+  context['form_empty']=form_empty
+  
+  if request.POST.get("delete"):
+    invi=request.POST.get("invi")
+    i=Invigilator.objects.get(id=invi)
+    i.delete()
+    return render(request,'csc/invigilator.html',context)
+  
+  form = InvigilatorForm()
+  add = request.POST.get('add')
+  edit = request.POST.get('edit')
+  
+  if request.method == 'GET':
+    if request.GET.get('invi'):
+      invi = request.GET.get('invi')
+      invi_obj = Invigilator.objects.get(id=invi)
+      i = model_to_dict(invi_obj.user)
+      i['phone'] = invi_obj.phone
+      form = InvigilatorForm(initial=i)
+      context['invi_id']=invi_obj.id
+  if request.method == 'POST':
+    if add:
+      form = InvigilatorForm(request.POST)
+      if form.is_valid():
+        u=form.save(commit=False)
+        u.username = form.cleaned_data['email']
+        u.save()
+        phone=form.cleaned_data['phone']
+        invi=Invigilator.objects.create(user=u,phone=phone,vle=vle)
+    if edit:
+      invi = request.POST.get('invi_id')
+      invi_obj = Invigilator.objects.get(id=invi)
+      i = model_to_dict(invi_obj.user)
+      i['phone'] = invi_obj.phone
+      form = InvigilatorForm(request.POST,instance=invi_obj.user)
+      if form.is_valid():
+        u=form.save(commit=False)
+        u.username = form.cleaned_data['email']
+        u.save()
+        invi_obj.phone=form.cleaned_data['phone']
+        invi_obj.save()
+      else:
+        print(f"\n\n 11 errors*********************\n{form.errors}")      
+  context['form'] = form
+  context['invigilator'] = form
+  
+  
+    
+    
+  return render(request,'csc/invigilator.html',context)
