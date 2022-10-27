@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from .decorators import is_student
 from django.db.models import Q
 from .models import OPEN_TEST, TEST_ONGOING,TEST_COMPLETED_BY_STUDENT
+from django.conf import settings
 
 TEST_WAITING_PERIOD = 10
 def student_tests(request):
@@ -59,17 +60,22 @@ def student_dashboard(request):
     student = Student.objects.get(user=request.user)
     sf = Student_Foss.objects.filter(student=student)
     courses = [x.cert_category for x in sf]
+
     indi = CertifiateCategories.objects.get(code='INDI')
-    fosses = [x.csc_foss.foss for x in Student_Foss.objects.filter(student=student,cert_category__code='INDI').order_by('csc_foss__foss')]
+    indi_fosses = [x.csc_foss.foss for x in Student_Foss.objects.filter(student=student,cert_category__code='INDI').order_by('csc_foss__foss')]
+    
     d = {}
     for course in courses:
-        d[course] = [x.foss.foss for x in CategoryCourses.objects.filter(certificate_category=course)]
+        d[course] = [x.foss for x in CategoryCourses.objects.filter(certificate_category=course)]
     try:
         d.pop(indi)
     except:
         pass
+
+    context['student'] = student
+    context['CSC_ONLINE_TEST_URL'] = settings.CSC_ONLINE_TEST_URL
     context['courses'] = d
-    context['fosses'] = fosses
+    context['fosses'] = indi_fosses
     context['vle'] = student.vle_id.all()[0]
     
     return render(request,'csc/student_dashboard.html',context)
