@@ -13,18 +13,20 @@ from django.db import IntegrityError
 from csc.utils import is_user_vle, is_user_student
 from django.template.loader import render_to_string
 def send_pwd_mail(u):
+    print(u.username)
     pwd = ''.join(random.choices(string.ascii_letters,k=10))
-    
+    print(pwd)
     u.set_password(pwd)
     u.save()
     
     from_email = getattr(settings, "NO_REPLY_MAIL", "no-reply@spoken-tutorial.org")
+    print(from_email)
     subject = "Login credentials for Spoken Tutorial - CSC"
     if is_user_student(u):
         message = f"""
             Dear {u.get_full_name()},
             Thank you for registering under Spoken Tutorial(IIT Bombay) courses.
-            Below are the login details for Spoken Tutorial Dashboard 
+            Below are the login details for Spoken Tutorial Dashboard. 
             Link to Login: https://spoken-tutorial.in/login/
 
             username : {u.username}
@@ -34,7 +36,9 @@ def send_pwd_mail(u):
             Team,
             Spoken Tutorial
             """
+        path = 'student_mail_template.html'
     if is_user_vle(u):
+        print('USER IS VLE')
         message = f"""
             Dear {u.get_full_name()},
             
@@ -56,7 +60,7 @@ def send_pwd_mail(u):
             Team,
             Spoken Tutorial
             """
-    path = 'vle_mail_template.html'
+        path = 'vle_mail_template.html'
     html_content = render_to_string(path, {'full_name':u.get_full_name(),'username':u.username,'password':pwd})
     try:
         print(f"/n/nSending mail ; username,pwd : {u.username},{pwd}".ljust(40,'*'))
@@ -68,6 +72,7 @@ def send_pwd_mail(u):
     fail_silently=False,
     html_message = html_content
     )
+        print("***************mail send******")
     except Exception as e:
         print(e)
         print(f"Failed to send mail to user : {u.email}")

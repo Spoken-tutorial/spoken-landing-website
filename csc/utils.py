@@ -8,11 +8,27 @@ from datetime import date,timedelta
 from django.db.models import Count
 from django.conf import settings
 
+# from reportlab.pdfgen import canvas
+# from reportlab.pdfbase.ttfonts import TTFont
+# from reportlab.pdfbase import pdfmetrics
+# from reportlab.lib.styles import ParagraphStyle
+# from reportlab.platypus import Paragraph
+# from reportlab.lib.units import cm
+
+# from PyPDF2 import PdfFileWriter, PdfFileReader
+
+# from io import StringIO, BytesIO
+
+from django.http import HttpResponse
+
 def is_user_vle(user):
     return user.groups.filter(name="VLE").exists()   
 
 def is_user_student(user):
     return user.groups.filter(name="STUDENT").exists()   
+
+def is_csc_team_role(user):
+    return user.groups.filter(name="CSC-TEAM").exists()   
 
 def is_user_invigilator(user):
     print("\n\n user is INVIGILATOR \n\n")
@@ -25,6 +41,7 @@ def get_upcoming_test_stats():
     for test in tests:
         approved = StudentTest.objects.filter(test=test,status=APPROVED).count()
         rejected = StudentTest.objects.filter(test=test,status=REJECTED).count()
+        # key = test.test_name if test.test_name else test.foss.foss
         key = test.foss.foss
         d[key] = {'approved' : approved, 'rejected' : rejected,'date': test.tdate, 'time': test.ttime, 'id':test.id }
     return d
