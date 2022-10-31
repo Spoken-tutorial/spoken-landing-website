@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'widget_tweaks',
     # 'masquerade',
-    # 'mdl',
+    'mdl',
     # 'rest_framework_swagger',
 
 ]
