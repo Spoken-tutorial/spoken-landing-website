@@ -22,36 +22,19 @@
 
 {% block content %}
 <div class="container py-2">
-  {% if messages %}
-        <ul class="messages" style="padding-left: 0!important;">
-            {% for message in messages %}
-            <li style="list-style: none;">
-                <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">
-                    {{ message }}
-                </div>
-            </li>
-            {% endfor %}
-        </ul>
-        {% endif %}
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-          <button class="nav-link active" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">List / Edit Invigilator</button>
-          <button class="nav-link " id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Create</button>
           
+          <button class="nav-link active" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="true">Update</button>
+          <button class="nav-link " id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="false">Create</button>
+          <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">List</button>
         </div>
       </nav>
       <div class="tab-content" id="nav-tabContent">
         
         <div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-          <div class="card">
-            <div class="card-header c-card-header">
-              Edit Invigilator Details
-            </div>
-            <div class="card-body">
-              <form method="GET">
-                <label for="invi" class="form-label"><b>Select Invigilator to edit</b></label>
-                <select class="form-select" aria-label="Default select example" onchange="this.form.submit()" name="invi" id="invi">
-                    <option value="">Select</option>
+            <form method="GET">
+                <select class="form-select" aria-label="Default select example" onchange="this.form.submit()" name="invi">
                     {% for item in invigilators %}
                     <option value="{{item.id}}">{{item}}</option>
                     {% endfor %}
@@ -59,24 +42,11 @@
             </form>
             <form method="POST">
                 {% csrf_token %}
-                  <div class="row">
-                    {% for field in form %}
-                      {% if field.label != 'Email address'%}
-                      <div class="col-3">
-                        {{field|as_crispy_field}}
-                      </div>
-                      {% endif %}
-                    
-                     {% endfor %}
-                  </div>
+                {{form}}
                 <input type="hidden" value="edit" name="edit">
                 <input type="hidden" value="{{invi_id}}" name="invi_id">
-                <button type="submit" class="btn c-btn mt-3">Update Invigilator Details</button>
+                <button type="submit" >Update Invigilator Details</button>
             </form>
-            </div>
-          </div>
-            
-            <hr>
             <div>
                 <table class="table table-bordered" id='tb_i'>
                     <thead>
@@ -94,13 +64,12 @@
                             <td scope="row" class="f-sm">{{item.user.email}}</td>
                             <td scope="row" class="f-sm">{{item.phone}}</td>
                             <td>
-                                {% comment %} <form method="POST" id="myform"> {% endcomment %}
+                                <form method="POST" id="myform">
                                     {% csrf_token %}
                                     <input type="hidden" value="delete" name="delete">
                                     <input type="hidden" value="{{item.id}}" name="invi">
-                                    {% comment %} <button class="remove-btn" form="myform" type="submit" onclick="return confirm('Are you sure you want to delete selected invigilator?')" ><i class="fas fa-trash-alt"></i></button> {% endcomment %}
-                                    <button class="remove-btn"   onclick="return confirm('Are you sure you want to delete selected invigilator?')" id="{{item.id}}"><i class="fas fa-trash-alt"></i></button>
-                                  {% comment %} </form> {% endcomment %}
+                                    <!-- <button data-bs-toggle="modal" data-bs-target="#exampleModal"></button></form> -->
+                                    <button form="myform" type="submit" onclick="return confirm('Are you sure you want to rollback deletion of candidate table?')" >delete</button>
                             </td>
                             
                           </tr>
@@ -109,15 +78,32 @@
                   </table>
                   
             </div>
-        </div> 
-
+        </div>
         <div class="tab-pane fade " id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-          <form method="POST" id="add">
-              {% csrf_token %}
-              {{form_empty|crispy}}
-              <input type="hidden" value="add" name="add">
-              <button type="submit" class="btn c-btn mt-3">Add Invigilator</button>
-          </form>
+            <form method="POST" id="add">
+                {% csrf_token %}
+                {{form}}
+                <input type="hidden" value="add" name="add">
+                <button type="submit" >Add Invigilator</button>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+            <table class="table" id='tb_pending'>
+                <thead>
+                  <tr>
+                    <th scope="col">Test</th>                         
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in invigilators %}
+                  <tr>
+                    <td>
+                      <span>{{item}} Test</span>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
         </div>
       </div>
 </div>
@@ -130,31 +116,10 @@
 
 <script>
     $(document).ready(function(){       
-      $('#tb_i').DataTable(); 
+        
        
     });
 
-    $( ".remove-btn" ).click(function() {
-      alert('delete');
-      data = {}
-      data['invi'] = this.id
-      alert(this.id);
-      url = '/csc/delete_invigilator/'
-      $.ajax({
-          url : url,
-          type: "GET",
-          data : data,
-          success: function(data, textStatus, jqXHR)
-          {
-            alert('success')
-            location.reload();
-          },
-          error: function (jqXHR, textStatus, errorThrown)
-          {
-              alert('error')
-          }
-      });
-    });
 
 
 

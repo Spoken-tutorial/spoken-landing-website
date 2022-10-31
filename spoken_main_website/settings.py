@@ -55,8 +55,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'drf_yasg',
     'widget_tweaks',
-    'masquerade',
-    'mdl',
+    # 'masquerade',
+    # 'mdl',
     # 'rest_framework_swagger',
 
 ]
@@ -67,7 +67,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'masquerade.middleware.MasqueradeMiddleware',
+    # 'masquerade.middleware.MasqueradeMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'sso.middleware.SSO',
@@ -291,3 +291,4 @@ TEST_VLE_EMAIL=os.getenv("TEST_VLE_EMAIL").split(' ')
 TEST_STUDENT_EMAIL=os.getenv("TEST_STUDENT_EMAIL").split(' ')
 TEST_CSC_ID=os.getenv("TEST_CSC_ID").split(' ')
 CSC_ONLINE_TEST_URL = os.getenv("CSC_ONLINE_TEST_URL")
+MDL_URL = os.getenv("MDL_URL")

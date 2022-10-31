@@ -19,7 +19,7 @@ urlpatterns = [
     path('test/', test, name="test"),
     path('test_assign/', test_assign, name="test_assign"),
     path('test_list/', test_list, name="test_list"),
-    path('add_test/', TestCreateView.as_view(), name="add_test"),
+    # path('add_test/', TestCreateView.as_view(), name="add_test"),
     path('mark_attendance/<int:id>', mark_attendance, name="mark_attendance"),
     # path('detail_test/<int:pk>', TestDetailView.as_view(), name="detail_test"),
     path('detail_test/<slug:slug>', TestDetailView.as_view(), name="detail_test"),
@@ -29,7 +29,7 @@ urlpatterns = [
     path('list_test/', TestListView.as_view(), name="list_test"),
     path('invigilator/', invigilator, name="invigilator"),
     path('invigilators/', invigilators, name="invigilators"),
-    path('invigilator_dashboard/', invigilator_dashboard, name="invigilator_dashboard"),
+    # path('invigilator_dashboard/', invigilator_dashboard, name="invigilator_dashboard"),
     path('verify_invigilator_email/', verify_invigilator_email, name="verify_invigilator_email"),
     path('add_invigilator/', add_invigilator, name="add_invigilator"),
     path('review_invigilation_request/', review_invigilation_request, name="review_invigilation_request"),
@@ -41,6 +41,7 @@ urlpatterns = [
     path('invigilators/<int:id>/', update_invigilator, name="update_invigilator"),
     path('invigilators/delete/<int:id>/', InvigilatorDeleteView.as_view(), name="delete_invigilator"),
     
+    path('invigilator_dashboard/', invi_dashboard, name="invi_dashboard"),
     
     url(
       r'^get-foss-option/', 

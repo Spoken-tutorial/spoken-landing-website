@@ -11,6 +11,19 @@
     <div class="container">
         <div class="row">
             <div class="col-5">
+                {% if messages %}
+                    <ul class="messages" style="padding-left: 0!important;">
+                        {% for message in messages %}
+                        <li style="list-style: none;">
+                            <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">
+                                {{ message }}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                <p class="sm-header">Create Test</p>
+                <hr>
                 <div>
                     <form method="POST">
                         {% csrf_token %}

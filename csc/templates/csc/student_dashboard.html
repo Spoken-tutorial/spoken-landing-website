@@ -149,7 +149,7 @@ body{
         </div>
       {% endcomment %}
         <!-- Earnings (Monthly) Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
+        <!-- <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-2 shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -164,10 +164,10 @@ body{
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     
         <!-- Earnings (Monthly) Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
+        <!-- <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-3 shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -188,7 +188,7 @@ body{
                     </div>
                 </div>
             </div>
-        </div> 
+        </div>  -->
     
         
     </div>
@@ -227,11 +227,11 @@ body{
                               Attempt {{course.testfoss.foss}} Test
                               </button>
 
-                            {% else %}                    
+                              {% comment %} {% else %}                    
 
                               {% with grade=student.id|get_grade:course.testfoss_id %}
                                 <button type="submit" class="btn btn-success" >Download Test Certificate &nbsp;<span class="badge">Grade: {{grade}} </span></button>
-                              {% endwith %}
+                              {% endwith %} {% endcomment %}
                             
                           {% endif %}
 

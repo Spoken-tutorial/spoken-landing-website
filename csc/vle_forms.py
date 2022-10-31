@@ -4,7 +4,7 @@ from django import forms
 from csc.models import *
 from spokenlogin.models import *
 
-from .utils import get_all_foss_for_vle
+from .utils import get_valid_animation_fosses
 
 class FossForm(forms.Form):
 	programme_type = forms.ChoiceField(required=True, choices=PROGRAMME_TYPE_CHOICES)
@@ -95,18 +95,14 @@ class InvigilationRequestForm(forms.Form):
 class TestForm(forms.ModelForm):
     class Meta:
         model = Test
-        fields = ['foss','tdate','ttime','note_student','note_invigilator','invigilator','publish']
+        fields = ['foss','tdate','ttime','invigilator','publish']
         widgets = {
-			'note_student' : forms.Textarea(attrs={'rows':2, 'cols':15}),
-			'note_invigilator' : forms.Textarea(attrs={'rows':2, 'cols':15}),
    			'tdate' : forms.DateInput(attrs={'type': 'date'}),
 			'ttime' : forms.DateInput(attrs={'type': 'time'},format='%H:%M')
 		}
         labels = {
 			'tdate' : 'Test Date',
 			'ttime' : 'Test Time',
-   			'note_student' : 'Note for student',
-			'note_invigilator' : 'Note for invigilator',
 			'invigilator' : 'Invigilators'
 		}
         help_texts = {
@@ -117,6 +113,8 @@ class TestForm(forms.ModelForm):
         user = kwargs.pop('user')
         vle = VLE.objects.get(user=user)
         super(TestForm, self).__init__(*args, **kwargs)
-        r = get_all_foss_for_vle(vle)
-        print(f"r ************* {len(r)}")
-        self.fields['foss'].queryset = get_all_foss_for_vle(vle)
+        # r = get_all_foss_for_vle(vle)
+        # print(f"r ************* {len(r)}")
+        # self.fields['foss'].queryset = get_all_foss_for_vle(vle) #IMPORTANT : For querying foss valid for the vle
+        
+        self.fields['foss'].queryset = get_valid_animation_fosses()

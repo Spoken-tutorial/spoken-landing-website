@@ -57,6 +57,10 @@
 			<a class="dropdown-item" href="{% url 'student:student_dashboard' %}">STUDENT Dashboard</a>
 			{% endif %}
 
+			{% if request.user|has_group:"INVIGILATOR" %}
+			<a class="dropdown-item" href="{% url 'csc:invi_dashboard' %}">INVIGILATOR Dashboard</a>
+			{% endif %}
+
 			{% if request.user|has_group:"CSC-TEAM" %}
 			<a class="dropdown-item" href="{% url 'stats_dashboard' %}">STATISTICS</a>
 			{% endif %}

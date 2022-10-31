@@ -1,4 +1,3 @@
-
 from __future__ import unicode_literals
 from audioop import reverse
 from email.policy import default
@@ -11,16 +10,16 @@ from cms.models import State, District, City
 from django.forms import widgets
 from datetime import date
 from django.template.defaultfilters import slugify
+# from csc.utils import TEST_OPEN
 
+
+TEST_OPEN = 0
 REJECTED = 0
 APPROVED = 1
 PROGRAMME_TYPE_CHOICES = Choices(
     ('', ('-- None --')),('dca', ('DCA Programme')), ('individual', ('Individual Course'))
     )
-OPEN_TEST=0
-TEST_ONGOING=2
-TEST_COMPLETED_BY_STUDENT=3
-TEST_CLOSED_BY_VLE=4
+
 
 class FossSuperCategory(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -164,6 +163,7 @@ class Student(models.Model):
     date_of_registration = models.DateField(default=date.today())
     occupation = models.CharField(max_length=255,blank=True,null=True)
     category = models.CharField(max_length=255,blank=True,null=True)
+    mdl_mail_sent = models.BooleanField(default=False)
     
     
 
@@ -222,9 +222,9 @@ class Test(models.Model):
     invigilator = models.ManyToManyField(Invigilator,blank=True,null=True)
     publish = models.BooleanField(default=True)
     vle = models.ForeignKey(VLE,on_delete=models.CASCADE,null=True,blank=True)
-    note_student = models.TextField(blank=True,null=True)
-    note_invigilator = models.TextField(blank=True,null=True)
-    status = models.PositiveIntegerField(default=OPEN_TEST)#
+    # note_student = models.TextField(blank=True,null=True)
+    # note_invigilator = models.TextField(blank=True,null=True)
+    status = models.PositiveIntegerField(default=TEST_OPEN)#
     # test_name = models.CharField(max_length=252,blank=True,null=True)
     participant_count = models.IntegerField(null=True,blank=True)
     slug = models.SlugField(max_length=40)

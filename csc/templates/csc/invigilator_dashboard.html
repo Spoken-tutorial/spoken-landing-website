@@ -1,4 +1,5 @@
 {% extends 'csc_base.html' %}
+{% load csc_tags %}
 {% block css %}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
 <style>
@@ -13,106 +14,112 @@
             <div class="mb-3"><strong>Test Invigilation Requests</strong></div>
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                  <button class="nav-link active" id="nav-pending-tab" data-bs-toggle="tab" data-bs-target="#nav-pending" type="button" role="tab" aria-controls="nav-pending" aria-selected="true">Pending</button>
-                  <button class="nav-link" id="nav-accepted-tab" data-bs-toggle="tab" data-bs-target="#nav-accepted" type="button" role="tab" aria-controls="nav-accepted" aria-selected="false">Accepted</button>
-                  <button class="nav-link" id="nav-rejected-tab" data-bs-toggle="tab" data-bs-target="#nav-rejected" type="button" role="tab" aria-controls="nav-rejected" aria-selected="false">Rejected</button>
-                  <button class="nav-link" id="nav-all-tab" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab" aria-controls="nav-all" aria-selected="false">All</button>
+                  <button class="nav-link active" id="nav-pending-tab" data-bs-toggle="tab" data-bs-target="#nav-pending" type="button" role="tab" aria-controls="nav-pending" aria-selected="true">Upcoming</button>
+                  <button class="nav-link" id="nav-accepted-tab" data-bs-toggle="tab" data-bs-target="#nav-accepted" type="button" role="tab" aria-controls="nav-accepted" aria-selected="false">Completed</button>
                 </div>
               </nav>
               <div class="tab-content mt-5" id="nav-tabContent">
                 <div class="tab-pane fade show active" id="nav-pending" role="tabpanel" aria-labelledby="nav-pending-tab">
                   <div>
-                    <table class="table" id='tb_pending'>
+                    <table class="table my-5 table-bordered tb" id="example">
+                    
                       <thead>
-                        <tr>
-                          <th scope="col">Test</th>
-                          <th scope="col">Date & Time</th>
-                          <th scope="col">VLE</th>
-                          <th scope="col">CSC</th>
-                          <th scope="col"></th>
-                          <th scope="col"></th>                          
-                        </tr>
+                          <tr>
+                              <th>Test</th>
+                              <th scope="col">FOSS</th>
+                              <th scope="col">Date</th>
+                              <th scope="col">Time</th>
+                              <th scope="col">Published</th>
+                              <th scope="col">Mark attendance</th>
+                          </tr>
                       </thead>
                       <tbody>
-                        {% for item in pending %}
-                        <tr>
-                          <td>
-                            <span>{{item.test.foss | title}} Test</span>
-                          </td>
-                            
-                            <td>{{ item.test.tdate }},{{ item.test.ttime }}</td>
-                            <td>{{ item.test.vle }}</td>
-                            <td>{{ item.test.vle.csc }}</td>
-                            <td><a class="btn btn-sm btn-success" href="{% url 'csc:review_invigilation_request' %}?review=1&item={{item.id}}" role="button">Accept</a></td>
-                            <td><a class="btn btn-sm btn-danger" href="{% url 'csc:review_invigilation_request' %}?review=2&item={{item.id}}" role="button">Reject</a></td>
-                            
-                        </tr>
-                        {% endfor %}
+                          {% for test in upcoming_tests %}
+                          <tr>
+                              <td>
+                                  {% if test.test_name %}
+                                  <span>{{test.test_name | title}}</span>
+                                  {% else %}
+                                  <span>{{test.foss | title}} Test</span>
+                                  {% endif %}
+                              </td>
+                              <td>{{test.foss | title }}</td>
+                              <td>{{test.tdate}}</td>
+                              <td>{{test.ttime}}</td>
+                              <td>
+                                  {% if test.publish %}
+                                      <i class="far fa-check-circle"></i>
+                                  {% else %}    
+                                  <i class="far fa-times-circle"></i>
+                                  {% endif %}
+                              </td> 
+                              <td>{% if test.tdate|is_today %}
+                                  <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button> -->
+            
+                                  <!-- <button class="btn btn-sm btn-warning attendance" id="att_{{test.id}}"></button> -->
+                                  <a href="{% url 'csc:mark_attendance' test.id %}" class="btn btn-sm btn-warning">attendance</a>
+                                  {% else %}
+                                  <span>NA</span>
+                                  {% endif %}
+                              </td>
+                          </tr>
+                          {% endfor %}
                       </tbody>
-                    </table>
+              </table>
+            
                   </div>
                 </div>
                 <div class="tab-pane fade" id="nav-accepted" role="tabpanel" aria-labelledby="nav-accepted-tab">
-                  <table class="table" id="tb_accepted">
+                  <table class="table my-5 table-bordered tb" id="example">
+                    
                     <thead>
-                      <tr>
-                        <th scope="col">Test</th>
-                        <th scope="col">Date & Time</th>
-                        <th scope="col">VLE</th>
-                        <th scope="col">CSC</th>
-                        <!-- <th scope="col"></th> -->
-                        <th scope="col"></th>                          
-                      </tr>
+                        <tr>
+                            <th>Test</th>
+                            <th scope="col">FOSS</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Time</th>
+                            <th scope="col">Published</th>
+                            <th scope="col">Mark attendance</th>
+                        </tr>
                     </thead>
                     <tbody>
-                      {% for item in accepted %}
-                      <tr>
-                        <td>
-                          <span>{{item.test.foss | title}} Test</span>
-                          </td>
-                          <td>{{ item.test.tdate }},{{ item.test.ttime }}</td>
-                          <td>{{ item.test.vle }}</td>
-                          <td>{{ item.test.vle.csc }}</td>
-                          <!-- <td><a class="btn btn-sm btn-success" href="{% url 'csc:review_invigilation_request' %}?review=1&item={{item.id}}" role="button">Accept</a></td> -->
-                          <td><a class="btn btn-sm btn-danger" href="{% url 'csc:review_invigilation_request' %}?review=2&item={{item.id}}" role="button">Reject</a></td>
-                          <td></td>
-                      </tr>
-                      {% endfor %}
+                        {% for test in completed_tests %}
+                        <tr>
+                            <td>
+                                {% if test.test_name %}
+                                <span>{{test.test_name | title}}</span>
+                                {% else %}
+                                <span>{{test.foss | title}} Test</span>
+                                {% endif %}
+                            </td>
+                            <td>{{test.foss | title }}</td>
+                            <td>{{test.tdate}}</td>
+                            <td>{{test.ttime}}</td>
+                            <td>
+                                {% if test.publish %}
+                                    <i class="far fa-check-circle"></i>
+                                {% else %}    
+                                <i class="far fa-times-circle"></i>
+                                {% endif %}
+                            </td> 
+                            
+                            <td>{% if test.tdate|is_today %}
+                                <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button> -->
+          
+                                <!-- <button class="btn btn-sm btn-warning attendance" id="att_{{test.id}}"></button> -->
+                                <a href="{% url 'csc:mark_attendance' test.id %}" class="btn btn-sm btn-warning">attendance</a>
+                                {% else %}
+                                <span>NA</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
                     </tbody>
-                  </table>
+            </table>
+          
                 </div>
-                <div class="tab-pane fade" id="nav-rejected" role="tabpanel" aria-labelledby="nav-rejected-tab">
-                  <table class="table" id="tb_rejected">
-                    <thead>
-                      <tr>
-                        <th scope="col">Test</th>
-                        <th scope="col">Date & Time</th>
-                        <th scope="col">VLE</th>
-                        <th scope="col">CSC</th>
-                        <th scope="col"></th>
-                        <!-- <th scope="col"></th>                           -->
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for item in rejected %}
-                      <tr>
-                        <td>
-                          <span>{{item.test.foss | title}} Test</span>
-                        </td>
-                          <td>{{ item.test.tdate }},{{ item.test.ttime }}</td>
-                          <td>{{ item.test.vle }}</td>
-                          <td>{{ item.test.vle.csc }}</td>
-                          <td><a class="btn btn-sm btn-success" href="{% url 'csc:review_invigilation_request' %}?review=1&item={{item.id}}" role="button">Accept</a></td>
-                          <!-- <td><a class="btn btn-sm btn-danger" href="{% url 'csc:review_invigilation_request' %}?review=0" role="button">Reject</a></td> -->
-                          
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
-                </div>
-                <div class="tab-pane fade" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
-                  
-                </div>
+                
+                
               </div>
         </div>
     
@@ -126,9 +133,8 @@
 <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
 <script>
     $(document).ready(function () {
-      $('#tb_pending').DataTable(); 
-      $('#tb_accepted').DataTable(); 
-      $('#tb_rejected').DataTable(); 
+      $('.tb').DataTable(); 
+    
     });
 
 

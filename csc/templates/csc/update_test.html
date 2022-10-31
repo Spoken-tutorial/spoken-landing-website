@@ -10,6 +10,17 @@
 {% block content %}
     <div class="container">
         <div class="col-6">
+            {% if messages %}
+                <ul class="messages" style="padding-left: 0!important;">
+                    {% for message in messages %}
+                    <li style="list-style: none;">
+                        <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">
+                            {{ message }}
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
             <form method="POST">
                 {% csrf_token %}
                 {{form | crispy}}

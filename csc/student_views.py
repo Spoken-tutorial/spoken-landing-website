@@ -10,7 +10,7 @@ from .student_forms import RaiseTestRequestForm
 from django.contrib.auth.decorators import login_required
 from .decorators import is_student
 from django.db.models import Q
-from .models import OPEN_TEST, TEST_ONGOING,TEST_COMPLETED_BY_STUDENT
+from .utils import TEST_COMPLETED_BY_STUDENT
 from django.conf import settings
 
 TEST_WAITING_PERIOD = 10
