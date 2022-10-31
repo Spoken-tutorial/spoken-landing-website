@@ -4,12 +4,13 @@ from multiprocessing import context
 from django.urls import reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
-from .models import CertifiateCategories, Student, StudentTest, Student_Foss, Test, VLE, TestRequest, Vle_csc_foss,CategoryCourses,FossCategory,Student_certificate_course
+from .models import CSCTestAtttendance, CertifiateCategories, Student, StudentTest, Student_Foss, Test, VLE, TestRequest, Vle_csc_foss,CategoryCourses,FossCategory,Student_certificate_course
 from .utils import upcoming_foss_tests,check_student_test_status
 from .student_forms import RaiseTestRequestForm
 from django.contrib.auth.decorators import login_required
 from .decorators import is_student
 from django.db.models import Q
+from .utils import TEST_COMPLETED_BY_STUDENT
 from django.conf import settings
 
 TEST_WAITING_PERIOD = 10
@@ -23,7 +24,7 @@ def student_tests(request):
     tests_all = []
     test_status = {}
     for vle in vles:
-        tests_vle = Test.objects.filter(vle=vle,foss__in=[x.csc_foss.spoken_foss for x in studentFoss])
+        tests_vle = Test.objects.filter(vle=vle,foss__in=[x.csc_foss.foss for x in studentFoss])
         for test in tests_vle:
             tests_all.append(test)
             try:
@@ -116,51 +117,56 @@ def student_courses(request):
 def student_tests(request):
     context = {}
     student = Student.objects.get(user=request.user)
-    print(f"student.vle_id - {student.vle_id.all()}")
-    vles = VLE.objects.filter(id__in=[x.id for x in student.vle_id.all()])
-    csc = [(x.csc.id,x.csc.csc_id, x.csc.city) for x in vles]
-    # if len(csc) == 1:
-    vle = VLE.objects.get(csc_id = csc[0])
-    vle_csc_foss = Vle_csc_foss.objects.filter(vle=vle)
-    sf = Student_Foss.objects.filter(student=student,csc_foss__in = vle_csc_foss) 
+    open_tests = CSCTestAtttendance.objects.filter(student=student,status=OPEN_TEST)
+    completed_tests = CSCTestAtttendance.objects.filter(student=student,status__in=[TEST_COMPLETED_BY_STUDENT])
+    context['open_tests']=open_tests
+    context['completed_tests']=completed_tests
+    # print(f"student.vle_id - {student.vle_id.all()}")
+    # vles = VLE.objects.filter(id__in=[x.id for x in student.vle_id.all()])
+    # csc = [(x.csc.id,x.csc.csc_id, x.csc.city) for x in vles]
+    # # if len(csc) == 1:
+    # vle = VLE.objects.get(csc_id = csc[0])
+    # # vle_csc_foss = Vle_csc_foss.objects.filter(vle=vle)
+    # # sf = Student_Foss.objects.filter(student=student,csc_foss__in = vle_csc_foss) 
+    # sf = Student_Foss.objects.filter(student=student) 
 
-    # fosses = [(x.csc_foss.spoken_foss.foss,x.csc_foss.spoken_foss.id) for x in sf]
-    fosses = [x.csc_foss.spoken_foss for x in sf]
-    applied = [x.foss for x in TestRequest.objects.filter(student=student)]
-    print(f'fosses : {fosses}')
-    print(f'applied : {applied}')
-    available_foss = [] 
-    for foss in fosses:
-        if not foss in applied:
-            available_foss.append((foss.foss,foss.id))
-    context['fosses'] = available_foss
+    # # fosses = [(x.csc_foss.spoken_foss.foss,x.csc_foss.spoken_foss.id) for x in sf]
+    # fosses = [x.csc_foss for x in sf]
+    # applied = [x.foss for x in TestRequest.objects.filter(student=student)]
+    # print(f'fosses : {fosses}')
+    # print(f'applied : {applied}')
+    # available_foss = [] 
+    # for foss in fosses:
+    #     if not foss in applied:
+    #         available_foss.append((foss.foss,foss.id))
+    # context['fosses'] = available_foss
 
-    context['csc'] = csc
-    testReqs = TestRequest.objects.filter(student=student)
-    context['test_requests'] = testReqs
+    # context['csc'] = csc
+    # testReqs = TestRequest.objects.filter(student=student)
+    # context['test_requests'] = testReqs
 
-    student_foss = Student_Foss.objects.filter(student=student)
-    in_progress_foss_data = {}
-    for item in student_foss:
-        csc_foss = item.csc_foss
-        foss = csc_foss.spoken_foss
-        vle = csc_foss.vle
+    # student_foss = Student_Foss.objects.filter(student=student)
+    # in_progress_foss_data = {}
+    # for item in student_foss:
+    #     csc_foss = item.csc_foss
+    #     foss = csc_foss.foss
+    #     vle = csc_foss.vle
         
-        upcoming_tests = upcoming_foss_tests(foss,vle)
-        applied = check_student_test_status(upcoming_tests,student)
-        print(f'before : {upcoming_tests}')
-        try:
-            upcoming_tests.remove(applied)
-        except Exception as e:
-            print(e)
+    #     upcoming_tests = upcoming_foss_tests(foss,vle)
+    #     applied = check_student_test_status(upcoming_tests,student)
+    #     print(f'before : {upcoming_tests}')
+    #     try:
+    #         upcoming_tests.remove(applied)
+    #     except Exception as e:
+    #         print(e)
 
-        print(f'after : {upcoming_tests}')
-        in_progress_foss_data[foss] = {'applied' : applied, 'upcoming_tests' : upcoming_tests}
+    #     print(f'after : {upcoming_tests}')
+    #     in_progress_foss_data[foss] = {'applied' : applied, 'upcoming_tests' : upcoming_tests}
 
-    context['in_progress_foss_data'] = in_progress_foss_data
+    # context['in_progress_foss_data'] = in_progress_foss_data
     return render(request,'csc/student_tests.html',context)
 
-
-
-
-
+def download_certificate(request):
+    data = {}
+    print(f"download_certificate ************************************ ")
+    return JsonResponse(data)

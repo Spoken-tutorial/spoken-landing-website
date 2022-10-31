@@ -34,7 +34,7 @@
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        {% if test.test_name %}<strong>{{test.test_name | title}}</strong>{% else %}<strong>{{test.foss | title}} Test</strong>{% endif %}
+                        <strong>{{test.foss | title}} Test</strong>
                     </div>
                     <div class="card-body">
                         <table class="table table-bordered ">
@@ -51,14 +51,6 @@
                                 <tr>
                                     <th>Published</th>
                                     <td colspan="2">{% if test.publish %}<i class="far fa-check-circle"></i>{% else %}<i class="far fa-times-circle"></i>{% endif %}</td>
-                                </tr>
-                                <tr>
-                                    <th>Note (For Students)</th>
-                                    <td colspan="3">{{test.note_student|default_if_none:"-" }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Note (For Invigilator)</th>
-                                    <td colspan="2">{{test.note_invigilator|default_if_none:"-" }}</td>
                                 </tr>
                             </tbody>
                     </table>

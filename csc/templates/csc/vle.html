@@ -43,7 +43,11 @@ body{
   opacity: 0.4;
 }
 .fa-clipboard-list{
-  color: #377D71;
+  color: #0dcaf0;
+  opacity: 0.4;
+}
+.fa-clipboard-check{
+  color: #198754!important;
   opacity: 0.4;
 }
 .fa-award{
@@ -146,22 +150,39 @@ body{
         </div>
     
         <!-- Earnings (Monthly) Card Example -->
-        {% comment %} <div class="col-xl-3 col-md-6 mb-4">
+       <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-2 shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Total tests completed</div>
+                                Total tests - completed</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_tests_completed}}</div>
                         </div>
-                        <div class="col-auto">
-                          <i class="fas fa-clipboard-list fa-2x "></i>
+                        <div class="col-auto ">
+                          <i class="fas fa-clipboard-check fa-2x"></i>
                         </div>
                     </div>
                 </div>
             </div>
-        </div> {% endcomment %}
+        </div> 
+
+        <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card border-3 shadow h-100 py-2">
+              <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                      <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                              Total tests - upcoming</div>
+                          <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_upcoming_tests}}</div>
+                      </div>
+                      <div class="col-auto">
+                        <i class="fas fa-clipboard-list fa-2x "></i>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div> 
     
         <!-- Earnings (Monthly) Card Example -->
         {% comment %} <div class="col-xl-3 col-md-6 mb-4">
@@ -189,37 +210,38 @@ body{
     
         
     </div>
+    {% if upcoming_test_stats %}
     <div>
-      {% comment %} <div class="card">
-        <div class="card-header">
-          Upcoming Tests
-        </div>
-        <div class="card-body">
-          <div class="row">
-              {% for key,value in upcoming_test_stats.items %}
-              <div class="col-md-3">
-              <div class="border p-2">
-                <div class="test_info">
-                  <p ><a href="{% url 'csc:update_test' pk=value.id %}" class="test_title"><i class="far fa-clipboard"></i> {{key}} <i class="fas fa-location-arrow"></i></a></p>
-                  <p><i class="fas fa-calendar-day"></i>{{value.date}} / {{value.time}}</p>
-                  <p>Approved : {{value.approved}}</p>
-                  <p>Rejected : {{value.rejected}}</p>
-                </div>
-                <canvas id="test_{{value.id}}"></canvas>
-              </div>
-            </div>
-              {% endfor %}
-          </div>
-        </div>
-      </div> {% endcomment %}
-    </div>
+      <div class="card">
+       <div class="card-header">
+         Upcoming Tests
+       </div>
+       <div class="card-body">
+         <div class="row">
+             {% for key,value in upcoming_test_stats.items %}
+             <div class="col-md-3">
+             <div class="border p-2 mb-2">
+               <div class="test_info">
+                 <p ><a href="{% url 'csc:update_test' pk=value.id %}" class="test_title"><i class="far fa-clipboard"></i> {{key}} <i class="fas fa-location-arrow"></i></a></p>
+                 <p><i class="fas fa-calendar-day"></i>{{value.date}} / {{value.time}}</p>
+                 <p>Total Students : {{value.total_students}}</p>
+               </div>
+             </div>
+           </div>
+             {% endfor %}
+         </div>
+       </div>
+     </div> 
+   </div>
+    {% endif %}
+   
     <div class="row mt-2 ">
-      <div class="col-md-8 ">
+      {% comment %} <div class="col-md-8 ">
         <div class="border p-2 bg-white">
           <p class="heading text-center">Enrollment based on Course Type </p>
           <div class="text-xs d-flex justify-content-around">
-            {% comment %} <div>DCA({{courses_offered_stats.dca}})</div>
-            <div>Individual({{courses_offered_stats.individual}})</div> {% endcomment %}
+             <div>DCA({{courses_offered_stats.dca}})</div>
+            <div>Individual({{courses_offered_stats.individual}})</div> 
           </div>
           <canvas id="prg_type"></canvas>  
           
@@ -232,7 +254,7 @@ body{
           
           
         </div>
-      </div>
+      </div>{% endcomment %}
 
       
       {% comment %} <div class="col-4 mt-2 ">
