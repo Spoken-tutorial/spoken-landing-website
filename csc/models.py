@@ -1,4 +1,3 @@
-
 from __future__ import unicode_literals
 from audioop import reverse
 from email.policy import default
@@ -11,7 +10,10 @@ from cms.models import State, District, City
 from django.forms import widgets
 from datetime import date
 from django.template.defaultfilters import slugify
+# from csc.utils import TEST_OPEN
 
+
+TEST_OPEN = 0
 REJECTED = 0
 APPROVED = 1
 PROGRAMME_TYPE_CHOICES = Choices(
@@ -161,7 +163,8 @@ class Student(models.Model):
     date_of_registration = models.DateField(default=date.today())
     occupation = models.CharField(max_length=255,blank=True,null=True)
     category = models.CharField(max_length=255,blank=True,null=True)
-
+    mdl_mail_sent = models.BooleanField(default=False)
+    
     
 
 class Student_certificate_course(models.Model):
@@ -195,16 +198,22 @@ class Student_Foss(models.Model):
 
 
 class Invigilator(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
-    phone = models.CharField(max_length=32)
-    vle = models.ManyToManyField(VLE)
-    added_by = models.ForeignKey(User,on_delete=models.CASCADE,related_name='added_by_user')
+    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='invi')
+    phone = models.CharField(max_length=32,null=True,blank=True)
+    # vle = models.ManyToManyField(VLE)
+    # vle = models.ForeignKey(User,on_delete=models.CASCADE,related_name='invig')
+    vle = models.ForeignKey(VLE,on_delete=models.CASCADE,related_name='invig')
+    # added_by = models.ForeignKey(User,on_delete=models.CASCADE,related_name='added_by_user')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    password_mail_sent = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} - {self.user.email}"
 
+    class Meta:
+        unique_together = [['user', 'vle']]
+        
 class Test(models.Model):
     foss = models.ForeignKey(FossCategory,on_delete=models.CASCADE)
     # mdlfoss = models.ForeignKey(FossCategory,on_delete=models.CASCADE)
@@ -213,9 +222,9 @@ class Test(models.Model):
     invigilator = models.ManyToManyField(Invigilator,blank=True,null=True)
     publish = models.BooleanField(default=True)
     vle = models.ForeignKey(VLE,on_delete=models.CASCADE,null=True,blank=True)
-    note_student = models.TextField(blank=True,null=True)
-    note_invigilator = models.TextField(blank=True,null=True)
-    status = models.BooleanField(default=False)
+    # note_student = models.TextField(blank=True,null=True)
+    # note_invigilator = models.TextField(blank=True,null=True)
+    status = models.PositiveIntegerField(default=TEST_OPEN)#
     # test_name = models.CharField(max_length=252,blank=True,null=True)
     participant_count = models.IntegerField(null=True,blank=True)
     slug = models.SlugField(max_length=40)
@@ -232,8 +241,11 @@ class Test(models.Model):
         return reverse("detail_test",kwargs={"slug": self.slug})
 
     def __str__(self):
-        return f"{self.foss} - {self.tdate}"
+        return f"{self.foss} ".ljust(25,'-') + f" ( {self.tdate.strftime('%b %d')}, {self.ttime.strftime('%I:%M %p')} )"
     
+    def __repr__(self):
+        return f"{self.foss} - {self.tdate}"
+        
     def save(self, *args, **kwargs):  # new
         if not self.slug:
             self.slug = slugify(self.id)
@@ -268,8 +280,8 @@ class TestRequest(models.Model):
 class CSCTestAtttendance(models.Model):
     test = models.ForeignKey(Test, on_delete=models.PROTECT )
     student = models.ForeignKey(Student, on_delete=models.PROTECT )
-    mdluser_firstname = models.CharField(max_length = 100)
-    mdluser_lastname = models.CharField(max_length = 100)
+    # mdluser_firstname = models.CharField(max_length = 100)
+    # mdluser_lastname = models.CharField(max_length = 100)
     mdluser_id = models.PositiveIntegerField()
     mdlcourse_id = models.PositiveIntegerField(default=0)
     mdlquiz_id = models.PositiveIntegerField(default=0)
@@ -292,6 +304,24 @@ class CSCFossMdlCourses(models.Model):
     def __str__(self):
         return self.foss.foss
     
+    def __str__(self):
+        return self.student.user.email + self.test.foss.foss
     
     
+class CSCFossMdlCourses(models.Model):
+	foss = models.ForeignKey(FossCategory, on_delete=models.PROTECT, related_name='cscfoss', null=True)
+	mdlcourse_id = models.PositiveIntegerField()
+	mdlquiz_id = models.PositiveIntegerField()
+	testfoss = models.ForeignKey(FossCategory, on_delete=models.PROTECT, related_name='testfoss', null=True)
+
+	def __str__(self):
+		return self.foss.foss    
+
+class FOSSVLEView(models.Model):
+    foss = models.CharField(max_length=256)
+    vle_id = models.IntegerField()
+    
+    class Meta:
+        managed = False
+        db_table = "foss_vle"
     

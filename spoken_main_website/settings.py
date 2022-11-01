@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'drf_yasg',
     'widget_tweaks',
+    # 'masquerade',
+    'mdl',
     # 'rest_framework_swagger',
 
 ]
@@ -65,6 +67,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # 'masquerade.middleware.MasqueradeMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'sso.middleware.SSO',
@@ -134,6 +137,15 @@ DATABASES = {
         'HOST': os.getenv("FDB_DB_HOST"),                  # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.	
         'PORT': '',                  # Set to empty string for default.	
     },
+    'moodle': {	
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.	
+        'NAME': os.getenv("MDL"),                      # Or path to database file if using sqlite3.	
+        'USER': os.getenv("MDL_USER"),	
+        'PASSWORD': os.getenv("MDL_PASS"),
+        'HOST': os.getenv("MDL_DB_HOST"),                  # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.	
+        'PORT': '',                  # Set to empty string for default.	
+    },
+    
 
 }
 
@@ -193,7 +205,7 @@ SAML_FOLDER = os.path.join(BASE_DIR, 'saml')
 AUTHENTICATION_BACKENDS = [
     'csc.backends.CSCBackend',
     'spokenlogin.backends.SpokenBackend',
-    'sso.backends.SSOBackend',
+    # 'sso.backends.SSOBackend',
     'django.contrib.auth.backends.ModelBackend'
     ]
 
@@ -270,13 +282,11 @@ MESSAGE_TAGS = {
 }
 CSC_SUBSCRIPTION_PERIOD = 100
 
-
-
-
-
 TEST_VLE_COUNT=os.getenv("TEST_VLE_COUNT")
 TEST_STUDENT_COUNT=os.getenv("TEST_STUDENT_COUNT")
 TEST_VLE_EMAIL=os.getenv("TEST_VLE_EMAIL").split(' ')
 TEST_STUDENT_EMAIL=os.getenv("TEST_STUDENT_EMAIL").split(' ')
 TEST_CSC_ID=os.getenv("TEST_CSC_ID").split(' ')
 CSC_ONLINE_TEST_URL = os.getenv("CSC_ONLINE_TEST_URL")
+MDL_URL = os.getenv("MDL_URL")
+
