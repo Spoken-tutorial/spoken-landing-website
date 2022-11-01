@@ -31,6 +31,19 @@ TEST_COMPLETED_BY_STUDENT=3
 TEST_CLOSED_BY_VLE=4
 PASS_GRADE=40.00
 
+# from reportlab.pdfgen import canvas
+# from reportlab.pdfbase.ttfonts import TTFont
+# from reportlab.pdfbase import pdfmetrics
+# from reportlab.lib.styles import ParagraphStyle
+# from reportlab.platypus import Paragraph
+# from reportlab.lib.units import cm
+
+# from PyPDF2 import PdfFileWriter, PdfFileReader
+
+# from io import StringIO, BytesIO
+
+from django.http import HttpResponse
+
 def is_user_vle(user):
     return user.groups.filter(name="VLE").exists()   
 
@@ -192,3 +205,4 @@ def get_valid_animation_fosses():
     course = CertifiateCategories.objects.get(code = 'IT07')
     fosses = [x.foss.id for x in CategoryCourses.objects.filter(certificate_category=course)]
     return FossCategory.objects.filter(id__in=fosses).order_by('foss')
+
