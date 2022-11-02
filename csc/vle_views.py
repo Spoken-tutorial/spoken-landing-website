@@ -586,7 +586,8 @@ def test(request):
       test_data.vle = vle
       test_data.save()
       form.save_m2m() 
-      messages.success(request,"Test added successfully.")
+      # messages.success(request,"Test added successfully.")
+      messages.add_message(request,messages.SUCCESS,f'Test added successfully.')
   context['form'] = form
   
   return render(request,'csc/test.html',context)
