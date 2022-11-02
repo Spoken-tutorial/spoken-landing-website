@@ -221,7 +221,7 @@ body{
 
                           {% if not student.id|check_passgrade_exists:course.testfoss_id%}
 
-                              <input type="hidden" id="testurl{{course.mdlcourse_id}}" name="testurl" value="{{ CSC_ONLINE_TEST_URL }}course/view.php?id={{course.mdlcourse_id}}">
+                              <input type="hidden" id="testurl{{course.mdlcourse_id}}" name="testurl" value="{{ CSC_ONLINE_TEST_URL }}/course/view.php?id={{course.mdlcourse_id}}">
 
                               <button class="btn btn-info" type="button" onclick="take_to_test({{course.mdlcourse_id}});">
                               Attempt {{course.testfoss.foss}} Test
