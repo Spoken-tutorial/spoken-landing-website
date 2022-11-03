@@ -222,8 +222,8 @@ class Test(models.Model):
     invigilator = models.ManyToManyField(Invigilator,blank=True,null=True)
     publish = models.BooleanField(default=True)
     vle = models.ForeignKey(VLE,on_delete=models.CASCADE,null=True,blank=True)
-    # note_student = models.TextField(blank=True,null=True)
-    # note_invigilator = models.TextField(blank=True,null=True)
+    note_student = models.TextField(blank=True,null=True)
+    note_invigilator = models.TextField(blank=True,null=True)
     status = models.PositiveIntegerField(default=TEST_OPEN)#
     # test_name = models.CharField(max_length=252,blank=True,null=True)
     participant_count = models.IntegerField(null=True,blank=True)
@@ -315,13 +315,5 @@ class CSCFossMdlCourses(models.Model):
 	testfoss = models.ForeignKey(FossCategory, on_delete=models.PROTECT, related_name='testfoss', null=True)
 
 	def __str__(self):
-		return self.foss.foss    
-
-class FOSSVLEView(models.Model):
-    foss = models.CharField(max_length=256)
-    vle_id = models.IntegerField()
-    
-    class Meta:
-        managed = False
-        db_table = "foss_vle"
+		return self.foss.foss
     
