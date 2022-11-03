@@ -1,0 +1,128 @@
+{% extends 'csc_base.html'%}
+{% load csc_tags %}
+{% block css %}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+<style>
+    .fa-check-circle{
+        color: green;
+    }
+    .fa-times-circle,.fa-trash-alt{
+        color: maroon;
+    }
+    #example_length, #example_paginate{
+        display: none;
+    }
+    .fa-edit{
+        color: midnightblue;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div>
+  <p>Section coming soon !</p>
+</div> 
+{% endblock %}
+
+{% block script %}
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#test_req').DataTable(); 
+        $('#tb-attendance').DataTable({
+            "pageLength": 200
+        }); 
+
+        $( ".attendance" ).click(function() {
+            alert( "Handler for attendance called." );
+            var test_id = this.id;
+            test_id = test_id.split('_')[1]
+            console.log(test_id);
+            data = {test_id : test_id}
+            url = '/csc/get_test_students/'
+            $.ajax({
+                url : url,
+                type: "POST",
+                data : data,
+                success: function(data, textStatus, jqXHR)
+                {
+                    alert('s');
+                    console.log(data);
+                   
+                    
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    alert('e')
+                }
+            });
+
+            var myOffcanvas = document.getElementById('offcanvasRight');
+            var bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas);
+
+
+            bsOffcanvas.show();
+
+            // tb_students
+        });
+
+        
+});
+
+
+
+function assign_foss(){      
+    var checkStudent = [];
+    var checkFoss = [];
+    $('input[name=check_student]').each(function () {
+    if(this.checked){
+        console.log(this);
+        checkStudent.push(this.value);
+    }     
+    });
+    if(checkStudent.length==0){
+        alert("Please select students to assign FOSS");
+    }else{
+        $('input[name=check_foss]').each(function () {
+        if(this.checked){
+        console.log(this);
+        checkFoss.push(this.value);
+    }     
+    });
+    if(checkFoss.length==0){
+        alert("Please select FOSS");
+    }else{
+        data = {student:checkStudent,foss:checkFoss}
+    url = '/csc/assign_foss/'
+
+    $.ajax({
+    url : url,
+    type: "POST",
+    data : data,
+    success: function(data, textStatus, jqXHR)
+    {
+        console.log(data);
+        console.log(data['foss']);
+        console.log(data);
+        alert('FOSS assigned successfully.\nFOSS assigned :' + data['foss'] +'\nTotal Students : '+ data['student_count'])
+    },
+    error: function (jqXHR, textStatus, errorThrown)
+    {
+        alert('e')
+    }
+});
+    }  
+}
+}
+  </script>
+{% endblock %}
+
+
+
+

@@ -4,6 +4,7 @@ from django import forms
 from csc.models import *
 from spokenlogin.models import *
 
+from .utils import get_valid_animation_fosses
 
 class FossForm(forms.Form):
 	programme_type = forms.ChoiceField(required=True, choices=PROGRAMME_TYPE_CHOICES)
@@ -54,12 +55,22 @@ class StudentForm(forms.ModelForm):
 		}
 
 
+# class InvigilatorForm(forms.ModelForm):
+#     phone = forms.CharField(max_length=15,required=False)
+#     class Meta:
+#         model = User
+#         fields = ['first_name','last_name','email','phone']
+	# email = forms.EmailField()
+	# fname = forms.CharField(max_length=120,label='First Name')
+	# lname = forms.CharField(max_length=120,label='Last Name')
+	# phone = forms.CharField(max_length=32,label='Contact Number')
+ 
 class InvigilatorForm(forms.Form):
-	email = forms.EmailField()
-	fname = forms.CharField(max_length=120,label='First Name')
-	lname = forms.CharField(max_length=120,label='Last Name')
-	phone = forms.CharField(max_length=32,label='Contact Number')
-	
+    email = forms.EmailField(max_length=200,required=False)
+    first_name = forms.CharField(max_length=200,required=False)
+    last_name = forms.CharField(max_length=200,required=False)
+    phone = forms.CharField(max_length=20,required=False)
+    
 
 class InvigilationRequestForm(forms.Form):
 	
@@ -81,4 +92,29 @@ class InvigilationRequestForm(forms.Form):
 		self.fields['invigilators'].initial = l
 
 
-
+class TestForm(forms.ModelForm):
+    class Meta:
+        model = Test
+        fields = ['foss','tdate','ttime','invigilator','publish']
+        widgets = {
+   			'tdate' : forms.DateInput(attrs={'type': 'date'}),
+			'ttime' : forms.DateInput(attrs={'type': 'time'},format='%H:%M')
+		}
+        labels = {
+			'tdate' : 'Test Date',
+			'ttime' : 'Test Time',
+			'invigilator' : 'Invigilators'
+		}
+        help_texts = {
+			'tdate' : 'Format : DD/MM/YYYY',
+		}
+    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        vle = VLE.objects.get(user=user)
+        super(TestForm, self).__init__(*args, **kwargs)
+        # r = get_all_foss_for_vle(vle)
+        # print(f"r ************* {len(r)}")
+        # self.fields['foss'].queryset = get_all_foss_for_vle(vle) #IMPORTANT : For querying foss valid for the vle
+        
+        self.fields['foss'].queryset = get_valid_animation_fosses()

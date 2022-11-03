@@ -1,6 +1,7 @@
 {% extends "csc_base.html" %}
 {% load static %}
 {% load crispy_forms_tags%}
+{% load csc_tags %}
 {% block title%} CSC - VLE Dashboard {% endblock title%}
 {% block css %}
 <style>
@@ -103,12 +104,12 @@ body{
           </div>
         </div>
         
-        {% comment %} <div class="col-md-4">
+        <div class="col-md-4">
           <div class="d-flex">
             <span class="me-2"><i class="fas fa-phone-square-alt p-icons d-inline-block mr-5"></i></span>
-            <span class="me-2">{{ user.student }}</span>
+            <span class="me-2">{{ student.id }}</span>
           </div>
-        </div> {% endcomment %}
+        </div> 
         
         {% comment %} <div class="col-12 mt-2">
           
@@ -146,9 +147,9 @@ body{
                 </div>
             </div>
         </div>
-    
+      {% endcomment %}
         <!-- Earnings (Monthly) Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
+        <!-- <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-2 shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -163,10 +164,10 @@ body{
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     
         <!-- Earnings (Monthly) Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
+        <!-- <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-3 shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -187,7 +188,7 @@ body{
                     </div>
                 </div>
             </div>
-        </div> {% endcomment %}
+        </div>  -->
     
         
     </div>
@@ -204,11 +205,46 @@ body{
                     <p class="card-header inner-header">{{key.code}} : {{key.title}}</p>
                     <div class="card-body">
                       {% comment %} <h6 class="card-title">Special title treatment</h6> {% endcomment %}
+                      <table class="table">
                       {% for item in val %}
-                        <p class="card-text ">
+                        <tr>
+                          <td>
                           <a class="foss-name" href="{% url 'tutorial_search' %}?search_foss={{ item.split|join:"+" }}&search_language=English">{{item}}</a>
-                        </p>
+                        </td>
+
+                        <td>
+                        <!-- if testattendance is marked  status 1-->
+                        {% with fossmdlcourse=item.id|get_csc_mdlcourseid %}
+
+
+                          {% for course in fossmdlcourse %}
+
+                          {% if not student.id|check_passgrade_exists:course.testfoss_id%}
+
+                              <input type="hidden" id="testurl{{course.mdlcourse_id}}" name="testurl" value="{{ CSC_ONLINE_TEST_URL }}/course/view.php?id={{course.mdlcourse_id}}">
+
+                              <button class="btn btn-info" type="button" onclick="take_to_test({{course.mdlcourse_id}});">
+                              Attempt {{course.testfoss.foss}} Test
+                              </button>
+
+                              {% comment %} {% else %}                    
+
+                              {% with grade=student.id|get_grade:course.testfoss_id %}
+                                <button type="submit" class="btn btn-success" >Download Test Certificate &nbsp;<span class="badge">Grade: {{grade}} </span></button>
+                              {% endwith %} {% endcomment %}
+                            
+                          {% endif %}
+
+                          {% endfor %}
+                        {% endwith %}
+                        </td>
+
+
+
+
+                        </tr>
                       {% endfor %}
+                    </table>
                     </div>
                   </div>
                 </div>
@@ -285,6 +321,13 @@ body{
 <div class="container" style="padding-top:9%;" id="main">
 {% endblock %}
 
+
+
+
+
+
+
+
 {% block script %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="text/javascript" src="{% static '/spoken/csc.js' %}"></script>
@@ -320,5 +363,16 @@ body{
         }
     });
   });
+
+
+
+  function take_to_test(mdlcourseid){
+    alert("hi"+mdlcourseid);
+    testurl=$('#testurl'+mdlcourseid).val()
+    alert(testurl);
+    window.location = testurl;
+
+}
+
   </script>
 {% endblock %}

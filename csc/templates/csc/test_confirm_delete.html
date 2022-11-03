@@ -42,8 +42,8 @@
                 </div>
                 <div class="card-body">
                     <form method="post">{% csrf_token %}
-                        <p>Are you sure you want to delete {% if test.test_name %}
-                            <strong>{{test.test_name | title}}</strong>
+                        <p>Are you sure you want to delete {% if test.foss %}
+                            <strong>{{test.foss | title}}</strong>
                             {% else %}<strong>{{test.foss | title}} Test</strong>
                             {% endif %}, scheduled on {{test.tdate}}, {{test.ttime}}?
                         
