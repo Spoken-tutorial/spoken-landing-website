@@ -1,0 +1,97 @@
+{% extends 'csc_base.html'%}
+{% load static %}
+{% load csc_tags %}
+{% block css %}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="{% static '/spoken/utility.css' %}">
+<style></style>
+{% endblock css %}
+
+{% block content %}
+<div>
+    <div class="container">
+      <div>
+        <table class="table my-5" id="example">
+                    
+          <thead>
+              <tr>
+                  <th>#</th>
+                  <th>Title</th>
+                  <th scope="col">FOSS</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Time</th>
+                  <th scope="col">Published</th>
+                  <th scope="col">Delete</th>
+                  <th scope="col">Edit</th>
+                  <th scope="col"></th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for test in tests %}
+              <tr>
+                    <td>{{forloop.counter}}</td>
+                  <td>
+                      {% if test.test_name %}
+                      <span>{{test.test_name | title}}</span>
+                      {% else %}
+                      <span>{{test.foss | title}} Test</span>
+                      {% endif %}
+                  </td>
+                  <td>{{test.foss | title }}</td>
+                  <td>{{test.tdate}}</td>
+                  <td>{{test.ttime}}</td>
+                  <td>
+                      {% if test.publish %}
+                          <i class="far fa-check-circle"></i>
+                      {% else %}    
+                      <i class="far fa-times-circle"></i>
+                      {% endif %}
+                  </td> 
+                  <td><a href="{% url 'csc:delete_test' test.id %}"><i class="far fa-trash-alt"></i></a></td>
+                  <td><a href="{% url 'csc:update_test' test.id %}"><i class="far fa-edit"></i></a></td>
+                  <td>{% if test.tdate|is_today %}
+                      <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button> -->
+
+                      <!-- <button class="btn btn-sm btn-warning attendance" id="att_{{test.id}}"></button> -->
+                      <a href="{% url 'csc:mark_attendance' test.id %}" class="btn btn-sm btn-warning">attendance</a>
+                      
+                      {% endif %}
+                  </td>
+              </tr>
+              {% endfor %}
+          </tbody>
+  </table>
+      </div>
+        
+    </div>
+    <div>
+    
+    </div>
+    
+    
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        
+        $('#example').DataTable({
+            "pageLength": 200
+        }); 
+});
+
+  </script>
+{% endblock %}
+
+
+
+
