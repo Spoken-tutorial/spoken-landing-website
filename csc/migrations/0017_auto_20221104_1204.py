@@ -53,12 +53,6 @@ class Migration(migrations.Migration):
             name='user',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='invi', to=settings.AUTH_USER_MODEL),
         ),
-        migrations.AddField(
-            model_name='invigilator',
-            name='vle',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='invig', to='csc.VLE'),
-            preserve_default=False,
-        ),
         migrations.AlterField(
             model_name='student',
             name='date_of_registration',
@@ -74,10 +68,6 @@ class Migration(migrations.Migration):
             name='vle',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='csc.VLE'),
         ),
-        migrations.AlterUniqueTogether(
-            name='invigilator',
-            unique_together={('user', 'vle')},
-        ),
         migrations.CreateModel(
             name='CSCFossMdlCourses',
             fields=[
@@ -91,10 +81,6 @@ class Migration(migrations.Migration):
         migrations.RemoveField(
             model_name='invigilator',
             name='added_by',
-        ),
-        migrations.RemoveField(
-            model_name='invigilator',
-            name='vle',
         ),
         migrations.CreateModel(
             name='CSCTestAtttendance',
