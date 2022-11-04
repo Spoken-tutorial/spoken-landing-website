@@ -1,0 +1,16 @@
+.form-group{
+  margin-bottom: 12px;
+  margin-top: 12px;
+}
+label{
+  font-weight: bold;
+}
+.fa-check-circle{
+  color: green;
+}
+.fa-times-circle,.fa-trash-alt{
+  color: maroon;
+}
+.fa-edit{
+  color: midnightblue;
+}

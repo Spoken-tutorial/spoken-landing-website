@@ -782,7 +782,10 @@ def create_invigilator(request):
       user = User.objects.filter(email=email)[0]
       messages.add_message(request,messages.SUCCESS,f'User with this email {email} already exists & assigned to you as an Invigilator.')
     try:
-      Invigilator.objects.create(user=user,vle=vle,phone=phone)
+      # Invigilator.objects.create(user=user,vle=vle,phone=phone)
+      i=Invigilator.objects.create(user=user,phone=phone)
+      print(f"invi ************************************ {i}")
+      i.vle.add(vle)
       invi_group = Group.objects.get(name='INVIGILATOR')
       invi_group.user_set.add(user)
       if send_mail:
