@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from csc.models import CSC,VLE,Student, FossCategory, CertifiateCategories, Student_Foss
+from csc.models import CSC,VLE,Student, FossCategory, CertifiateCategories, Student_Foss, Test
 from cms.models import State, District
 from csc.decorators import is_csc_team as dec_is_csc_team
 from csc.utils import is_csc_team_role
@@ -27,6 +27,8 @@ def stats(request):
     context['total_students'] = total_students
     context['total_foss'] = total_foss
     context['total_certificate_course'] = total_certificate_course
+    context['total_test_conducted'] = Test.objects.filter(status=1).count()
+    context['total_upcoming_tests'] = Test.objects.filter(status=0).count()
     
     student_gender = get_student_gender_stats()
     context['student_gender'] = student_gender
