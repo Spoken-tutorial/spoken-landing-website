@@ -1,0 +1,25 @@
+{% extends "stats/stats_base.html" %}
+{% load static %}
+{% block custom_style %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+<style>
+  #test_report{
+    border-left: 5px solid orange;
+    color: #013A6B;
+    font-weight: bold;
+  }
+    .scrollspy-example-collapsible {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+      border: 1px solid green;
+    }
+    .scrollspy-example{
+      height: 100vh;
+      overflow: auto;
+    } 
+</style>
+{% endblock custom_style %}
+{% block content  %}
+    <h1>Test Stats</h1>
+{% endblock content  %}

@@ -234,3 +234,8 @@ def vle_report(request):
     context['csc_district'] = csc_district
     
     return render(request, 'stats/vle_report.html', context)
+
+@login_required
+@dec_is_csc_team   
+def test_report(request):
+    return render(request, 'stats/test_report.html')
