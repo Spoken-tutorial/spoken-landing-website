@@ -30,7 +30,7 @@ import logging
 import random
 import requests
 import string
-
+import hashlib
 
 STUDENT_ENROLLED_FOR_TEST = 0
 ATTENDANCE_MARKED = 1
@@ -625,7 +625,8 @@ def test_assign(request):
           mdluser=MdlUser.objects.get(email=email)
         except MdlUser.DoesNotExist:
           pwd = ''.join(random.choices(string.ascii_letters,k=10))
-          mdluser = MdlUser.objects.create(username=email,firstname=user.first_name,lastname=user.last_name,email=email,password=pwd)
+          encryp_pwd = hashlib.md5((pwd).encode('utf-8')).hexdigest()
+          mdluser = MdlUser.objects.create(username=email,firstname=user.first_name,lastname=user.last_name,email=email,password=encryp_pwd,mnethostid=1,confirmed=1)
           send_mdl_mail(user,pwd)
           mdluser = MdlUser.objects.get(email=email)
         except MdlUser.MultipleObjectsReturned as e:
