@@ -21,5 +21,56 @@
 </style>
 {% endblock custom_style %}
 {% block content  %}
-    <h1>Test Stats</h1>
+    <div class="row">
+  <div class="col-3">
+    <div class="nav flex-column nav-tabs me-3 static-nav" id="v-pills-tab" role="tablist" aria-orientation="vertical" style="overflow: hidden;">
+      <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="tab" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">
+        Foss Tests
+      </button>
+
+    </div>
+  </div>
+  <div class="col-9">
+    <div class="tab-content" id="v-pills-tabContent" data-bs-spy="scroll" data-bs-target="#items" >
+      <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+        <table class="table" id="foss_test">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Foss</th>
+                <th scope="col">Upcoming Tests</th>
+                <th scope="col">Conducted Tests</th>
+                <th scope="col">Total Students Upcoming</th>
+                <th scope="col">Total students Appeared</th>
+                <th scope="col">Total certificates</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for item in all_foss %}
+                <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{item}}</td>
+                    <td>{{item.test__count}}</td>
+                    <td>{{item.test__count}}</td>
+                    <td>{{item.}}</td>
+                    <td>{{item.}}</td>
+                    <td>{{item.}}</td>
+                  </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock content  %}
+{% block js_script %}
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $('#foss_test').DataTable({
+          pageLength: 100
+        });   
+    </script>
+{% endblock js_script %}

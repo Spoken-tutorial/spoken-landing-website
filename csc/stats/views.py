@@ -13,6 +13,8 @@ from csc.decorators import is_csc_team as dec_is_csc_team
 from csc.utils import is_csc_team_role
 from .utility import *
 
+from datetime import datetime
+
 
 @login_required
 @dec_is_csc_team
@@ -27,8 +29,8 @@ def stats(request):
     context['total_students'] = total_students
     context['total_foss'] = total_foss
     context['total_certificate_course'] = total_certificate_course
-    context['total_test_conducted'] = Test.objects.filter(status=1).count()
-    context['total_upcoming_tests'] = Test.objects.filter(status=0).count()
+    context['total_test_conducted'] = Test.objects.filter(tdate__lt=datetime.now().date()).count()
+    context['total_upcoming_tests'] = Test.objects.filter(tdate__gte=datetime.now().date()).count()
     
     student_gender = get_student_gender_stats()
     context['student_gender'] = student_gender
@@ -155,7 +157,8 @@ class VLEListView(ListView):
         return context
     def get_queryset(self):
         qs = super().get_queryset() 
-        qs = qs_vle
+        qs = qs_vle.annotate(Count('test'))
+        print(vars(qs[0]))
         if self.request.GET.get('name'):
             name = self.request.GET.get('name')
             qs = qs.filter(Q(user__first_name__icontains=name)|Q(user__last_name__icontains=name)|Q(user__email__icontains=name))
@@ -200,6 +203,8 @@ def ajax_vle_detail(request):
     data['students'] = [x for x in Student.objects.filter(vle_id=vle_id).values('user__first_name', 'user__last_name','user__email')]
     cert_category = CertifiateCategories.objects.get(code='INDI')
     data['indi_fosses'] = [x for x in Student_Foss.objects.filter(student__vle_id=vle_id,cert_category=cert_category).values('csc_foss__foss').annotate(count=Count('csc_foss'))]
+    data['conducted_test'] = Test.objects.filter(vle=vle, tdate__lt=datetime.now().date()).count()
+    data['upcoming_test'] = Test.objects.filter(vle=vle, tdate__gte=datetime.now().date()).count()
     
     return JsonResponse(data)
 
@@ -240,4 +245,7 @@ def vle_report(request):
 @login_required
 @dec_is_csc_team   
 def test_report(request):
-    return render(request, 'stats/test_report.html')
+    context = {}
+    all_foss = FossCategory.objects.annotate(Count('test'))
+    context['all_foss'] = all_foss
+    return render(request, 'stats/test_report.html', context)
