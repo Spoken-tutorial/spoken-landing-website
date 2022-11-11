@@ -40,9 +40,9 @@
                 <th scope="col">Foss</th>
                 <th scope="col">Upcoming Tests</th>
                 <th scope="col">Conducted Tests</th>
-                <th scope="col">Total Students Upcoming</th>
-                <th scope="col">Total students Appeared</th>
-                <th scope="col">Total certificates</th>
+                <th scope="col">Upcoming Students</th>
+                <th scope="col">Appeared Students</th>
+                <th scope="col">Certificates</th>
               </tr>
             </thead>
             <tbody>
@@ -50,11 +50,11 @@
                 <tr>
                     <th scope="row">{{forloop.counter}}</th>
                     <td>{{item}}</td>
-                    <td>{{item.test__count}}</td>
-                    <td>{{item.test__count}}</td>
-                    <td>{{item.}}</td>
-                    <td>{{item.}}</td>
-                    <td>{{item.}}</td>
+                    <td>{{item.upcoming_tests}}</td>
+                    <td>{{item.conducted_tests}}</td>
+                    <td>{{item.upcoming_students}}</td>
+                    <td>{{item.appeared_students}}</td>
+                    <td>{{item.all_certificates}}</td>
                   </tr>
                 {% endfor %}
             </tbody>

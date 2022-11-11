@@ -246,6 +246,6 @@ def vle_report(request):
 @dec_is_csc_team   
 def test_report(request):
     context = {}
-    all_foss = FossCategory.objects.annotate(Count('test'))
+    all_foss = FossCategory.objects.annotate(upcoming_tests = Count('test', distinct=True, filter=Q(test__tdate__gte=datetime.now().date())), conducted_tests=Count('test', distinct=True, filter=Q(test__tdate__lt=datetime.now().date())), upcoming_students=Count('student_foss', distinct=True), appeared_students=Count('student_foss', distinct=True), all_certificates=Count('categorycourses', distinct=True))
     context['all_foss'] = all_foss
     return render(request, 'stats/test_report.html', context)
