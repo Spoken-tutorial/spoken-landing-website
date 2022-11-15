@@ -43,7 +43,14 @@ def studentTest(request,user__email):
         courses = set()
         cert_categories = [courses.add(x.cert_category) for x in Student_Foss.objects.filter(student=student)]
         scores = {}
-        ta = CSCTestAtttendance.objects.filter(student=student,status__gte=TEST_COMPLETED_BY_STUDENT)
+        ta = CSCTestAtttendance.objects.filter(student=student,status__gte=TEST_COMPLETED_BY_STUDENT).order_by('-updated')
+        if ta:
+            last_test_date = ta[0].updated.date()
+            d['last_updated'] = last_test_date
+        else:
+            d['last_updated'] = None
+        # else:
+        #     d['last_updated'] = 'No test taken'
         for item in ta:
             scores[item.test.foss.foss] = item.mdlgrade
         for course in courses:
@@ -51,6 +58,11 @@ def studentTest(request,user__email):
                 'title' : course.title
             }
             fosses = [x.foss for x in CategoryCourses.objects.filter(certificate_category=course)]
+            ta_temp = CSCTestAtttendance.objects.filter(student=student,status__gte=TEST_COMPLETED_BY_STUDENT,test__foss__in=fosses).order_by('-updated')
+            if ta_temp:
+                d[course.code]['last_test_date'] = ta_temp[0].updated.date()
+            else:
+                d[course.code]['last_test_date'] = None
             temp = dict()
             for foss in fosses:
                 temp[foss.foss] = scores.get(foss.foss,'NA')
