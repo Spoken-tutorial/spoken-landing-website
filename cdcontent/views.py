@@ -88,7 +88,7 @@ def add_side_by_side_tutorials(archive, languages):
     available_langs = set()
 
     for language in languages:
-        filepath = '{}videos/32/714/Side-by-Side-Method-{}.ogv'.format(settings.MEDIA_ROOT, language)
+        filepath = '{}/videos/32/714/Side-by-Side-Method-{}.ogv'.format(settings.MEDIA_ROOT, language)
 
         if os.path.isfile(filepath):
             available_langs.add(language)
@@ -97,12 +97,12 @@ def add_side_by_side_tutorials(archive, languages):
     return available_langs
 
 def add_forum_video(archive):
-    filepath = '{}videos/32/1450/Spoken-Tutorial-Forums-English.ogv'.format(settings.MEDIA_ROOT)
+    filepath = '{}/videos/32/1450/Spoken-Tutorial-Forums-English.ogv'.format(settings.MEDIA_ROOT)
     if os.path.isfile(filepath):
             archive.write(filepath, 'spoken/videos/Spoken-Tutorial-Forums-English.ogv')
 
 def add_suplementary_video(archive):
-    filepath = '{}videos/32/1537/Spoken-Tutorial-Supplementary-Material-English.ogv'.format(settings.MEDIA_ROOT)
+    filepath = '{}/videos/32/1537/Spoken-Tutorial-Supplementary-Material-English.ogv'.format(settings.MEDIA_ROOT)
     if os.path.isfile(filepath):
             archive.write(filepath, 'spoken/videos/Spoken-Tutorial-Supplementary-Material-English.ogv')
 
@@ -212,24 +212,24 @@ def collect_common_files(tr_rec, common_files):
 
 def add_common_files(archive, common_files):
     for filepath in common_files:
-        if os.path.isfile(settings.MEDIA_ROOT + filepath):
-            archive.write(settings.MEDIA_ROOT + filepath, 'spoken/' + filepath)
+        if os.path.isfile(os.path.join(settings.MEDIA_ROOT, filepath)):
+            archive.write(os.path.join(settings.MEDIA_ROOT, filepath), 'spoken/' + filepath)
 
 
 def add_srt_file(archive, tr_rec, filepath, eng_flag, srt_files):
     ptr = filepath.rfind(".")
     filepath = filepath[:ptr] + '.srt'
 
-    if os.path.isfile(settings.MEDIA_ROOT + filepath):
-        archive.write(settings.MEDIA_ROOT + filepath, 'spoken/' + filepath)
+    if os.path.isfile(os.path.join(settings.MEDIA_ROOT, filepath)):
+        archive.write(os.path.join(settings.MEDIA_ROOT, filepath), 'spoken/' + filepath)
 
     if eng_flag:
         filepath = 'videos/{}/{}/{}-English.srt'.format(tr_rec.tutorial_detail.foss_id, tr_rec.tutorial_detail_id,
                                                         tr_rec.tutorial_detail.tutorial.replace(' ', '-'))
 
-        if os.path.isfile(settings.MEDIA_ROOT + filepath) and filepath not in srt_files:
+        if os.path.isfile(os.path.join(settings.MEDIA_ROOT, filepath)) and filepath not in srt_files:
             srt_files.add(filepath)
-            archive.write(settings.MEDIA_ROOT + filepath, 'spoken/' + filepath)
+            archive.write(os.path.join(settings.MEDIA_ROOT, filepath), 'spoken/' + filepath)
 
 
 def internal_computation(request, user_type):
@@ -279,8 +279,8 @@ def internal_computation(request, user_type):
                 question_s = Question.objects.filter(category=foss_rec.foss.replace(' ','-'),tutorial=rec.tutorial_detail.tutorial.replace(' ','-')).order_by('-date_created')
 
 
-                if os.path.isfile(settings.MEDIA_ROOT + filepath):
-                    archive.write(settings.MEDIA_ROOT + filepath, 'spoken/' + filepath)
+                if os.path.isfile(os.path.join(settings.MEDIA_ROOT, filepath)):
+                    archive.write(os.path.join(settings.MEDIA_ROOT, filepath), 'spoken/' + filepath)
 
                 # add srt file to archive
                 add_srt_file(archive, rec, filepath, eng_flag, srt_files)
@@ -455,20 +455,20 @@ def ajax_show_added_foss(request):
                 languages.add(rec.language.name)
                 # calculate video size
                 filepath = 'videos/{}/{}/{}'.format(foss.id, rec.tutorial_detail_id, rec.video)
-                if os.path.isfile(settings.MEDIA_ROOT + filepath):
-                    fsize += os.path.getsize(settings.MEDIA_ROOT + filepath)
+                if os.path.isfile(os.path.join(settings.MEDIA_ROOT, filepath)):
+                    fsize += os.path.getsize(os.path.join(settings.MEDIA_ROOT, filepath))
                 # calculate str file size
                 ptr = filepath.rfind(".")
                 filepath = filepath[:ptr] + '.srt'
-                if os.path.isfile(settings.MEDIA_ROOT + filepath):
-                    fsize += os.path.getsize(settings.MEDIA_ROOT + filepath)
+                if os.path.isfile(os.path.join(settings.MEDIA_ROOT, filepath)):
+                    fsize += os.path.getsize(os.path.join(settings.MEDIA_ROOT, filepath))
                 if eng_flag:
                     filepath = 'videos/{}/{}/{}-English.srt'.format(
                         key, rec.tutorial_detail_id, rec.tutorial_detail.tutorial.replace(' ', '-'))
-                    if os.path.isfile(settings.MEDIA_ROOT + filepath) and filepath not in srt_files:
-                        fsize += os.path.getsize(settings.MEDIA_ROOT + filepath)
+                    if os.path.isfile(os.path.join(settings.MEDIA_ROOT, filepath)) and filepath not in srt_files:
+                        fsize += os.path.getsize(os.path.join(settings.MEDIA_ROOT, filepath))
                 # append common files path to list
-                common_files_path = '{}videos/{}/{}/resources'.format(settings.MEDIA_ROOT, key,
+                common_files_path = '{}/videos/{}/{}/resources'.format(settings.MEDIA_ROOT, key,
                                                                       rec.tutorial_detail_id)
                 # if rec.common_content.slide_status > 0:
                 #     common_files.add('{}/{}'.format(common_files_path, rec.common_content.slide))
@@ -498,18 +498,18 @@ def ajax_show_added_foss(request):
 
     # calculate size for side-by-side tutorials
     for language in languages:
-        filepath = '{}videos/32/714/Side-by-Side-Method-{}.ogv'.format(settings.MEDIA_ROOT, language)
+        filepath = '{}/videos/32/714/Side-by-Side-Method-{}.ogv'.format(settings.MEDIA_ROOT, language)
 
         if os.path.isfile(filepath):
             fsize += os.path.getsize(filepath)
 
     # calculate size for forum video
-    filepath = '{}videos/32/1450/Spoken-Tutorial-Forums-English.ogv'.format(settings.MEDIA_ROOT)
+    filepath = '{}/videos/32/1450/Spoken-Tutorial-Forums-English.ogv'.format(settings.MEDIA_ROOT)
     if os.path.isfile(filepath):
             fsize += os.path.getsize(filepath)
 
     # calculate size for suplementary video
-    filepath = '{}videos/32/1537/Spoken-Tutorial-Supplementary-Material-English.ogv'.format(settings.MEDIA_ROOT)
+    filepath = '{}/videos/32/1537/Spoken-Tutorial-Supplementary-Material-English.ogv'.format(settings.MEDIA_ROOT)
     if os.path.isfile(filepath):
             fsize += os.path.getsize(filepath)
             

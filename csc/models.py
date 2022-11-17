@@ -200,9 +200,8 @@ class Student_Foss(models.Model):
 class Invigilator(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='invi')
     phone = models.CharField(max_length=32,null=True,blank=True)
-    # vle = models.ManyToManyField(VLE)
-    # vle = models.ForeignKey(User,on_delete=models.CASCADE,related_name='invig')
-    vle = models.ForeignKey(VLE,on_delete=models.CASCADE,related_name='invig')
+    vle = models.ManyToManyField(VLE)
+    # vle = models.ForeignKey(VLE,on_delete=models.CASCADE,related_name='invig')
     # added_by = models.ForeignKey(User,on_delete=models.CASCADE,related_name='added_by_user')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -210,9 +209,6 @@ class Invigilator(models.Model):
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} - {self.user.email}"
-
-    class Meta:
-        unique_together = [['user', 'vle']]
         
 class Test(models.Model):
     foss = models.ForeignKey(FossCategory,on_delete=models.CASCADE)
