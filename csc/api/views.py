@@ -44,6 +44,7 @@ def studentTest(request,user__email):
         cert_categories = [courses.add(x.cert_category) for x in Student_Foss.objects.filter(student=student)]
         scores = {}
         ta = CSCTestAtttendance.objects.filter(student=student,status__gte=TEST_COMPLETED_BY_STUDENT).order_by('-updated')
+        d['dca_count'] = student.dca_count
         if ta:
             last_test_date = ta[0].updated.date()
             d['last_updated'] = last_test_date
