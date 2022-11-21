@@ -164,6 +164,7 @@ class Student(models.Model):
     occupation = models.CharField(max_length=255,blank=True,null=True)
     category = models.CharField(max_length=255,blank=True,null=True)
     mdl_mail_sent = models.BooleanField(default=False)
+    dca_count = models.IntegerField(default=0)
     
     
 

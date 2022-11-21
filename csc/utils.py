@@ -137,9 +137,8 @@ def get_tenure_end_date(tdate):
     
 def get_valid_students_for_test(vle,test):
     foss = test.foss
-    print(f"datetime.date.today()-timedelta(days=10) ************ {datetime.date.today()-timedelta(days=10)}")
-    students = Student.objects.filter(vle_id=vle.id,student_foss__csc_foss_id=foss.id,student_foss__foss_start_date__lte=datetime.date.today()-timedelta(days=10)).annotate(assigned=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test)))
-    
+    other_tests = Test.objects.filter(foss=foss).exclude(id=test.id)
+    students = Student.objects.filter(vle_id=vle.id,student_foss__csc_foss_id=foss.id,student_foss__foss_start_date__lte=datetime.date.today()-timedelta(days=10)).annotate(assigned=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test))).annotate(ineligible=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test__in=other_tests)))
     return students
 
 def get_all_foss_for_vle(vle):
