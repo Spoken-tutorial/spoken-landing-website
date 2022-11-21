@@ -288,7 +288,7 @@ class CSCTestAtttendance(models.Model):
     updated = models.DateTimeField(auto_now = True)
     class Meta(object):
         verbose_name = "Test Attendance"
-        unique_together = (("test", "mdluser_id"))
+        unique_together = (("mdlcourse_id", "mdluser_id"))
 
 
 class CSCFossMdlCourses(models.Model):
