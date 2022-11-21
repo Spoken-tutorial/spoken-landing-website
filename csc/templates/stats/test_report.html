@@ -46,15 +46,15 @@
               </tr>
             </thead>
             <tbody>
-                {% for item in all_foss %}
+                {% for key, value in fosses.items %}
                 <tr>
                     <th scope="row">{{forloop.counter}}</th>
-                    <td>{{item}}</td>
-                    <td>{{item.upcoming_tests}}</td>
-                    <td>{{item.conducted_tests}}</td>
-                    <td>{{item.upcoming_students}}</td>
-                    <td>{{item.appeared_students}}</td>
-                    <td>{{item.all_certificates}}</td>
+                    <td>{{key}}</td>
+                    <td>{{value.upcoming_tests}}</td>
+                    <td>{{value.conducted_tests}}</td>
+                    <td>{{value.upcoming_students}}</td>
+                    <td>{{value.appeared_students}}</td>
+                    <td>{{value.all_certificates}}</td>
                   </tr>
                 {% endfor %}
             </tbody>
@@ -71,6 +71,7 @@
       $(document).ready(function () {
         $('#foss_test').DataTable({
           pageLength: 100
-        });   
+        })
+      });   
     </script>
 {% endblock js_script %}

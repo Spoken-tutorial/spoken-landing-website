@@ -158,7 +158,6 @@ class VLEListView(ListView):
     def get_queryset(self):
         qs = super().get_queryset() 
         qs = qs_vle.annotate(Count('test'))
-        print(vars(qs[0]))
         if self.request.GET.get('name'):
             name = self.request.GET.get('name')
             qs = qs.filter(Q(user__first_name__icontains=name)|Q(user__last_name__icontains=name)|Q(user__email__icontains=name))
@@ -246,6 +245,18 @@ def vle_report(request):
 @dec_is_csc_team   
 def test_report(request):
     context = {}
-    all_foss = FossCategory.objects.annotate(upcoming_tests = Count('test', distinct=True, filter=Q(test__tdate__gte=datetime.now().date())), conducted_tests=Count('test', distinct=True, filter=Q(test__tdate__lt=datetime.now().date())), upcoming_students=Count('student_foss', distinct=True), appeared_students=Count('student_foss', distinct=True), all_certificates=Count('categorycourses', distinct=True))
-    context['all_foss'] = all_foss
+    all_foss = FossCategory.objects.annotate(upcoming_tests = Count('test', distinct=True, filter=Q(test__tdate__gte=datetime.now().date())), conducted_tests=Count('test', distinct=True, filter=Q(test__tdate__lt=datetime.now().date()))).order_by()
+    all_test = Test.objects.annotate(upcoming_students = Count('csctestatttendance', distinct=True, filter=Q(csctestatttendance__status__lte=2)), appeared_students = Count('csctestatttendance', distinct=True, filter=Q(csctestatttendance__status__gt=2)), all_certificates = Count('csctestatttendance', distinct=True, filter=Q(csctestatttendance__status__gte=3)))
+    foss = {}
+    for item in all_foss:
+        for value in all_test:
+            foss[item.foss] = {
+                'upcoming_tests': item.upcoming_tests,
+                'conducted_tests': item.conducted_tests,
+                'upcoming_students': value.upcoming_students,
+                'appeared_students': value.appeared_students,
+                'all_certificates': value.all_certificates,
+            }
+    context['fosses'] = foss
+    print(context['fosses']['Blender'])
     return render(request, 'stats/test_report.html', context)
