@@ -637,7 +637,7 @@ def test_assign(request):
         except IntegrityError as e:
           print(e)
       if request.POST.get('action_type') == 'add_students':
-        nta = CSCTestAtttendance.objects.filter(test=test).exclude(student__user__email__in=assigned_students)
+        nta = CSCTestAtttendance.objects.filter(test=test,status=TEST_OPEN).exclude(student__user__email__in=assigned_students)
         for item in nta:
           item.delete()
       else:
