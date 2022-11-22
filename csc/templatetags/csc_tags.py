@@ -10,6 +10,11 @@ def is_today(value):
 
 register.filter('is_today', is_today)
 
+def is_gte_today(value):
+    return value <= datetime.date.today()
+
+register.filter('is_gte_today', is_gte_today)
+
 
 @register.filter
 def get_csc_mdlcourseid(eventfossid):
@@ -52,6 +57,7 @@ def check_attendance(studentid, testfossid):
 def check_passgrade_exists(studentid, testfossid):
   try:
     pass_entry = CSCTestAtttendance.objects.filter(test__foss__id=testfossid, student_id=studentid, status__gte=TEST_COMPLETED_BY_STUDENT, mdlgrade__gte=PASS_GRADE).first()
+    print(f"pass_entry for foss - {testfossid} - {pass_entry}")
     return pass_entry   
   except:
     return None  

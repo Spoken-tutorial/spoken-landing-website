@@ -50,7 +50,7 @@
                   </td> 
                   <td><a href="{% url 'csc:delete_test' test.id %}"><i class="far fa-trash-alt"></i></a></td>
                   <td><a href="{% url 'csc:update_test' test.id %}"><i class="far fa-edit"></i></a></td>
-                  <td>{% if test.tdate|is_today %}
+                  <td>{% if test.tdate|is_gte_today %}
                       <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button> -->
 
                       <!-- <button class="btn btn-sm btn-warning attendance" id="att_{{test.id}}"></button> -->

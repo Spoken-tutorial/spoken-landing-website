@@ -12,6 +12,7 @@ from .decorators import is_student
 from django.db.models import Q
 from .utils import TEST_COMPLETED_BY_STUDENT
 from django.conf import settings
+from csc.utils import PASS_GRADE
 
 TEST_WAITING_PERIOD = 10
 def student_tests(request):
@@ -77,6 +78,7 @@ def student_dashboard(request):
     context['courses'] = d
     context['fosses'] = indi_fosses
     context['vle'] = student.vle_id.all()[0]
+    context['pass_grade'] = PASS_GRADE
     
     return render(request,'csc/student_dashboard.html',context)
 
