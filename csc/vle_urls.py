@@ -25,6 +25,7 @@ urlpatterns = [
     path('detail_test/<slug:slug>', TestDetailView.as_view(), name="detail_test"),
     # path('update_test/<int:pk>', TestUpdateView.as_view(), name="update_test"),
     path('update_test/<int:pk>', update_test, name="update_test"),
+    path('test_students/<int:pk>', test_students, name="test_students"),
     path('delete_test/<int:pk>', TestDeleteView.as_view(), name="delete_test"),
     path('list_test/', TestListView.as_view(), name="list_test"),
     path('invigilator/', invigilator, name="invigilator"),
