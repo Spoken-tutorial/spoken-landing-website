@@ -499,10 +499,7 @@ def mark_attendance(request,id):
  
   test = Test.objects.get(id=id)
   # st = [x.student for x in StudentTest.objects.filter(test=test)]
-  print("\n\n")
-  print(f"1********************************")
   st = [(x.student,x.status) for x in CSCTestAtttendance.objects.filter(test=test)]
-  print(f"2********************************")
   context['test'] = test
   context['students'] = st
   total_enrolled = len(st)
@@ -513,13 +510,11 @@ def mark_attendance(request,id):
   context['pending'] = pending
   
   if request.method == 'POST':
-    print(f"3********************************")
     student_attendance = request.POST.getlist('student_attendance')
-    print(f"student_attendance\n\n ************************ {student_attendance}")
     #present
-    CSCTestAtttendance.objects.filter(test=test,student_id__in=student_attendance).update(status=TEST_ATTENDANCE_MARKED)
+    CSCTestAtttendance.objects.filter(test=test,student_id__in=student_attendance,status__in=[TEST_OPEN,TEST_ATTENDANCE_MARKED]).update(status=TEST_ATTENDANCE_MARKED)
     #absent
-    CSCTestAtttendance.objects.exclude(test=test,student_id__in=student_attendance).update(status=0)
+    b=CSCTestAtttendance.objects.filter(test=test,status=TEST_ATTENDANCE_MARKED).exclude(student_id__in=student_attendance).update(status=0)
     st = [(x.student,x.status) for x in CSCTestAtttendance.objects.filter(test=test)]
     context['students'] = st
   
