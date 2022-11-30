@@ -9,6 +9,8 @@ class MdlUser(models.Model):
     firstname = models.CharField(max_length=300)
     lastname = models.CharField(max_length=300)
     email = models.CharField(max_length=300)
+    confirmed = models.IntegerField()
+    mnethostid = models.IntegerField()
     class Meta(object):
         db_table = 'mdl_user'
         managed = False

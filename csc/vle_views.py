@@ -30,7 +30,7 @@ import logging
 import random
 import requests
 import string
-
+import hashlib
 
 STUDENT_ENROLLED_FOR_TEST = 0
 ATTENDANCE_MARKED = 1
@@ -499,10 +499,7 @@ def mark_attendance(request,id):
  
   test = Test.objects.get(id=id)
   # st = [x.student for x in StudentTest.objects.filter(test=test)]
-  print("\n\n")
-  print(f"1********************************")
   st = [(x.student,x.status) for x in CSCTestAtttendance.objects.filter(test=test)]
-  print(f"2********************************")
   context['test'] = test
   context['students'] = st
   total_enrolled = len(st)
@@ -513,13 +510,11 @@ def mark_attendance(request,id):
   context['pending'] = pending
   
   if request.method == 'POST':
-    print(f"3********************************")
     student_attendance = request.POST.getlist('student_attendance')
-    print(f"student_attendance\n\n ************************ {student_attendance}")
     #present
-    CSCTestAtttendance.objects.filter(test=test,student_id__in=student_attendance).update(status=TEST_ATTENDANCE_MARKED)
+    CSCTestAtttendance.objects.filter(test=test,student_id__in=student_attendance,status__in=[TEST_OPEN,TEST_ATTENDANCE_MARKED]).update(status=TEST_ATTENDANCE_MARKED)
     #absent
-    CSCTestAtttendance.objects.exclude(test=test,student_id__in=student_attendance).update(status=0)
+    b=CSCTestAtttendance.objects.filter(test=test,status=TEST_ATTENDANCE_MARKED).exclude(student_id__in=student_attendance).update(status=0)
     st = [(x.student,x.status) for x in CSCTestAtttendance.objects.filter(test=test)]
     context['students'] = st
   
@@ -625,7 +620,8 @@ def test_assign(request):
           mdluser=MdlUser.objects.get(email=email)
         except MdlUser.DoesNotExist:
           pwd = ''.join(random.choices(string.ascii_letters,k=10))
-          mdluser = MdlUser.objects.create(username=email,firstname=user.first_name,lastname=user.last_name,email=email,password=pwd)
+          encryp_pwd = hashlib.md5((pwd).encode('utf-8')).hexdigest()
+          mdluser = MdlUser.objects.create(username=email,firstname=user.first_name,lastname=user.last_name,email=email,password=encryp_pwd,mnethostid=1,confirmed=1)
           send_mdl_mail(user,pwd)
           mdluser = MdlUser.objects.get(email=email)
         except MdlUser.MultipleObjectsReturned as e:
@@ -636,7 +632,7 @@ def test_assign(request):
         except IntegrityError as e:
           print(e)
       if request.POST.get('action_type') == 'add_students':
-        nta = CSCTestAtttendance.objects.filter(test=test).exclude(student__user__email__in=assigned_students)
+        nta = CSCTestAtttendance.objects.filter(test=test,status=TEST_OPEN).exclude(student__user__email__in=assigned_students)
         for item in nta:
           item.delete()
       else:

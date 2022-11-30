@@ -164,7 +164,7 @@ class Student(models.Model):
     occupation = models.CharField(max_length=255,blank=True,null=True)
     category = models.CharField(max_length=255,blank=True,null=True)
     mdl_mail_sent = models.BooleanField(default=False)
-    
+    dca_count = models.IntegerField(default=0)
     
 
 class Student_certificate_course(models.Model):
@@ -288,7 +288,7 @@ class CSCTestAtttendance(models.Model):
     updated = models.DateTimeField(auto_now = True)
     class Meta(object):
         verbose_name = "Test Attendance"
-        unique_together = (("test", "mdluser_id"))
+        unique_together = (("mdlcourse_id", "mdluser_id"))
 
 
 class CSCFossMdlCourses(models.Model):

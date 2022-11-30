@@ -67,7 +67,7 @@
                             <tr>
                                 <td>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="{{student.user.email}}" id="flexCheckDefault" name="students" {% if student.assigned %}checked{% endif %}>
+                                        <input class="form-check-input" type="checkbox" value="{{student.user.email}}" id="flexCheckDefault" name="students" {% if student.assigned %}checked{% endif %} {% if student.ineligible %}disabled{% endif %} {% if student.test_taken %}disabled{% endif %}>
                                         <label class="form-check-label" for="flexCheckDefault"></label>
                                       </div>
                                 </td>
