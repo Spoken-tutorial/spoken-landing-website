@@ -209,7 +209,7 @@ body{
                       {% for item in val %}
                         <tr>
                           <td>
-                          <a class="foss-name" href="{% url 'tutorial_search' %}?search_foss={{ item.split|join:"+" }}&search_language=English">{{item}}</a>
+                          <a class="foss-name" href="{% url 'tutorial_search' %}?search_foss={{ item|format_url }}&search_language=English">{{item}}</a>
                         </td>
 
                         <td>
