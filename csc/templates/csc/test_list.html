@@ -21,9 +21,9 @@
                   <th scope="col">FOSS</th>
                   <th scope="col">Date</th>
                   <th scope="col">Time</th>
-                  <th scope="col">Published</th>
-                  <th scope="col">Delete</th>
-                  <th scope="col">Edit</th>
+                  {% comment %} <th scope="col">Published</th> {% endcomment %}
+                  {% comment %} <th scope="col">Delete</th>
+                  <th scope="col">Edit</th> {% endcomment %}
                   <th scope="col"></th>
               </tr>
           </thead>
@@ -41,15 +41,15 @@
                   <td>{{test.foss | title }}</td>
                   <td>{{test.tdate}}</td>
                   <td>{{test.ttime}}</td>
-                  <td>
+                  {% comment %} <td>
                       {% if test.publish %}
                           <i class="far fa-check-circle"></i>
                       {% else %}    
                       <i class="far fa-times-circle"></i>
                       {% endif %}
-                  </td> 
-                  <td><a href="{% url 'csc:delete_test' test.id %}"><i class="far fa-trash-alt"></i></a></td>
-                  <td><a href="{% url 'csc:update_test' test.id %}"><i class="far fa-edit"></i></a></td>
+                  </td>  {% endcomment %}
+                  {% comment %} <td><a href="{% url 'csc:delete_test' test.id %}"><i class="far fa-trash-alt"></i></a></td>
+                  <td><a href="{% url 'csc:update_test' test.id %}"><i class="far fa-edit"></i></a></td> {% endcomment %}
                   <td>{% if test.tdate|is_gte_today %}
                       <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button> -->
 

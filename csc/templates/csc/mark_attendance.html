@@ -51,8 +51,10 @@
                             <p class="me-5"><button class="btn btn-sm " id="btn_select_all" style="background-color: #90B77D">Select all </button></p>
                             <p class="me-5"><button class="btn btn-sm " id="btn_deselect_all"  style="background-color: #F29393">Deselect all </button></p>
                             <p class="me-5"><button class="btn btn-sm btn-success" id="btn_mark_attendance1" type="submit" form="mark_atten">Mark attendance</button></p>
+                            
                             <!-- <p>Total Students selected : <span id="students_selected"></span></p> -->
                           </div>
+                          <p><small>**Select/Deselect students below to mark attendance. Click on 'Mark Attendance' button above to submit attendance. </small></p>
                         </div>
                       </div>
                 </div>
@@ -65,7 +67,7 @@
                         <th scope="col">Name</th>
                         <th scope="col">email</th>
                         <th scope="col">contact</th>
-                        <th scope="col"></th>
+                        <th scope="col">Action</th>
                         
                       </tr>
                     </thead>
@@ -81,9 +83,9 @@
                             <td>{{student.phone}}</td>
                             <td> 
                                 <div class="form-check">
-                                    
+                                    {% if status <= 1 %}
                                         <input class="form-check-input att" type="checkbox" value="{{student.id}}" id="check_{{item.id}}" name="student_attendance" {% if status != 0 %}checked{% endif %}>
-                                    
+                                        {% endif %}
                                     
                                     {% comment %} {% if item.test_status %}
                                     <input class="form-check-input att" type="checkbox" value="{{item.id}}" id="check_{{item.id}}" checked>                               
