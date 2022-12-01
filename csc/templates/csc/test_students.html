@@ -1,0 +1,74 @@
+{% extends 'csc_base.html'%}
+{% load static %}
+{% load csc_tags %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="{% static '/spoken/utility.css' %}">
+<style></style>
+{% endblock css %}
+{% block content %}
+<div>
+    <div class="container">
+      <div>
+        <table class="table my-5" id="example">
+          <thead>
+              <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Gender</th>
+                  <th scope="col">Age</th>
+                  <th scope="col">Phone</th>
+                  <th scope="col">Edu Qualification</th>
+                  <th scope="col">Occupation</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Grade</th>
+              </tr>
+          </thead>
+            <tbody>
+              {% for test in tests %}
+              <tr>
+                  <td>{{forloop.counter}}</td>
+                  <td><a class="text-dark" href="{% url 'csc:student_profile' id=test.student_id %}">{{test.student.user.first_name | title}} {{test.student.user.last_name | title}}</a></td>
+                  <td>{{test.student.user.email}}</td>
+                  <td>{{test.student.gender | title}}</td>
+                  <td>{{test.student.dob | timesince}}</td>
+                  <td>{{test.student.phone}}</td>
+                  <td>{{test.student.edu_qualification}}</td>
+                  <td>{{test.student.occupation}}</td>
+                  <td>{{test.student.category}}</td>
+                  {% if  test.status == 0%}
+                  <td>Open</td>
+                  {% elif  test.status == 1%}
+                  <td>Attendance Marked</td>
+                  {% elif  test.status == 2%}
+                  <td>Ongoing</td>
+                  {% elif  test.status == 3%}
+                  <td>Completed by Student</td>
+                  {% elif  test.status == 4%}
+                  <td>Closed by VLE</td>
+                  {% endif %}
+                  <td>{{test.mdlgrade}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable({
+            "pageLength": 100
+        }); 
+    });
+</script>
+{% endblock %}

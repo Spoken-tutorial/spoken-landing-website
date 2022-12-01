@@ -648,9 +648,15 @@ def test_assign(request):
 def test_list(request):
   context = {}
   vle = VLE.objects.get(user=request.user)
-  tests = Test.objects.filter(vle=vle)
+  tests = Test.objects.filter(vle=vle).annotate(upcoming_students = Count('csctestatttendance', distinct=True, filter=Q(csctestatttendance__status__lte=2)), appeared_students = Count('csctestatttendance', distinct=True, filter=Q(csctestatttendance__status__gt=2)))
   context['tests'] = tests
   return render(request,'csc/test_list.html',context)
+
+def test_students(request, pk):
+  context = {}
+  tests = CSCTestAtttendance.objects.filter(test=pk)
+  context['tests'] = tests
+  return render(request,'csc/test_students.html', context)
 
 def update_test(request,pk):
   context = {}

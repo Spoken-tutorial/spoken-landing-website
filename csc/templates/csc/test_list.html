@@ -17,13 +17,14 @@
           <thead>
               <tr>
                   <th>#</th>
-                  <th>Title</th>
                   <th scope="col">FOSS</th>
                   <th scope="col">Date</th>
                   <th scope="col">Time</th>
-                  {% comment %} <th scope="col">Published</th> {% endcomment %}
-                  {% comment %} <th scope="col">Delete</th>
-                  <th scope="col">Edit</th> {% endcomment %}
+                  <th scope="col">Delete</th>
+                  <th scope="col">Edit</th>
+                  <th scope="col">Students</th>
+                  <th scope="col">Upcoming</th>
+                  <th scope="col">Appeared</th>
                   <th scope="col"></th>
               </tr>
           </thead>
@@ -31,26 +32,15 @@
               {% for test in tests %}
               <tr>
                     <td>{{forloop.counter}}</td>
-                  <td>
-                      {% if test.test_name %}
-                      <span>{{test.test_name | title}}</span>
-                      {% else %}
-                      <span>{{test.foss | title}} Test</span>
-                      {% endif %}
-                  </td>
                   <td>{{test.foss | title }}</td>
                   <td>{{test.tdate}}</td>
                   <td>{{test.ttime}}</td>
-                  {% comment %} <td>
-                      {% if test.publish %}
-                          <i class="far fa-check-circle"></i>
-                      {% else %}    
-                      <i class="far fa-times-circle"></i>
-                      {% endif %}
-                  </td>  {% endcomment %}
-                  {% comment %} <td><a href="{% url 'csc:delete_test' test.id %}"><i class="far fa-trash-alt"></i></a></td>
-                  <td><a href="{% url 'csc:update_test' test.id %}"><i class="far fa-edit"></i></a></td> {% endcomment %}
-                  <td>{% if test.tdate|is_gte_today %}
+                  <td><a href="{% url 'csc:delete_test' test.id %}"><i class="far fa-trash-alt"></i></a></td>
+                  <td><a href="{% url 'csc:update_test' test.id %}"><i class="far fa-edit"></i></a></td>
+                  <td><a class="text-dark" href="{% url 'csc:test_students' test.id %}"><i class="fas fa-users"></i></a></td>
+                  <td>{{test.upcoming_students}}</td>
+                  <td>{{test.appeared_students}}</td>
+                  <td>{% if test.tdate|is_today %}
                       <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button> -->
 
                       <!-- <button class="btn btn-sm btn-warning attendance" id="att_{{test.id}}"></button> -->

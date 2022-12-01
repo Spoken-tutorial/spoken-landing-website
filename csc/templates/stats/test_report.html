@@ -1,0 +1,77 @@
+{% extends "stats/stats_base.html" %}
+{% load static %}
+{% block custom_style %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+<style>
+  #test_report{
+    border-left: 5px solid orange;
+    color: #013A6B;
+    font-weight: bold;
+  }
+    .scrollspy-example-collapsible {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+      border: 1px solid green;
+    }
+    .scrollspy-example{
+      height: 100vh;
+      overflow: auto;
+    } 
+</style>
+{% endblock custom_style %}
+{% block content  %}
+    <div class="row">
+  <div class="col-3">
+    <div class="nav flex-column nav-tabs me-3 static-nav" id="v-pills-tab" role="tablist" aria-orientation="vertical" style="overflow: hidden;">
+      <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="tab" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">
+        Foss Tests
+      </button>
+
+    </div>
+  </div>
+  <div class="col-9">
+    <div class="tab-content" id="v-pills-tabContent" data-bs-spy="scroll" data-bs-target="#items" >
+      <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+        <table class="table" id="foss_test">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Foss</th>
+                <th scope="col">Upcoming Tests</th>
+                <th scope="col">Conducted Tests</th>
+                <th scope="col">Upcoming Students</th>
+                <th scope="col">Appeared Students</th>
+                <th scope="col">Certificates</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for key, value in fosses.items %}
+                <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{key}}</td>
+                    <td>{{value.upcoming_tests}}</td>
+                    <td>{{value.conducted_tests}}</td>
+                    <td>{{value.upcoming_students}}</td>
+                    <td>{{value.appeared_students}}</td>
+                    <td>{{value.all_certificates}}</td>
+                  </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content  %}
+{% block js_script %}
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $('#foss_test').DataTable({
+          pageLength: 100
+        })
+      });   
+    </script>
+{% endblock js_script %}
