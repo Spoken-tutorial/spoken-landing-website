@@ -98,6 +98,7 @@
             <th scope="col">District</th>
             <th scope="col">Plan</th>
             <th scope="col">Date of Joining</th>
+            <th scope="col">Total Tests</th>
             
           </tr>
         </thead>
@@ -114,6 +115,7 @@
                 <td>{{vle.csc.district}}</td>
                 <td>{{vle.csc.plan}}</td>
                 <td>{{vle.user.date_joined}}</td>
+                <td>{{vle.test__count}}</td>
                 
               </tr>
             {% endfor %}
@@ -153,6 +155,16 @@
                     <div class="col-12">
                         <p>
                             <i class="fas fa-users c-icon"></i><span class="d-inline-block" style="margin-left: 10px;">Total Students :</span> <span id="total_students"></span>
+                        </p>
+                    </div>
+                    <div class="col-12">
+                        <p>
+                            <span class="d-inline-block">Conducted Tests :</span> <span id="conducted_test"></span>
+                        </p>
+                    </div>
+                    <div class="col-12">
+                        <p>
+                            <span class="d-inline-block">Upcoming Tests :</span> <span id="upcoming_test"></span>
                         </p>
                     </div>
                 </div>
@@ -244,6 +256,8 @@
                     document.getElementById("pr_district").innerHTML = data['district'];
                     document.getElementById("pin").innerHTML = data['pin'];
                     document.getElementById("total_students").innerHTML = data['total_students'];
+                    document.getElementById("conducted_test").innerHTML = data['conducted_test'];
+                    document.getElementById("upcoming_test").innerHTML = data['upcoming_test'];
                     
                     $("#tb_students tr").remove(); 
                     var tb_students = document.getElementById("tb_students");
