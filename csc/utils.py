@@ -220,4 +220,7 @@ def get_valid_animation_fosses():
     fosses = [x.foss.id for x in CategoryCourses.objects.filter(certificate_category=course)]
     return FossCategory.objects.filter(id__in=fosses).order_by('foss')
 
-
+def get_test_valid_fosses(vle):
+    students = Student.objects.filter(vle_id=vle.id)
+    fosses = Student_Foss.objects.filter(student__in=students).values('csc_foss').distinct()
+    return FossCategory.objects.filter(id__in=fosses).order_by('foss')
