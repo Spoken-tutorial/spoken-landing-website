@@ -209,39 +209,43 @@ body{
                       {% for item in val %}
                         <tr>
                           <td>
-                          <a class="foss-name" href="{% url 'tutorial_search' %}?search_foss={{ item.split|join:"+" }}&search_language=English">{{item}}</a>
+                          <a class="foss-name" href="{% url 'tutorial_search' %}?search_foss={{ item|format_url }}&search_language=English">{{item}}</a>
                         </td>
 
                         <td>
-                        <!-- if testattendance is marked  status 1-->
-                        {% with fossmdlcourse=item.id|get_csc_mdlcourseid %}
+
+                          {% with fossmdlcourse=item.id|get_csc_mdlcourseid %}
 
 
-                          {% for course in fossmdlcourse %}
-
-                          {% if not student.id|check_passgrade_exists:course.testfoss_id%}
-
-                              <input type="hidden" id="testurl{{course.mdlcourse_id}}" name="testurl" value="{{ CSC_ONLINE_TEST_URL }}/course/view.php?id={{course.mdlcourse_id}}">
-
-                              <button class="btn btn-info" type="button" onclick="take_to_test({{course.mdlcourse_id}});">
-                              Attempt {{course.testfoss.foss}} Test
-                              </button>
-
-                              {% comment %} {% else %}                    
-
-                              {% with grade=student.id|get_grade:course.testfoss_id %}
-                                <button type="submit" class="btn btn-success" >Download Test Certificate &nbsp;<span class="badge">Grade: {{grade}} </span></button>
-                              {% endwith %} {% endcomment %}
+                            {% for course in fossmdlcourse %}
                             
-                          {% endif %}
+                              <!-- check attendance -->
+                              
+                                  {% with attendance=student.id|check_attendance:course.testfoss_id %}
+                                  
 
-                          {% endfor %}
-                        {% endwith %}
+                                    {% if attendance.status == 1%}
+                                      <input type="hidden" id="testurl{{course.mdlcourse_id}}" name="testurl" value="{{ CSC_ONLINE_TEST_URL }}/course/view.php?id={{course.mdlcourse_id}}">
+
+                                      <button class="btn btn-info" type="button" onclick="take_to_test({{course.mdlcourse_id}});">
+                                      Attempt {{course.testfoss.foss}} Test
+                                      </button>
+                                    {% elif attendance.status >= 3%}
+
+                                      {% with pass_entry=student.id|check_passgrade_exists:course.testfoss_id%}
+                                        {% if pass_entry %}
+                                          <button type="submit" class="btn btn-success" >Request VLE for Certificate &nbsp;<span class="badge">Grade: {{pass_entry.mdlgrade}} </span></button>
+                                        {% endif %}
+                                      {% endwith %}
+                                    
+                                    {% endif %}
+                                  {% endwith %}
+                              
+
+                            {% endfor %}
+                          {% endwith %}
+
                         </td>
-
-
-
-
                         </tr>
                       {% endfor %}
                     </table>
@@ -279,6 +283,39 @@ body{
                         <div class="border rounded p-2">
                           <a class="foss-name" href="{% url 'tutorial_search' %}?search_foss={{ key.split|join:"+" }}&search_language=English">
                           {{key}}</a>
+
+                          {% with fossmdlcourse=key.id|get_csc_mdlcourseid %}
+
+
+                            {% for course in fossmdlcourse %}
+                            
+                              <!-- check attendance -->
+                              
+                                  {% with attendance=student.id|check_attendance:course.testfoss_id %}
+                                  
+
+                                    {% if attendance.status == 1%}
+                                      <input type="hidden" id="testurl{{course.mdlcourse_id}}" name="testurl" value="{{ CSC_ONLINE_TEST_URL }}/course/view.php?id={{course.mdlcourse_id}}">
+
+                                      <button class="btn btn-info" type="button" onclick="take_to_test({{course.mdlcourse_id}});">
+                                      Attempt {{course.testfoss.foss}} Test
+                                      </button>
+                                    {% elif attendance.status >= 3%}
+
+                                      {% with pass_entry=student.id|check_passgrade_exists:course.testfoss_id%}
+                                        {% if pass_entry %}
+                                          <button type="submit" class="btn btn-success" >Request VLE for Certificate&nbsp;<span class="badge">Grade: {{pass_entry.mdlgrade}} </span></button>
+                                        {% endif %}
+                                      {% endwith %}
+                                    
+                                    {% endif %}
+                                  {% endwith %}
+                              
+
+                            {% endfor %}
+                          {% endwith %}
+
+                         
                       </div>
                   </div>
                 {% endfor %}
@@ -367,9 +404,7 @@ body{
 
 
   function take_to_test(mdlcourseid){
-    alert("hi"+mdlcourseid);
     testurl=$('#testurl'+mdlcourseid).val()
-    alert(testurl);
     window.location = testurl;
 
 }

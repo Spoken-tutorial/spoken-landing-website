@@ -9,7 +9,7 @@ from drf_yasg import openapi
 
 import os
 
-from csc.api.views import StudentListCreate,SutdentDetail,VLEListCreate,VLEDetail
+from csc.api.views import StudentListCreate,SutdentDetail,VLEListCreate,VLEDetail,studentTest
 from rest_framework_swagger.views import get_swagger_view
 schema_view = get_swagger_view(title='Pastebin API')
 
@@ -29,6 +29,7 @@ urlpatterns = [
     path('students/<str:user__email>',SutdentDetail.as_view(),name="detail_student"),
     path('vles/',VLEListCreate.as_view(),name="create_list_student"),
     path('vles/<str:user__email>',VLEDetail.as_view(),name="detail_student"),
+    path('tests/students/<str:user__email>',studentTest,name="student_test"),
     # path('',schema_view)
 ]
 

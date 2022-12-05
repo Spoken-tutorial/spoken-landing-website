@@ -137,8 +137,8 @@ def get_tenure_end_date(tdate):
     
 def get_valid_students_for_test(vle,test):
     foss = test.foss
-    print(f"datetime.date.today()-timedelta(days=10) ************ {datetime.date.today()-timedelta(days=10)}")
-    students = Student.objects.filter(vle_id=vle.id,student_foss__csc_foss_id=foss.id,student_foss__foss_start_date__lte=datetime.date.today()-timedelta(days=10)).annotate(assigned=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test)))
+    other_tests = Test.objects.filter(foss=foss).exclude(id=test.id)
+    students = Student.objects.filter(vle_id=vle.id,student_foss__csc_foss_id=foss.id,student_foss__foss_start_date__lte=datetime.date.today()-timedelta(days=10)).annotate(assigned=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test))).annotate(ineligible=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test__in=other_tests))).annotate(test_taken=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test,status__gte=TEST_COMPLETED_BY_STUDENT)))
     
     return students
 
@@ -181,8 +181,8 @@ def send_mdl_mail(u,pwd):
     student = Student.objects.get(user=u)
     mdluser = MdlUser.objects.filter(email=u.email)[0]
     # pwd = ''.join(random.choices(string.ascii_letters,k=10))
-    u.set_password(pwd)
-    u.save()
+    # u.set_password(pwd)
+    # u.save()
     
     from_email = getattr(settings, "NO_REPLY_MAIL", "no-reply@spoken-tutorial.org")
     print(f"2 SENDING Email ************************ {u.email}")
