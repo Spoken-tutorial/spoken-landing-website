@@ -1,7 +1,7 @@
 from django.db.models import Count,Q,F
 from django.conf import settings
 
-from csc.models import CertifiateCategories, Student,Student_Foss,FossCategory, CSC, VLE
+from csc.models import CertifiateCategories, Student,Student_Foss,FossCategory, CSC, VLE, CategoryCourses
 
 TEST_VLE_COUNT=int(getattr(settings, "TEST_VLE_COUNT", 2))
 TEST_STUDENT_COUNT=int(getattr(settings, "TEST_STUDENT_COUNT", 1))
@@ -52,3 +52,7 @@ def get_student_foss_stats(start=0,end=len(qs_student_foss),type=''):
     else:
         return qs_student_foss.filter(csc_foss__foss__in=temp).values('csc_foss__foss').annotate(count=Count('csc_foss__foss')).order_by('-count')
     
+    
+def get_test_stats():
+    f = [x.foss.id for x in CategoryCourses.objects.filter(certificate_category__code='IT07')]
+    return FossCategory.objects.filter(id__in=f).annotate(tests=Count('test'))

@@ -17,10 +17,13 @@
           <thead>
               <tr>
                   <th>#</th>
-                  <th>Title</th>
                   <th scope="col">FOSS</th>
                   <th scope="col">Date</th>
                   <th scope="col">Time</th>
+                  <th scope="col">Students (Pending)</th>
+                  <th scope="col">Appeared Students</th>
+                  <th scope="col">View Students </th>
+
                   {% comment %} <th scope="col">Published</th> {% endcomment %}
                   {% comment %} <th scope="col">Delete</th>
                   <th scope="col">Edit</th> {% endcomment %}
@@ -31,16 +34,14 @@
               {% for test in tests %}
               <tr>
                     <td>{{forloop.counter}}</td>
-                  <td>
-                      {% if test.test_name %}
-                      <span>{{test.test_name | title}}</span>
-                      {% else %}
-                      <span>{{test.foss | title}} Test</span>
-                      {% endif %}
-                  </td>
                   <td>{{test.foss | title }}</td>
                   <td>{{test.tdate}}</td>
                   <td>{{test.ttime}}</td>
+                  <td>{{test.upcoming_students}}</td>
+                  <td>{{test.appeared_students}}</td>
+                  <td><a class="text-dark" href="{% url 'csc:test_students' test.id %}"><i class="fas fa-users"></i></a></td>
+
+
                   {% comment %} <td>
                       {% if test.publish %}
                           <i class="far fa-check-circle"></i>
@@ -55,7 +56,6 @@
 
                       <!-- <button class="btn btn-sm btn-warning attendance" id="att_{{test.id}}"></button> -->
                       <a href="{% url 'csc:mark_attendance' test.id %}" class="btn btn-sm btn-warning">attendance</a>
-                      
                       {% endif %}
                   </td>
               </tr>
