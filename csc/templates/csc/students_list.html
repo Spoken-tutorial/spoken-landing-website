@@ -51,16 +51,15 @@
                         {% endfor %}
                       </select>
                     </div>
-                      <div class="col-md-3  col-6 mb-3">
+                    <div class="col-md-3  col-6 mb-3">
                         <label for="name" class="form-label" ><b>Name/Email</b></label>
                         <input type="text" class="form-control" id="name" aria-describedby="nameEmail" name="name">
                         <div id="emailHelp" class="form-text">Search by student name or email</div>
-                      </div>
-                      {% comment %} <div class="col-md-3  col-6 ">
+                    </div>
+                    <div class="col-md-3  col-6 ">
                         <label for="name" class="form-label" >Registration Date Range</label>
                         <input  class="form-control" id="dates" aria-describedby="nameEmail" name="dates" >
-                      </div> {% endcomment %}
-
+                    </div>
                 </div>
                   <button type="submit" class="btn btn-primary c-btn">Submit</button>
             </form>
@@ -78,7 +77,7 @@
         <div>
             <p class="f-name fs-sm ">* Click on student name below to view student details.</p>
             <hr>
-            <p>Search results for : {{search_foss}}, {{search_course}}, {{search_name}}</p>
+            <p>Search results for : {{search_foss}}, {{search_course}}, {{search_name}}, {{search_date}}</p>
             <hr>
         </div>
         <div>

@@ -15,7 +15,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View,ListView,DeleteView,DetailView,UpdateView
 from django.views.generic.edit import CreateView
-
+import datetime
 from csc.models import *
 from mdl.models import *
 from spokenlogin.models import *
@@ -151,7 +151,7 @@ def student_list(request):
   course = request.GET.get('course')
   foss = request.GET.get('foss')
   name = request.GET.get('name')
-  # dates = request.GET.get('dates')
+  dates = request.GET.get('dates')
   findividual = FossCategory.objects.filter(available_for_jio=True)
   context['foss_individual'] = [x for x in findividual]
   indi_id = CertifiateCategories.objects.get(code="INDI").id
@@ -176,6 +176,11 @@ def student_list(request):
   if name!=None:
     context['search_name'] = name
     s = s.filter(Q(user__first_name__icontains=name)|Q(user__last_name__icontains=name)|Q(user__email__icontains=name))
+  if dates!=None:
+    context['search_date'] = dates
+    start_date = datetime.datetime.strptime(dates.split('-')[0].strip(), "%m/%d/%Y")
+    end_date = datetime.datetime.strptime(dates.split('-')[1].strip(), "%m/%d/%Y")
+    s = s.filter(Q(date_of_registration__gte=start_date)&Q(date_of_registration__lte=end_date))
   if course!='0' and course!=None:
     try:
       context['search_course'] = CertifiateCategories.objects.get(id=course)
