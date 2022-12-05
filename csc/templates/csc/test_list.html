@@ -22,9 +22,10 @@
                   <th scope="col">Time</th>
                   <th scope="col">Delete</th>
                   <th scope="col">Edit</th>
-                  <th scope="col">Students</th>
-                  <th scope="col">Upcoming</th>
-                  <th scope="col">Appeared</th>
+                  
+                  <th scope="col">Students (Pending)</th>
+                  <th scope="col">Appeared Students</th>
+                  <th scope="col">View Students </th>
                   <th scope="col"></th>
               </tr>
           </thead>
@@ -37,15 +38,12 @@
                   <td>{{test.ttime}}</td>
                   <td><a href="{% url 'csc:delete_test' test.id %}"><i class="far fa-trash-alt"></i></a></td>
                   <td><a href="{% url 'csc:update_test' test.id %}"><i class="far fa-edit"></i></a></td>
-                  <td><a class="text-dark" href="{% url 'csc:test_students' test.id %}"><i class="fas fa-users"></i></a></td>
+                  
                   <td>{{test.upcoming_students}}</td>
                   <td>{{test.appeared_students}}</td>
+                  <td><a class="text-dark" href="{% url 'csc:test_students' test.id %}"><i class="fas fa-users"></i></a></td>
                   <td>{% if test.tdate|is_today %}
-                      <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button> -->
-
-                      <!-- <button class="btn btn-sm btn-warning attendance" id="att_{{test.id}}"></button> -->
                       <a href="{% url 'csc:mark_attendance' test.id %}" class="btn btn-sm btn-warning">attendance</a>
-                      
                       {% endif %}
                   </td>
               </tr>

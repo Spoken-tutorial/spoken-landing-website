@@ -7,10 +7,10 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from csc.models import CSC,VLE,Student, FossCategory, CertifiateCategories, Student_Foss, Test
+from csc.models import CSC,VLE,Student, FossCategory, CertifiateCategories, Student_Foss, Test,CSCTestAtttendance
 from cms.models import State, District
 from csc.decorators import is_csc_team as dec_is_csc_team
-from csc.utils import is_csc_team_role
+from csc.utils import is_csc_team_role,TEST_OPEN,TEST_ONGOING,PASS_GRADE,TEST_ATTENDANCE_MARKED
 from .utility import *
 
 from datetime import datetime
@@ -31,7 +31,8 @@ def stats(request):
     context['total_certificate_course'] = total_certificate_course
     context['total_test_conducted'] = Test.objects.filter(tdate__lt=datetime.now().date()).count()
     context['total_upcoming_tests'] = Test.objects.filter(tdate__gte=datetime.now().date()).count()
-    
+    context['certificates'] = CSCTestAtttendance.objects.filter(mdlgrade__gte=PASS_GRADE).count()
+    context['total_test_enrollments'] = CSCTestAtttendance.objects.count()
     student_gender = get_student_gender_stats()
     context['student_gender'] = student_gender
     sct = get_student_certi_stats()
@@ -44,7 +45,8 @@ def stats(request):
     indi = CertifiateCategories.objects.get(code='INDI')
     student_indi_foss=Student_Foss.objects.filter(cert_category=indi).values('csc_foss__foss').annotate(count=Count('csc_foss')).order_by('-count')
     context['student_indi_foss'] = [x for x in student_indi_foss]
-    
+    temp = [x for x in get_test_stats()]
+    context['test_count_tb'] = [x for x in get_test_stats()]
     return render(request, 'stats/stats.html', context)
 
 
@@ -69,11 +71,7 @@ def ajax_stats(request):
     csc_state = get_student_state_stats()
     data['csc_state'] = [x for x in csc_state]
 
-    data['student_indi_foss_1'] = [x for x in get_student_foss_stats(0,15,'indi')]
-    data['student_indi_foss_2'] = [x for x in get_student_foss_stats(15,30,'indi')]
-    data['student_indi_foss_3'] = [x for x in get_student_foss_stats(30,45,'indi')]
-    data['student_indi_foss_4'] = [x for x in get_student_foss_stats(45,60,'indi')]
-    data['student_indi_foss_5'] = [x for x in get_student_foss_stats(start=45,type='indi')]
+    data['student_indi_foss'] = [x for x in get_student_foss_stats(start=0,type='indi')]
     
     return JsonResponse(data)
     
@@ -248,15 +246,25 @@ def test_report(request):
     all_foss = FossCategory.objects.annotate(upcoming_tests = Count('test', distinct=True, filter=Q(test__tdate__gte=datetime.now().date())), conducted_tests=Count('test', distinct=True, filter=Q(test__tdate__lt=datetime.now().date()))).order_by()
     all_test = Test.objects.annotate(upcoming_students = Count('csctestatttendance', distinct=True, filter=Q(csctestatttendance__status__lte=2)), appeared_students = Count('csctestatttendance', distinct=True, filter=Q(csctestatttendance__status__gt=2)), all_certificates = Count('csctestatttendance', distinct=True, filter=Q(csctestatttendance__status__gte=3)))
     foss = {}
-    for item in all_foss:
-        for value in all_test:
-            foss[item.foss] = {
-                'upcoming_tests': item.upcoming_tests,
-                'conducted_tests': item.conducted_tests,
-                'upcoming_students': value.upcoming_students,
-                'appeared_students': value.appeared_students,
-                'all_certificates': value.all_certificates,
-            }
-    context['fosses'] = foss
-    print(context['fosses']['Blender'])
+    upcoming_tests = Count('test',filter=Q(test__tdate__gte=datetime.now()))
+    conducted_tests = Count('test',filter=Q(test__tdate__lt=datetime.now()))
+    enrolled_students = Count('test',filter=Q(test__csctestatttendance__status__gte=TEST_OPEN))
+    appeared_students = Count('test',filter=Q(test__csctestatttendance__status__gte=TEST_ONGOING))
+    certificates_provided = Count('test',filter=Q(test__csctestatttendance__mdlgrade__gte=PASS_GRADE))
+    f = FossCategory.objects.annotate(upcoming_tests=upcoming_tests,conducted_tests=conducted_tests,enrolled_students=enrolled_students,
+                                      appeared_students=appeared_students,certificates_provided=certificates_provided).values(
+                                          'foss','upcoming_tests','conducted_tests','enrolled_students','appeared_students','certificates_provided')
+   
+    # for item in all_foss:
+    #     for value in all_test:
+    #         foss[item.foss] = {
+    #             'upcoming_tests': item.upcoming_tests,
+    #             'conducted_tests': item.conducted_tests,
+    #             'upcoming_students': value.upcoming_students,
+    #             'appeared_students': value.appeared_students,
+    #             'all_certificates': value.all_certificates,
+    #         }
+    context['fosses'] = f
+    # context['fosses'] = foss
+    # print(context['fosses']['Blender'])
     return render(request, 'stats/test_report.html', context)

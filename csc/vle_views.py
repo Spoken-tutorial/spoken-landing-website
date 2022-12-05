@@ -78,9 +78,13 @@ def vle_dashboard(request):
     context['upcoming_test_stats'] = get_upcoming_test_stats(vle)
     context['courses_offered_stats'] = get_courses_offered_stats()
     context['total_students_enrolled'] = Student.objects.filter(vle_id=vle).count()
-    context['total_tests_completed'] = Test.objects.filter(vle=vle,tdate__lt=datetime.datetime.today().date()).count()
+    context['total_tests_completed'] = Test.objects.filter(vle=vle).count()
     context['total_upcoming_tests'] = Test.objects.filter(vle=vle,tdate__gte=datetime.datetime.today().date()).count()
     context['total_certificates_issued'] = StudentTest.objects.filter(status=4).count() #ToDo check condition
+    student_ids = [x.id for x in Student.objects.filter(vle_id=vle.id)]
+    context['enroll_training'] = Student_Foss.objects.filter(student_id__in=student_ids).count()
+    context['enroll_test'] = CSCTestAtttendance.objects.filter(student_id__in=student_ids).count()
+    context['certificates'] = CSCTestAtttendance.objects.filter(student_id__in=student_ids,mdlgrade__gte=PASS_GRADE).count()
     
     return render(request, 'csc/vle.html', context)
    

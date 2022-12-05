@@ -39,22 +39,22 @@
                 <th scope="col">#</th>
                 <th scope="col">Foss</th>
                 <th scope="col">Upcoming Tests</th>
-                <th scope="col">Conducted Tests</th>
-                <th scope="col">Upcoming Students</th>
+                <th scope="col">Competed Tests</th>
+                <th scope="col">Enrolled Students</th>
                 <th scope="col">Appeared Students</th>
                 <th scope="col">Certificates</th>
               </tr>
             </thead>
             <tbody>
-                {% for key, value in fosses.items %}
+                {% for value in fosses %}
                 <tr>
                     <th scope="row">{{forloop.counter}}</th>
-                    <td>{{key}}</td>
+                    <td>{{value.foss}}</td>
                     <td>{{value.upcoming_tests}}</td>
                     <td>{{value.conducted_tests}}</td>
-                    <td>{{value.upcoming_students}}</td>
+                    <td>{{value.enrolled_students}}</td>
                     <td>{{value.appeared_students}}</td>
-                    <td>{{value.all_certificates}}</td>
+                    <td>{{value.certificates_provided}}</td>
                   </tr>
                 {% endfor %}
             </tbody>
