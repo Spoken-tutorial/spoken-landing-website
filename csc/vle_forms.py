@@ -4,7 +4,7 @@ from django import forms
 from csc.models import *
 from spokenlogin.models import *
 
-from .utils import get_valid_animation_fosses,get_test_valid_fosses
+from .utils import get_valid_animation_fosses,get_test_valid_fosses,get_invig
 
 class FossForm(forms.Form):
 	programme_type = forms.ChoiceField(required=True, choices=PROGRAMME_TYPE_CHOICES)
@@ -118,3 +118,4 @@ class TestForm(forms.ModelForm):
         # self.fields['foss'].queryset = get_all_foss_for_vle(vle) #IMPORTANT : For querying foss valid for the vle
         
         self.fields['foss'].queryset = get_test_valid_fosses(vle)
+        self.fields['invigilator'].queryset = get_invig(vle)
