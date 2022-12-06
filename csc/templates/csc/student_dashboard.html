@@ -232,11 +232,18 @@ body{
                                       </button>
                                     {% elif attendance.status >= 3%}
 
-                                      {% with pass_entry=student.id|check_passgrade_exists:course.testfoss_id%}
-                                        {% if pass_entry %}
-                                          <button type="submit" class="btn btn-success" >Request VLE for Certificate &nbsp;<span class="badge">Grade: {{pass_entry.mdlgrade}} </span></button>
+                                    {% with grade_entry,result=student.id|check_passgrade_exists:course.testfoss_id%}
+
+
+                                        {% if result=='Pass' %}
+                                          <button type="submit" class="btn btn-success" >Request VLE for Certificate &nbsp;<span class="badge">Grade: {{grade_entry.mdlgrade}} </span></button>
+                                        {% elif result=='Fail' %}
+                                          <button class="btn btn-warning" >Request VLE for Re-Test &nbsp;<span class="badge">Grade: {{grade_entry.mdlgrade}} </span></button>
                                         {% endif %}
-                                      {% endwith %}
+                                    
+
+
+                                    {% endwith %}
                                     
                                     {% endif %}
                                   {% endwith %}
