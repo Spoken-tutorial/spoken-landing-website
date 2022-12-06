@@ -72,3 +72,6 @@ def check_passgrade_exists(studentid, testfossid):
 
 
  
+@register.filter(name='format_url')
+def format_url(value):
+    return value.foss.replace(' ', '+')

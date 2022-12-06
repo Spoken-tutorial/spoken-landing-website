@@ -177,6 +177,7 @@ const config = {
   type: 'bar',
   data,
   options: {
+    // indexAxis: 'y',
     scales: {
       y: {
         // max : 2000,
@@ -330,12 +331,13 @@ function ajax_call(){
         
         course_stats(data['student_course']);
 
-        foss_stats(data['student_foss_1'],'student_foss_1','Student-FOSS Distribution (Top 20% popular FOSS)');
-        foss_stats(data['student_foss_2'],'student_foss_2','Student-FOSS Distribution (20% - 40% in popularity)');
-        foss_stats(data['student_foss_3'],'student_foss_3','Student-FOSS Distribution (40% - 60% in popularity)');
-        foss_stats(data['student_foss_4'],'student_foss_4','Student-FOSS Distribution (60% - 80% in popularity)');
-        foss_stats(data['student_foss_5'],'student_foss_5','Least popular FOSS (Bottom 20%)');
+        // foss_stats(data['student_foss_1'],'student_foss_1','Student-FOSS Distribution (Top 20% popular FOSS)');
+        // foss_stats(data['student_foss_2'],'student_foss_2','Student-FOSS Distribution (20% - 40% in popularity)');
+        // foss_stats(data['student_foss_3'],'student_foss_3','Student-FOSS Distribution (40% - 60% in popularity)');
+        // foss_stats(data['student_foss_4'],'student_foss_4','Student-FOSS Distribution (60% - 80% in popularity)');
+        // foss_stats(data['student_foss_5'],'student_foss_5','Least popular FOSS (Bottom 20%)');
 
+        foss_stats(data['student_indi_foss'],'student_indi_foss','Student-Individual FOSS Distribution (Top 20% popular FOSS)');
         foss_stats(data['student_indi_foss_1'],'student_indi_foss_1','Student-Individual FOSS Distribution (Top 20% popular FOSS)');
         foss_stats(data['student_indi_foss_2'],'student_indi_foss_2','Student-Individual FOSS Distribution (20% - 40% in popularity)');
         foss_stats(data['student_indi_foss_3'],'student_indi_foss_3','Student-Individual FOSS Distribution (40% - 60% in popularity)');

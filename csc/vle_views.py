@@ -78,9 +78,13 @@ def vle_dashboard(request):
     context['upcoming_test_stats'] = get_upcoming_test_stats(vle)
     context['courses_offered_stats'] = get_courses_offered_stats()
     context['total_students_enrolled'] = Student.objects.filter(vle_id=vle).count()
-    context['total_tests_completed'] = Test.objects.filter(vle=vle,tdate__lt=datetime.datetime.today().date()).count()
+    context['total_tests_completed'] = Test.objects.filter(vle=vle).count()
     context['total_upcoming_tests'] = Test.objects.filter(vle=vle,tdate__gte=datetime.datetime.today().date()).count()
     context['total_certificates_issued'] = StudentTest.objects.filter(status=4).count() #ToDo check condition
+    student_ids = [x.id for x in Student.objects.filter(vle_id=vle.id)]
+    context['enroll_training'] = Student_Foss.objects.filter(student_id__in=student_ids).count()
+    context['enroll_test'] = CSCTestAtttendance.objects.filter(student_id__in=student_ids).count()
+    context['certificates'] = CSCTestAtttendance.objects.filter(student_id__in=student_ids,mdlgrade__gte=PASS_GRADE).count()
     
     return render(request, 'csc/vle.html', context)
    
@@ -499,10 +503,7 @@ def mark_attendance(request,id):
  
   test = Test.objects.get(id=id)
   # st = [x.student for x in StudentTest.objects.filter(test=test)]
-  print("\n\n")
-  print(f"1********************************")
   st = [(x.student,x.status) for x in CSCTestAtttendance.objects.filter(test=test)]
-  print(f"2********************************")
   context['test'] = test
   context['students'] = st
   total_enrolled = len(st)
@@ -513,13 +514,11 @@ def mark_attendance(request,id):
   context['pending'] = pending
   
   if request.method == 'POST':
-    print(f"3********************************")
     student_attendance = request.POST.getlist('student_attendance')
-    print(f"student_attendance\n\n ************************ {student_attendance}")
     #present
-    CSCTestAtttendance.objects.filter(test=test,student_id__in=student_attendance).update(status=TEST_ATTENDANCE_MARKED)
+    CSCTestAtttendance.objects.filter(test=test,student_id__in=student_attendance,status__in=[TEST_OPEN,TEST_ATTENDANCE_MARKED]).update(status=TEST_ATTENDANCE_MARKED)
     #absent
-    CSCTestAtttendance.objects.exclude(test=test,student_id__in=student_attendance).update(status=0)
+    b=CSCTestAtttendance.objects.filter(test=test,status=TEST_ATTENDANCE_MARKED).exclude(student_id__in=student_attendance).update(status=0)
     st = [(x.student,x.status) for x in CSCTestAtttendance.objects.filter(test=test)]
     context['students'] = st
   
@@ -653,9 +652,15 @@ def test_assign(request):
 def test_list(request):
   context = {}
   vle = VLE.objects.get(user=request.user)
-  tests = Test.objects.filter(vle=vle)
+  tests = Test.objects.filter(vle=vle).annotate(upcoming_students = Count('csctestatttendance', distinct=True, filter=Q(csctestatttendance__status__lte=2)), appeared_students = Count('csctestatttendance', distinct=True, filter=Q(csctestatttendance__status__gt=2)))
   context['tests'] = tests
   return render(request,'csc/test_list.html',context)
+
+def test_students(request, pk):
+  context = {}
+  tests = CSCTestAtttendance.objects.filter(test=pk)
+  context['tests'] = tests
+  return render(request,'csc/test_students.html', context)
 
 def update_test(request,pk):
   context = {}

@@ -156,7 +156,7 @@ body{
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Total tests - completed</div>
+                                Total tests</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_tests_completed}}</div>
                         </div>
                         <div class="col-auto ">
@@ -167,22 +167,8 @@ body{
             </div>
         </div> 
 
-        <div class="col-xl-3 col-md-6 mb-4">
-          <div class="card border-3 shadow h-100 py-2">
-              <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                      <div class="col mr-2">
-                          <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                              Total tests - upcoming</div>
-                          <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_upcoming_tests}}</div>
-                      </div>
-                      <div class="col-auto">
-                        <i class="fas fa-clipboard-list fa-2x "></i>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div> 
+        
+      
     
         <!-- Earnings (Monthly) Card Example -->
         {% comment %} <div class="col-xl-3 col-md-6 mb-4">
@@ -236,6 +222,55 @@ body{
     {% endif %}
    
     <div class="row mt-2 ">
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-1 shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Total Enrollment For Training</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{enroll_training}}</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-clipboard fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-2 shadow h-100 py-2">
+          <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        Total Enrollment For Tests</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{enroll_test}}</div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-clipboard-list fa-2x"></i>
+                  </div>
+              </div>
+          </div>
+      </div>
+      
+  </div> 
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-3 shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                        Total Certificates</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{certificates}}</div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-clipboard-list fa-2x "></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
       {% comment %} <div class="col-md-8 ">
         <div class="border p-2 bg-white">
           <p class="heading text-center">Enrollment based on Course Type </p>

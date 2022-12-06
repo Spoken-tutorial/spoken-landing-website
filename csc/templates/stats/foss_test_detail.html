@@ -1,0 +1,160 @@
+
+{% extends "stats/stats_base.html" %}
+{% load static %}
+{% block custom_style %}
+<style>
+    #student_stats{
+        border-left: 5px solid orange;
+        color: #013A6B;
+        font-weight: bold;
+    }
+</style>
+{% endblock custom_style %}
+{% block content  %}
+<div class="border border-2 p-2 white-bg">
+    <h6 class="mt-2"> Search Student</h6>
+    <hr>
+
+    <form method="GET">
+        <div class="row py-3">
+            <div class="col-md-3">
+                <div class="mb-3">
+                    <label for="name" class="form-label fw-bold">Student Name / Email</label>
+                    <input type="text" class="form-control" placeholder="Student name/email" aria-label="name" name="name" id="name">
+                    {% comment %} <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> {% endcomment %}
+                  </div>
+            </div>
+            <div class="col-md-3">
+                <div class="mb-3">
+                    <label for="vle_name" class="form-label fw-bold">VLE Name / Email</label>
+                    <input type="text" class="form-control" placeholder="VLE name/email" aria-label="vle_name" name="vle_name" id="vle_name">
+                  </div>
+            </div>
+            <div class="col-md-3">
+                <div class="mb-3">
+                    <label for="csc" class="form-label fw-bold">CSC ID</label>
+                    <input type="text" class="form-control" placeholder="CSC ID" aria-label="csc" name="csc" id="csc">
+                  </div>
+                
+            </div>
+            <div class="col-md-3">
+                <div class="mb-3">
+                    <label for="edu" class="form-label fw-bold">Education</label>
+                    <select class="form-select" aria-label="Education" name="edu" id="edu">
+                        <option value="">Open this select menu</option>
+                        {% for education in edu %}
+                        <option value="{{education.edu_qualification}}">{{education.edu_qualification}}</option>
+                        {% endfor %}
+                      </select>
+                  </div>
+            </div>
+            <div class="col-md-3">
+                <div class="mb-3">
+                    <label for="state" class="form-label fw-bold">State</label>
+                    <select class="form-select" aria-label="Education" name="state" id="state">
+                        <option value="">Open this select menu</option>
+                        {% for item in states %}
+                        <option value="{{item}}">{{item}}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+            </div>
+            <div class="col-md-3">
+                <div class="mb-3">
+                    <label for="district" class="form-label fw-bold">District</label>
+                    <select class="form-select" aria-label="Education" name="district" id="district">
+                        <option value="">Open this select menu</option>
+                        {% for item in districts %}
+                        <option value="{{item}}">{{item}}</option>
+                        {% endfor %}
+                      </select>
+                  </div>
+            </div>
+            <div class="col-md-3">
+                <div class="mb-3">
+                    <label for="occupation" class="form-label fw-bold">Occupation</label>
+                    <select class="form-select" aria-label="Occupation" name="occupation" id="occupation">
+                        <option value="">Open this select menu</option>
+                        {% for item in occupation %}
+                        <option value="{{item.occupation}}">{{item.occupation}}</option>
+                        {% endfor %}
+                      </select>
+                  </div>
+            </div>
+            <div class="col-12">
+                <button type="submit" value="Filter" class="btn btn-primary">Filter</button>
+                <button type="submit" value="Filter" class="btn btn-primary">Clear Filter</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div>
+    {% if query_str.name  or query_str.vle_name or query_str.csc or query_str.edu or query_str.state or query_str.district or query_str.occupation  %}
+        
+<div class="alert alert-success my-2" role="alert">
+    <span style="color: #013A6B;" class="fw-bold">Showing Search Results For : </span>
+        {% for item,val in query_str.items %}
+            {% if val %}
+                {% if forloop.last %}
+                    <span> {{item}} : {{val}}  </span>
+                {% else %}
+                    <span> {{item}} : {{val}} | </span>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+    {% comment %} <div class="pagination my-2">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+    
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div> {% endcomment %}
+    <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Date</th>
+            <th scope="col">Time</th>
+            <th scope="col">Test Taken</th>
+            <th scope="col">Pending</th>
+            <th scope="col">Certificates</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+            {% for test in tests %}
+             <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{test.vle.user.get_full_name}}</td>
+                <td>{{test.vle.user.email}}</td>
+                <td>{{test.tdate}}</td>
+                <td>{{test.ttime}}</td>
+                <td>{{test.students_pending}}</td>
+                <td>{{test.students_completed}}</td>
+                <td>{{test.certificates}}</td>
+                
+            
+              </tr>
+            {% endfor %}
+          
+          
+        </tbody>
+      </table>
+
+{% endblock content  %}
+
