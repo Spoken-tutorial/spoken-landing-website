@@ -37,6 +37,7 @@ def send_pwd_mail(u):
             Spoken Tutorial
             """
         path = 'student_mail_template.html'
+        html_content = render_to_string(path, {'full_name':u.get_full_name(), 'username':u.username,'password':pwd})
     if is_user_vle(u):
         print('USER IS VLE')
         message = f"""
@@ -61,6 +62,7 @@ def send_pwd_mail(u):
             Spoken Tutorial
             """
         path = 'vle_mail_template.html'
+        html_content = render_to_string(path, {'full_name':u.get_full_name(), 'username':u.username,'password':pwd})
     if is_user_invigilator(u):
         inv = Invigilator.objects.get(user=u)
         name = inv.vle.all()[0].user.get_full_name()
@@ -87,7 +89,7 @@ def send_pwd_mail(u):
             Spoken Tutorial
             """
         path = 'invigilator_mail_template.html'
-    html_content = render_to_string(path, {'full_name':u.get_full_name(), 'vle': name,'username':u.username,'password':pwd})
+        html_content = render_to_string(path, {'full_name':u.get_full_name(), 'vle': name,'username':u.username,'password':pwd})
     try:
         print(f"/n/nSending mail ; username,pwd : {u.username},{pwd}".ljust(40,'*'))
         send_mail(
