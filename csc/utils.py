@@ -224,3 +224,7 @@ def get_test_valid_fosses(vle):
     students = Student.objects.filter(vle_id=vle.id)
     fosses = Student_Foss.objects.filter(student__in=students).values('csc_foss').distinct()
     return FossCategory.objects.filter(id__in=fosses).order_by('foss')
+
+def get_invig(vle):
+    invigilators = Invigilator.objects.filter(vle=vle).order_by('user__first_name')
+    return invigilators
