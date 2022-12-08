@@ -68,6 +68,19 @@ body{
 .progress{
   height: 0.25rem;
 }
+.accordion-button{
+    padding: 0.5rem 0.5rem;
+  }
+  .accordion-collapse{
+    height: 300px;
+    overflow: scroll;
+  }
+  .accordion-body{
+    padding: 0.25rem 0.25rem;
+  }
+  .white-bg{
+    background: #ffffff!important;
+  }
 </style>
 <link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
 <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
@@ -288,11 +301,86 @@ body{
   </div>
 </div>
 
-<div class="container" style="padding-top:9%;" id="main">
+<div class="container my-5" style="padding-top:9%;" id="main">
+    <div class="row white-bg border mt-2">
+      <div class="col-md-12 pt-3">
+        <div class="accordion" id="accordionFoss">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFoss">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFoss" aria-expanded="true" aria-controls="collapseFoss">
+                FOSS-Student Table 
+              </button>
+            </h2>
+            <div id="collapseFoss" class="accordion-collapse collapse show" aria-labelledby="headingFoss" data-bs-parent="#accordionFoss">
+              <div class="accordion-body">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">FOSS</th>
+                      <th scope="col">Student Count</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in foss_count_tb %}
+                    <tr>
+                      <td>{{forloop.counter}}</td>
+                      <td>{{item.csc_foss__foss}}</td>
+                      <td>{{item.count}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <canvas id="foss_count" style="width: 100%;" class="border rounded p-2 my-2"></canvas>
+    <div class="row white-bg border mt-2">
+      <div class="col-md-12 pt-3">
+        <div class="accordion" id="accordionIndiFoss">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFoss">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseIndiFoss" aria-expanded="true" aria-controls="collapseIndiFoss">
+                Course-Student Table
+              </button>
+            </h2>
+            <div id="collapseIndiFoss" class="accordion-collapse collapse show" aria-labelledby="headingFoss" data-bs-parent="#accordionIndiFoss">
+              <div class="accordion-body">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Course</th>
+                      <th scope="col">Student Count</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in cert_category %}
+                    <tr>
+                      <td>{{forloop.counter}}</td>
+                      <td>{{item.cert_category__title}}</td>
+                      <td>{{item.count}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <canvas id="cert_category_can" style="width: 100%;" class="border rounded p-2 my-2"></canvas>
+</div>
 {% endblock %}
 
 {% block script %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{{ foss_count_tb|json_script:"foss_count_tb" }}
+{{ cert_category|json_script:"cert_category" }}
 <script type="text/javascript" src="{% static '/spoken/csc.js' %}"></script>
 <script>
     
@@ -325,6 +413,60 @@ body{
             });
         }
     });
+    (()=>{
+      const foss_count_tb = document.getElementById('foss_count');
+      const foss_count_tb_value = JSON.parse(document.getElementById('foss_count_tb').textContent);
+      const foss_count_tb_lable = [];
+      const foss_count_tb_data = [];
+      for(let item of foss_count_tb_value){
+        foss_count_tb_lable.push(item.csc_foss__foss);
+        foss_count_tb_data.push(item.count);
+      }
+      new Chart(foss_count_tb, {
+        type: 'bar',
+        data: {
+          labels: foss_count_tb_lable,
+          datasets: [{
+            label: 'Student-FOSS Distribution Table',
+            data: foss_count_tb_data,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+      const cert_category_can = document.getElementById('cert_category_can');
+      const cert_category_value = JSON.parse(document.getElementById('cert_category').textContent);
+      const cert_category_lable = [];
+      const cert_category_data = [];
+      for(let item of cert_category_value){
+        cert_category_lable.push(item.cert_category__title);
+        cert_category_data.push(item.count);
+      }
+      new Chart(cert_category_can, {
+        type: 'bar',
+        data: {
+          labels: cert_category_lable,
+          datasets: [{
+            label: 'Course-Student Table',
+            data: cert_category_data,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    })();
   });
   </script>
 {% endblock %}
