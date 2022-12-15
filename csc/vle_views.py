@@ -81,9 +81,9 @@ def vle_dashboard(request):
     context['total_tests_completed'] = Test.objects.filter(vle=vle,tdate__lt=datetime.datetime.today().date()).count()
     context['total_upcoming_tests'] = Test.objects.filter(vle=vle,tdate__gte=datetime.datetime.today().date()).count()
     context['total_certificates_issued'] = StudentTest.objects.filter(status=4).count() #ToDo check condition
-    vles = VLE.objects.get(user=request.user).id
-    context['foss_count_tb'] = [x for x in Student_Foss.objects.filter(student__vle_id=vles).values('csc_foss__foss').annotate(count=Count('csc_foss'))]
-    context['cert_category'] = [x for x in Student_Foss.objects.filter(student__vle_id=vles).values('cert_category__title').annotate(count=Count('cert_category'))]
+    vle_id = VLE.objects.get(user=request.user).id
+    context['foss_count_tb'] = [x for x in Student_Foss.objects.filter(student__vle_id=vle_id).values('csc_foss__foss').annotate(count=Count('csc_foss'))]
+    context['cert_category'] = [x for x in Student_Foss.objects.filter(student__vle_id=vle_id).values('cert_category__title').annotate(count=Count('cert_category'))]
     return render(request, 'csc/vle.html', context)
    
 @login_required
