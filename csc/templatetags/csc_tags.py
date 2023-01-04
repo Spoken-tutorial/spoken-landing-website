@@ -56,7 +56,8 @@ def check_attendance(studentid, testfossid):
 @register.filter
 def check_passgrade_exists(studentid, testfossid):
   try:
-    grade_entry = CSCTestAtttendance.objects.filter(test__foss__id=testfossid, student_id=studentid, status=TEST_COMPLETED_BY_STUDENT).first()
+    grade_entry = CSCTestAtttendance.objects.filter(test__foss_id=testfossid, 
+      student_id=studentid, status__gte=TEST_COMPLETED_BY_STUDENT).first()
     
     if grade_entry.mdlgrade >= PASS_GRADE:
       result = "Pass"
@@ -67,8 +68,21 @@ def check_passgrade_exists(studentid, testfossid):
     print(f"pass_entry for foss - {testfossid} - {grade_entry}")
     return grade_entry
   except:
-    return None  
+    return None
 
+
+@register.filter
+def is_retest_allowed(studentid, testfossid):
+  try:
+    fail_entry = CSCTestAtttendance.objects.filter(test__foss__id=testfossid, student_id=studentid, mdlgrade__lt=40.00, attempts__lte=10).first()
+    if fail_entry:
+      return True
+    else:
+      return False
+  except:
+    print("&&&&&&&&&&&in except")
+    return False
+  
 
 
  

@@ -232,20 +232,26 @@ body{
                                       </button>
                                     {% elif attendance.status >= 3%}
 
-                                    {% with grade_entry=student.id|check_passgrade_exists:course.testfoss_id%}
-                                    
-                                        {% if grade_entry.mdlgrade >= 40.00 %}
-                                          <button type="submit" class="btn btn-success" >Request VLE for Certificate &nbsp;<span class="badge">Grade: {{grade_entry.mdlgrade}} </span></button>
-                                        {% elif grade_entry.mdlgrade < 40.00 %}
-                                          <button type="button" onclick = "retest({{grade_entry.id}})" class="btn btn-warning" >Request VLE for Re-Test &nbsp;
-                                            <span class="badge">Grade: {{grade_entry.mdlgrade}} </span>
-                                          </button>
-                                        {% endif %}
-                                    
+                                        {% with grade_entry=student.id|check_passgrade_exists:course.testfoss_id%}
+                                        
+                                            {% if grade_entry.mdlgrade >= 40.00 %}
+                                              <button type="submit" class="btn btn-success" >Request VLE for Certificate &nbsp;<span class="badge">Grade: {{grade_entry.mdlgrade}} </span></button>
 
 
-                                    {% endwith %}
-                                    
+                                            {% elif grade_entry.status == 3 and student.id|is_retest_allowed:course.testfoss_id %}
+
+                                              <button type="button" onclick = "retest({{grade_entry.id}})" class="btn btn-warning" >Request VLE for Re-Test &nbsp;
+                                                <span class="badge">Grade: {{grade_entry.mdlgrade}} </span></button>
+
+                                            {% elif grade_entry.status == 3 and not student.id|is_retest_allowed:course.testfoss_id  %}
+                                                <button type="button"  class="btn btn-warning" >Test attempts over &nbsp;
+                                                <span class="badge">Grade: {{grade_entry.mdlgrade}} </span></button>
+                                            {% endif %}
+                                        
+
+
+                                        {% endwith %}
+                                        
                                     {% endif %}
                                   {% endwith %}
                               
@@ -299,7 +305,7 @@ body{
                             
                               <!-- check attendance -->
                               
-                                  {% with attendance=student.id|check_attendance:course.testfoss_id %}
+                                {% with attendance=student.id|check_attendance:course.testfoss_id %}
                                   
 
                                     {% if attendance.status == 1%}
@@ -309,15 +315,26 @@ body{
                                       Attempt {{course.testfoss.foss}} Test
                                       </button>
                                     {% elif attendance.status >= 3%}
+                                        {% with grade_entry=student.id|check_passgrade_exists:course.testfoss_id%}
 
-                                      {% with pass_entry=student.id|check_passgrade_exists:course.testfoss_id%}
-                                        {% if pass_entry %}
-                                          <button type="submit" class="btn btn-success" >Request VLE for Certificate&nbsp;<span class="badge">Grade: {{pass_entry.mdlgrade}} </span></button>
-                                        {% endif %}
-                                      {% endwith %}
+                                            {% if grade_entry.mdlgrade >= 40.00 %}
+                                              <button type="submit" class="btn btn-success" >Request VLE for Certificate &nbsp;<span class="badge">Grade: {{grade_entry.mdlgrade}} </span></button>
+                                            {% elif grade_entry.status == 3 and student.id|is_retest_allowed:course.testfoss_id %}
+
+                                              <button type="button" onclick = "retest({{grade_entry.id}})" class="btn btn-warning" >Request VLE for Re-Test &nbsp;
+                                                <span class="badge">Grade: {{grade_entry.mdlgrade}} </span></button>
+
+                                            {% elif grade_entry.status == 3 and not student.id|is_retest_allowed:course.testfoss_id  %}
+                                                <button type="button"  class="btn btn-warning" >Test attempts over &nbsp;
+                                                <span class="badge">Grade: {{grade_entry.mdlgrade}} </span></button>
+                                            {% endif %}
+
+
+
+                                        {% endwith %}
                                     
                                     {% endif %}
-                                  {% endwith %}
+                                {% endwith %}
                               
 
                             {% endfor %}
