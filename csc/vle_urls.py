@@ -51,7 +51,8 @@ urlpatterns = [
    
   #  ajax
     path('ajax_mark_attendance/', ajax_mark_attendance, name="ajax_mark_attendance"),
-    path('check_vle_email/', check_vle_email, name="check_vle_email")
+    path('check_vle_email/', check_vle_email, name="check_vle_email"),
+    
 
     
     

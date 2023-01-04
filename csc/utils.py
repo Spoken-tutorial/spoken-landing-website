@@ -28,7 +28,7 @@ TEST_OPEN=0
 TEST_ATTENDANCE_MARKED=1
 TEST_ONGOING=2
 TEST_COMPLETED_BY_STUDENT=3
-TEST_CLOSED_BY_VLE=4
+RETEST=4
 PASS_GRADE=40.00
 
 # from reportlab.pdfgen import canvas
@@ -138,7 +138,7 @@ def get_tenure_end_date(tdate):
 def get_valid_students_for_test(vle,test):
     foss = test.foss
     other_tests = Test.objects.filter(foss=foss).exclude(id=test.id)
-    students = Student.objects.filter(vle_id=vle.id,student_foss__csc_foss_id=foss.id,student_foss__foss_start_date__lte=datetime.date.today()-timedelta(days=10)).annotate(assigned=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test))).annotate(ineligible=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test__in=other_tests))).annotate(test_taken=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test,status__gte=TEST_COMPLETED_BY_STUDENT)))
+    students = Student.objects.filter(vle_id=vle.id,student_foss__csc_foss_id=foss.id,student_foss__foss_start_date__lte=datetime.date.today()-timedelta(days=10)).annotate(assigned=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test))).annotate(ineligible=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test__in=other_tests))).annotate(test_taken=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test,status=TEST_COMPLETED_BY_STUDENT))).annotate(retest=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test,status=RETEST)))
     
     return students
 

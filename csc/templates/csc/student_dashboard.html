@@ -232,13 +232,14 @@ body{
                                       </button>
                                     {% elif attendance.status >= 3%}
 
-                                    {% with grade_entry,result=student.id|check_passgrade_exists:course.testfoss_id%}
-
-
-                                        {% if result=='Pass' %}
+                                    {% with grade_entry=student.id|check_passgrade_exists:course.testfoss_id%}
+                                    
+                                        {% if grade_entry.mdlgrade >= 40.00 %}
                                           <button type="submit" class="btn btn-success" >Request VLE for Certificate &nbsp;<span class="badge">Grade: {{grade_entry.mdlgrade}} </span></button>
-                                        {% elif result=='Fail' %}
-                                          <button class="btn btn-warning" >Request VLE for Re-Test &nbsp;<span class="badge">Grade: {{grade_entry.mdlgrade}} </span></button>
+                                        {% elif grade_entry.mdlgrade < 40.00 %}
+                                          <button type="button" onclick = "retest({{grade_entry.id}})" class="btn btn-warning" >Request VLE for Re-Test &nbsp;
+                                            <span class="badge">Grade: {{grade_entry.mdlgrade}} </span>
+                                          </button>
                                         {% endif %}
                                     
 
@@ -416,5 +417,24 @@ body{
 
 }
 
+f
+
+function retest(attendanceid){
+  alert('Change status to retest');
+  alert(attendanceid);
+    $.ajax({
+         type:"POST",
+         url:"/csc/student/request_retest/",
+         dataType : "json",
+         data: {
+                'attendanceid' : attendanceid,
+                },
+         success: function(){
+            
+             window.location.reload();
+         }
+    });
+        
+}
   </script>
 {% endblock %}

@@ -615,6 +615,7 @@ def test_assign(request):
     assigned_students = request.POST.getlist('students')
     try:
       fossMdlCourse = CSCFossMdlCourses.objects.filter(foss=foss)[0] #ToDo Change
+      print("************* 1F")
       mdlcourse_id = fossMdlCourse.mdlcourse_id
       mdlquiz_id = fossMdlCourse.mdlquiz_id
       for email in assigned_students:
@@ -623,20 +624,32 @@ def test_assign(request):
         try:
           mdluser=MdlUser.objects.get(email=email)
         except MdlUser.DoesNotExist:
+          print("************* 2F in expect")
           pwd = ''.join(random.choices(string.ascii_letters,k=10))
           encryp_pwd = hashlib.md5((pwd).encode('utf-8')).hexdigest()
           mdluser = MdlUser.objects.create(username=email,firstname=user.first_name,lastname=user.last_name,email=email,password=encryp_pwd,mnethostid=1,confirmed=1)
           send_mdl_mail(user,pwd)
+          print("************* 3F")
           mdluser = MdlUser.objects.get(email=email)
         except MdlUser.MultipleObjectsReturned as e:
           mdluser=MdlUser.objects.filter(email=email)[0]
           print(e)
+          print("************* 3f-1 in expect")
         try:
           ta = CSCTestAtttendance.objects.create(test=test,student=student,mdluser_id=mdluser.id,mdlcourse_id=mdlcourse_id,status=0,mdlquiz_id=mdlquiz_id)
+          print("************* 4F")
         except IntegrityError as e:
           print(e)
+          print("************* 5F")
+          print('test: ',test.id)
+          ta= CSCTestAtttendance.objects.get(test=test,student=student,mdluser_id=mdluser.id,mdlcourse_id=mdlcourse_id,status=4,mdlquiz_id=mdlquiz_id)
+          print(ta.id, '%%%%%%%%%%%%%%%%%%%%%%%')
+          ta.status=0
+          ta.attempts+=ta.attempts
+          ta.save()
       if request.POST.get('action_type') == 'add_students':
         nta = CSCTestAtttendance.objects.filter(test=test,status=TEST_OPEN).exclude(student__user__email__in=assigned_students)
+        print("************* 6F")
         for item in nta:
           item.delete()
       else:
@@ -885,3 +898,10 @@ def assign_foss(request):
         print(e)
     
   return JsonResponse({'foss':foss_name,'student_count':len(students)})
+
+
+
+
+
+
+
