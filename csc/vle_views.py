@@ -613,13 +613,8 @@ def test_assign(request):
   if request.method == 'POST' and request.POST.get('action_type') == 'add_students':
     assigned_students = request.POST.getlist('students')
     try:
-<<<<<<< HEAD
-      fossMdlCourse = CSCFossMdlCourses.objects.filter(foss=foss)[0] #ToDo Change
-      print("************* 1F")
-=======
       # fossMdlCourse = CSCFossMdlCourses.objects.filter(foss=foss)[0] #ToDo Change
       fossMdlCourse = CSCFossMdlCourses.objects.filter(testfoss=foss)[0] 
->>>>>>> 8bebc3fbd46098ca4dcd99a95a95131d820ee8a9
       mdlcourse_id = fossMdlCourse.mdlcourse_id
       mdlquiz_id = fossMdlCourse.mdlquiz_id
       for email in assigned_students:
@@ -905,13 +900,6 @@ def assign_foss(request):
   return JsonResponse({'foss':foss_name,'student_count':len(students)})
 
 
-<<<<<<< HEAD
-
-
-
-
-
-=======
 def training_enroll(request):
   context = {}
   vle = VLE.objects.get(user=request.user)
@@ -941,4 +929,3 @@ def test_certi(request):
   context['ta']=ta
   return render(request,'csc/test_certi.html',context)
   
->>>>>>> 8bebc3fbd46098ca4dcd99a95a95131d820ee8a9
