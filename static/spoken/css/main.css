@@ -638,9 +638,11 @@ pre.custom-jumbotron b {
 }
 
 /* sortable header */
+
 .paleblue th {
     padding: 2px 5px;
     line-height: normal;
+    
 }
 
 .paleblue th a:link, .paleblue th a:visited {

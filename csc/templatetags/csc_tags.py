@@ -29,9 +29,7 @@ def get_csc_mdlcourseid(eventfossid):
 @register.filter
 def check_attendance(studentid, testfossid):
   try:
-    print(testfossid)
     attendance = CSCTestAtttendance.objects.filter(test__foss_id=testfossid, student_id=studentid).first()
-    print(attendance,"######################")
     return attendance
   except Exception as e:
     print(e)
@@ -89,3 +87,15 @@ def is_retest_allowed(studentid, testfossid):
 @register.filter(name='format_url')
 def format_url(value):
     return value.foss.replace(' ', '+')
+  
+  
+@register.filter(name='get_test_status')
+def get_test_status(value):
+  d = {
+    0: 'Attendance not marked',
+    1: 'Attendance marked',
+    2: 'Test Ongoing',
+    3: 'Test Completed',
+    4: 'Request for re-test'
+  } 
+  return d.get(value,'-')

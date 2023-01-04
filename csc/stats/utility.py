@@ -1,6 +1,6 @@
 from django.db.models import Count,Q,F
 from django.conf import settings
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from csc.models import CertifiateCategories, Student,Student_Foss,FossCategory, CSC, VLE, CategoryCourses
 
 TEST_VLE_COUNT=int(getattr(settings, "TEST_VLE_COUNT", 2))
@@ -52,6 +52,15 @@ def get_student_foss_stats(start=0,end=len(qs_student_foss),type=''):
     else:
         return qs_student_foss.filter(csc_foss__foss__in=temp).values('csc_foss__foss').annotate(count=Count('csc_foss__foss')).order_by('-count')
     
+def get_page(resource, page=1, limit=40):
+    paginator = Paginator(resource, limit)
+    try:
+        resource = paginator.page(page)
+    except PageNotAnInteger:
+        resource = paginator.page(1)
+    except EmptyPage:
+        resource = paginator.page(paginator.num_pages)
+    return resource
     
 def get_test_stats():
     f = [x.foss.id for x in CategoryCourses.objects.filter(certificate_category__code='IT07')]

@@ -116,6 +116,8 @@ class StudentSerializer(serializers.ModelSerializer):
                 user_obj.email = user['email']
                 user_obj.save()
                 send_pwd_mail(user_obj)
+                student.mdl_mail_sent = 1
+                student.save()
         for item in vle_ids:
             student.vle_id.add(*vle_ids)
 

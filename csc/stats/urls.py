@@ -12,10 +12,14 @@ urlpatterns = [
     path('ajax_vle_detail/',ajax_vle_detail,name="ajax_vle_detail"),
     path('vle_stats/',VLEListView.as_view(),name="vle_stats"),
     path('student_stats/',StudentListView.as_view(),name="student_stats"),
+    path('test_stats/', test_stats, name="test_stats"),
     path('vle_report/',vle_report,name="vle_report"),
     path('student_report/',student_report,name="student_report"),
     
-    path('test_report/',test_report,name="test_report")
+    path('test_report/',test_report,name="test_report"),
+    path('ajax_get_cities/',ajax_get_cities,name="ajax_get_cities"),
+    
+    
     
     
 ]

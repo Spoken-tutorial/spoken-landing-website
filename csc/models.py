@@ -212,16 +212,13 @@ class Invigilator(models.Model):
         
 class Test(models.Model):
     foss = models.ForeignKey(FossCategory,on_delete=models.CASCADE)
-    # mdlfoss = models.ForeignKey(FossCategory,on_delete=models.CASCADE)
     tdate = models.DateField()
     ttime = models.TimeField()
     invigilator = models.ManyToManyField(Invigilator,blank=True,null=True)
-    publish = models.BooleanField(default=True)
     vle = models.ForeignKey(VLE,on_delete=models.CASCADE,null=True,blank=True)
     note_student = models.TextField(blank=True,null=True)
     note_invigilator = models.TextField(blank=True,null=True)
     status = models.PositiveIntegerField(default=TEST_OPEN)#
-    # test_name = models.CharField(max_length=252,blank=True,null=True)
     participant_count = models.IntegerField(null=True,blank=True)
     slug = models.SlugField(max_length=40)
     created = models.DateTimeField(auto_now_add=True)
@@ -312,5 +309,5 @@ class CSCFossMdlCourses(models.Model):
 	testfoss = models.ForeignKey(FossCategory, on_delete=models.PROTECT, related_name='testfoss', null=True)
 
 	def __str__(self):
-		return self.foss.foss
+		return f"{self.foss.foss}  ({self.testfoss.foss})" if self.foss != self.testfoss else self.foss.foss
     

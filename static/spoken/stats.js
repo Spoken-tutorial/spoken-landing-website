@@ -363,10 +363,27 @@ function ajax_call(){
 }
 
 $( document ).ready(function() {
-  
+  $('#id_vle__csc__city').prop("selected", false);
   ajax_call();
-  
-  // gender_stats();
+  $('#id_vle__csc__state').change(function(){
+    var state = $(this).val();
+    $.ajax({
+      url: "/csc/stats/ajax_get_cities/",
+      type: "GET",
+      data: {
+        state : state,
+        fields: {'district':'district' , 'city':'city' },
+      },
+      success: function(data) {
+        cities = data.cities
+        $('#id_vle__csc__city').empty();
+        $('#id_vle__csc__city').append(`<option value="0">--------</option>`);
+        for (var i = 0; i < cities.length; i++) {
+          $('#id_vle__csc__city').append(`<option value="${data.cities[i]}">${cities[i]}</option>`);
+        }
+      }
+    });
+  });
 });
 
 
@@ -604,3 +621,6 @@ function drawVisualization() {
       geojson.resetStyle(e.target);
       info.update();
     }
+
+
+    
