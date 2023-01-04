@@ -118,7 +118,6 @@ def courses(request):
     for course in courses:
       fosses = [x['foss__foss'] for x in CategoryCourses.objects.filter(certificate_category_id=course.id).values('foss__foss')]
       d[course] = fosses
-    print(f"\n\n{d}\n\n")
     context['courses'] = d
     
   return render(request,'csc/courses.html',context)
@@ -172,7 +171,6 @@ def student_list(request):
   l = list(distinct_foss)
   l.sort(key=lambda x: x.foss.title())
   context['distinct_foss'] = l
-  print(s.query)
   # all_students = Student.objects.filter(vle_id=vle.id)
   if name!=None:
     context['search_name'] = name
@@ -299,7 +297,6 @@ class TestCreateView(CreateView):
   def form_valid(self, form):
     vle = VLE.objects.filter(user=self.request.user).first()
     form.instance.vle = vle 
-    print(form)
 
     messages.success(self.request,"Test added successfully.")
     return super().form_valid(form)
@@ -623,17 +620,14 @@ def test_assign(request):
         try:
           mdluser=MdlUser.objects.get(email=email)
         except MdlUser.DoesNotExist:
-          print("************* 2F in expect")
           pwd = ''.join(random.choices(string.ascii_letters,k=10))
           encryp_pwd = hashlib.md5((pwd).encode('utf-8')).hexdigest()
           mdluser = MdlUser.objects.create(username=email,firstname=user.first_name,lastname=user.last_name,email=email,password=encryp_pwd,mnethostid=1,confirmed=1)
           send_mdl_mail(user,pwd)
-          print("************* 3F")
           mdluser = MdlUser.objects.get(email=email)
         except MdlUser.MultipleObjectsReturned as e:
           mdluser=MdlUser.objects.filter(email=email)[0]
           print(e)
-          print("************* 3f-1 in expect")
         try:
           ta = CSCTestAtttendance.objects.create(test=test,student=student,mdluser_id=mdluser.id,mdlcourse_id=mdlcourse_id,status=0,mdlquiz_id=mdlquiz_id)
           print("************* 4F")
@@ -642,13 +636,11 @@ def test_assign(request):
           print("************* 5F")
           print('test: ',test.id)
           ta= CSCTestAtttendance.objects.get(test=test,student=student,mdluser_id=mdluser.id,mdlcourse_id=mdlcourse_id,status=4,mdlquiz_id=mdlquiz_id)
-          print(ta.id, '%%%%%%%%%%%%%%%%%%%%%%%')
           ta.status=0
-          ta.attempts+=ta.attempts
+          ta.attempts=ta.attempts+1
           ta.save()
       if request.POST.get('action_type') == 'add_students':
         nta = CSCTestAtttendance.objects.filter(test=test,status=TEST_OPEN).exclude(student__user__email__in=assigned_students)
-        print("************* 6F")
         for item in nta:
           item.delete()
       else:
@@ -803,7 +795,6 @@ def create_invigilator(request):
     try:
       # Invigilator.objects.create(user=user,vle=vle,phone=phone)
       i=Invigilator.objects.create(user=user,phone=phone)
-      print(f"invi ************************************ {i}")
       i.vle.add(vle)
       invi_group = Group.objects.get(name='INVIGILATOR')
       invi_group.user_set.add(user)

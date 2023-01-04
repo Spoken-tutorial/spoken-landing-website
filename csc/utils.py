@@ -137,8 +137,8 @@ def get_tenure_end_date(tdate):
     
 def get_valid_students_for_test(vle,test):
     foss = test.foss
-    other_tests = Test.objects.filter(foss=foss).exclude(id=test.id)
-    students = Student.objects.filter(vle_id=vle.id,student_foss__csc_foss_id=foss.id,student_foss__foss_start_date__lte=datetime.date.today()-timedelta(days=10)).annotate(assigned=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test))).annotate(ineligible=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test__in=other_tests))).annotate(test_taken=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test,status=TEST_COMPLETED_BY_STUDENT))).annotate(retest=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test,status=RETEST)))
+    # other_tests = Test.objects.filter(foss=foss).exclude(id=test.id)
+    # students = Student.objects.filter(vle_id=vle.id,student_foss__csc_foss_id=foss.id,student_foss__foss_start_date__lte=datetime.date.today()-timedelta(days=10)).annotate(assigned=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test))).annotate(ineligible=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test__in=other_tests))).annotate(test_taken=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test,status=TEST_COMPLETED_BY_STUDENT))).annotate(retest=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test,status=RETEST)))
 
     cscFossMdlCourses=CSCFossMdlCourses.objects.filter(Q(testfoss=foss)|Q(foss=foss))
     fosses = []
@@ -146,7 +146,7 @@ def get_valid_students_for_test(vle,test):
         fosses.append(item.testfoss)
         fosses.append(item.foss)
     other_tests = Test.objects.filter(foss__in=fosses).exclude(id=test.id)
-    students = Student.objects.filter(vle_id=vle.id,student_foss__csc_foss_id__in=fosses,student_foss__foss_start_date__lte=datetime.date.today()-timedelta(days=10)).annotate(assigned=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test))).annotate(ineligible=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test__in=other_tests))).annotate(test_taken=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test,status__gte=TEST_COMPLETED_BY_STUDENT))).distinct()
+    students = Student.objects.filter(vle_id=vle.id,student_foss__csc_foss_id__in=fosses,student_foss__foss_start_date__lte=datetime.date.today()-timedelta(days=10)).annotate(assigned=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test))).annotate(ineligible=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test__in=other_tests))).annotate(test_taken=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test,status=TEST_COMPLETED_BY_STUDENT))).distinct()
     
     return students
 
