@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     # 'masquerade',
     'mdl',
     # 'rest_framework_swagger',
+    'django_filters',
 
 ]
 

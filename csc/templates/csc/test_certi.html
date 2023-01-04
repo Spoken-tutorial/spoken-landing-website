@@ -1,0 +1,79 @@
+{% extends 'csc_base.html'%}
+{% load static %}
+{% load csc_tags %}
+{% block css %}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="{% static '/spoken/utility.css' %}">
+<style>
+    a{
+        color: #013A6B!important;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div>
+    <div class="container">
+      <div>
+        <table class="table my-5" id="example">
+                    
+          <thead>
+              <tr>
+                  <th>#</th>
+                  <th scope="col">Student Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Test Foss</th>
+                  <th scope="col">Test Date </th>
+                  <th scope="col">Status </th>
+                  <th scope="col">Grade </th>
+                  
+              </tr>
+          </thead>
+          <tbody>
+              {% for item in ta %}
+              <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td><a href="{% url 'csc:student_profile' item.student_id %}">{{item.fullname | title  }}</a></td>
+                    <td>{{item.student__user__email  }}</td>
+                    <td>{{item.test__foss__foss}}</td>
+                    <td>{{item.test__tdate }}</td>
+                    <td>{{item.status | get_test_status}}</td>
+                    <td>{% if item.status >= 3 %}{{item.mdlgrade }}{% endif %}</td>
+              </tr>
+              {% endfor %}
+          </tbody>
+  </table>
+      </div>
+        
+    </div>
+    <div>
+    
+    </div>
+    
+    
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        
+        $('#example').DataTable({
+            "pageLength": 200
+        }); 
+});
+
+  </script>
+{% endblock %}
+
+
+
+
