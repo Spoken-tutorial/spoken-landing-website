@@ -22,12 +22,12 @@
                   <th scope="col">Time</th>
                   <th scope="col">Students (Pending)</th>
                   <th scope="col">Appeared Students</th>
-                  <th scope="col">View Students </th>
+                  <th scope="col">Action</th>
 
                   {% comment %} <th scope="col">Published</th> {% endcomment %}
                   {% comment %} <th scope="col">Delete</th>
                   <th scope="col">Edit</th> {% endcomment %}
-                  <th scope="col"></th>
+                  <th scope="col">Attendance</th>
               </tr>
           </thead>
           <tbody>
@@ -39,7 +39,9 @@
                   <td>{{test.ttime}}</td>
                   <td>{{test.upcoming_students}}</td>
                   <td>{{test.appeared_students}}</td>
-                  <td><a class="text-dark" href="{% url 'csc:test_students' test.id %}"><i class="fas fa-users"></i></a></td>
+                  <td><small><a class="btn btn-outline-dark btn-sm" href="{% url 'csc:test_students' test.id %}">View Participants</a></small>
+                    {% comment %} <a class="text-dark" href="{% url 'csc:test_students' test.id %}"><i class="fas fa-users"></i></a> {% endcomment %}
+                </td>
 
 
                   {% comment %} <td>
@@ -55,7 +57,7 @@
                       <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button> -->
 
                       <!-- <button class="btn btn-sm btn-warning attendance" id="att_{{test.id}}"></button> -->
-                      <a href="{% url 'csc:mark_attendance' test.id %}" class="btn btn-sm btn-warning">attendance</a>
+                      <a href="{% url 'csc:mark_attendance' test.id %}" class="btn btn-sm btn-outline-warning">attendance</a>
                       {% endif %}
                   </td>
               </tr>

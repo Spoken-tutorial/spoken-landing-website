@@ -1,0 +1,52 @@
+
+{% extends "stats/stats_base.html" %}
+{% load static %}
+{% load cmsdata %}
+{% block custom_style %}
+{% load crispy_forms_tags %}
+<style>
+    #test_stats{
+        border-left: 5px solid orange;
+        color: #013A6B;
+        font-weight: bold;
+    }
+</style>
+{% endblock custom_style %}
+{% block content  %}
+<div>
+  <form>
+    <div class="row">
+      <div class="col">{{ form.vle__csc__state.label_tag }} {{ form.vle__csc__state }}</div>
+      <div class="col">{{ form.vle__csc__city.label_tag }} {{ form.vle__csc__city }}</div>
+      <div class="col">{{ form.vle__user__email.label_tag }} {{ form.vle__user__email }}</div>
+      <div class="col">{{ form.name.label_tag }} {{ form.name }}</div>
+    </div>
+    
+    <input class="btn btn-success my-2" type="submit" value="Filter" />
+  </form>
+
+</div>
+    <table class="paleblue table table-striped table-hover table-bordered" id="tb_test_stats">
+        <thead>
+          {% get_sortable_header header ordering request.GET %}
+        </thead>
+        <tbody>
+            {% for test in collection %}
+              <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>{{test.vle.csc.state}}</td>
+                <td>{{test.vle.csc.city}}</td>
+                <td>{{test.vle.user.get_full_name | title}}</td>
+                <td>{{test.foss}}</td>
+                <td>{{test.tdate}} | {{test.ttime}}</td>
+                
+              </tr>
+            {% empty %}
+            <tr><td >No test data found for the selected criteria.</td><tr>
+            {% endfor %}
+          
+          
+        </tbody>
+    </table>
+
+{% endblock content  %}

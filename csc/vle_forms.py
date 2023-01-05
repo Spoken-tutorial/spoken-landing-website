@@ -95,7 +95,7 @@ class InvigilationRequestForm(forms.Form):
 class TestForm(forms.ModelForm):
     class Meta:
         model = Test
-        fields = ['foss','tdate','ttime','invigilator','publish']
+        fields = ['foss','tdate','ttime','invigilator']
         widgets = {
    			'tdate' : forms.DateInput(attrs={'type': 'date'}),
 			'ttime' : forms.DateInput(attrs={'type': 'time'},format='%H:%M')
@@ -119,3 +119,11 @@ class TestForm(forms.ModelForm):
         
         self.fields['foss'].queryset = get_test_valid_fosses(vle)
         self.fields['invigilator'].queryset = get_invig(vle)
+        
+    def clean_foss(self):
+        cscFossMdlCourse = self.cleaned_data['foss']
+        foss_obj = FossCategory.objects.get(foss=cscFossMdlCourse.testfoss.foss)
+        return foss_obj
+        
+        
+        

@@ -6,7 +6,8 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import IntegrityError
-from django.db.models import OuterRef,Exists,Q, Exists, OuterRef
+from django.db.models import OuterRef,Exists,Q, Exists, Subquery
+from django.db.models.functions import Concat
 from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render,get_object_or_404, redirect
@@ -585,7 +586,6 @@ def test(request):
       test_data.vle = vle
       test_data.save()
       form.save_m2m() 
-      # messages.success(request,"Test added successfully.")
       messages.add_message(request,messages.SUCCESS,f'Test added successfully.')
   context['form'] = form
   
@@ -595,8 +595,7 @@ def test_assign(request):
   context = {}
   vle = VLE.objects.get(user=request.user)
   students = [x['id'] for x in Student.objects.filter(vle_id=vle.id).values('id')]
-  valid_foss_for_tests = [x['csc_foss'] for x in Student_Foss.objects.filter(student_id__in=students).values('csc_foss').distinct()]
-  tests = Test.objects.filter(vle=vle,status=TEST_OPEN,foss_id__in=valid_foss_for_tests).order_by('-tdate','foss__foss')
+  tests = Test.objects.filter(vle=vle,status=TEST_OPEN).order_by('-tdate','foss__foss')
   context['tests'] = tests
   test = request.POST.get('test')
   if test and test!='0':
@@ -614,7 +613,8 @@ def test_assign(request):
   if request.method == 'POST' and request.POST.get('action_type') == 'add_students':
     assigned_students = request.POST.getlist('students')
     try:
-      fossMdlCourse = CSCFossMdlCourses.objects.filter(foss=foss)[0] #ToDo Change
+      # fossMdlCourse = CSCFossMdlCourses.objects.filter(foss=foss)[0] #ToDo Change
+      fossMdlCourse = CSCFossMdlCourses.objects.filter(testfoss=foss)[0] 
       mdlcourse_id = fossMdlCourse.mdlcourse_id
       mdlquiz_id = fossMdlCourse.mdlquiz_id
       for email in assigned_students:
@@ -660,6 +660,7 @@ def test_students(request, pk):
   context = {}
   tests = CSCTestAtttendance.objects.filter(test=pk)
   context['tests'] = tests
+  context['test'] = Test.objects.get(id=pk)
   return render(request,'csc/test_students.html', context)
 
 def update_test(request,pk):
@@ -885,3 +886,34 @@ def assign_foss(request):
         print(e)
     
   return JsonResponse({'foss':foss_name,'student_count':len(students)})
+
+
+def training_enroll(request):
+  context = {}
+  vle = VLE.objects.get(user=request.user)
+  students = [x.id for x in Student.objects.filter(vle_id=vle.id) ]
+  sf = Student_Foss.objects.filter(student_id__in=students).values('student_id','student__user__email','csc_foss__foss','foss_start_date').annotate(fullname=Concat(F('student__user__first_name'),Value(' '),F('student__user__last_name')))
+    
+  
+  
+  
+  context['sf']=sf
+  return render(request,'csc/training_enroll.html',context)
+
+def test_enroll(request):
+  context = {}
+  vle = VLE.objects.get(user=request.user)
+  students = [x.id for x in Student.objects.filter(vle_id=vle.id) ]
+  ta = CSCTestAtttendance.objects.filter(student_id__in=students).values('student_id','student__user__email','test__foss__foss','test__tdate','test__ttime','status','mdlgrade').annotate(fullname=Concat(F('student__user__first_name'),Value(' '),F('student__user__last_name')))
+  context['ta']=ta
+  return render(request,'csc/test_enroll.html',context)
+  
+  
+def test_certi(request):
+  context = {}
+  vle = VLE.objects.get(user=request.user)
+  students = [x.id for x in Student.objects.filter(vle_id=vle.id) ]
+  ta = CSCTestAtttendance.objects.filter(student_id__in=students,mdlgrade__gte=PASS_GRADE).values('student_id','student__user__email','test__foss__foss','test__tdate','test__ttime','status','mdlgrade').annotate(fullname=Concat(F('student__user__first_name'),Value(' '),F('student__user__last_name')))
+  context['ta']=ta
+  return render(request,'csc/test_certi.html',context)
+  

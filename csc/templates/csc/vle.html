@@ -68,6 +68,9 @@ body{
 .progress{
   height: 0.25rem;
 }
+a{
+  color: rgb(0,0,0);
+}
 </style>
 <link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
 <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
@@ -132,39 +135,46 @@ body{
 
         <!-- Earnings (Monthly) Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
+          <a href="{% url 'csc:student_list'%}">
             <div class="card border-1 shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                              Total students enrolled</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_students_enrolled}}</div>
-                        </div>
-                        <div class="col-auto">
-                            <!-- <i class="fas fa-calendar fa-2x text-gray-300"></i> -->
-                            <i class="fas fa-users fa-2x"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
+              <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                      <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Total students enrolled</div>
+                          <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_students_enrolled}}</div>
+                      </div>
+                      <div class="col-auto">
+                          <!-- <i class="fas fa-calendar fa-2x text-gray-300"></i> -->
+                          <i class="fas fa-users fa-2x"></i>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          </a>
+            
         </div>
     
         <!-- Earnings (Monthly) Card Example -->
        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-2 shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Total tests</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_tests_completed}}</div>
-                        </div>
-                        <div class="col-auto ">
-                          <i class="fas fa-clipboard-check fa-2x"></i>
-                        </div>
+        <a href="{% url 'csc:test_list' %}">
+          <div class="card border-2 shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Total tests</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_tests_completed}}</div>
+                    </div>
+                    <div class="col-auto ">
+                      <i class="fas fa-clipboard-check fa-2x"></i>
                     </div>
                 </div>
             </div>
+        </div>
+
+        </a>
+            
         </div> 
 
         
@@ -206,13 +216,13 @@ body{
          <div class="row">
              {% for key,value in upcoming_test_stats.items %}
              <div class="col-md-3">
-             <div class="border p-2 mb-2">
-               <div class="test_info">
-                 <p ><a href="{% url 'csc:update_test' pk=value.id %}" class="test_title"><i class="far fa-clipboard"></i> {{key}} <i class="fas fa-location-arrow"></i></a></p>
-                 <p><i class="fas fa-calendar-day"></i>{{value.date}} / {{value.time}}</p>
-                 <p>Total Students : {{value.total_students}}</p>
-               </div>
-             </div>
+                <div class="border p-2 mb-2">
+                  <div class="test_info">
+                    <p ><a href="{% url 'csc:test_students' value.id %}" class="test_title"><i class="far fa-clipboard"></i> {{key}} <i class="fas fa-location-arrow"></i></a></p>
+                    <p><i class="fas fa-calendar-day"></i>{{value.date}} / {{value.time}}</p>
+                    <p>Total Students : {{value.total_students}}</p>
+                  </div>
+                </div>
            </div>
              {% endfor %}
          </div>
@@ -223,7 +233,8 @@ body{
    
     <div class="row mt-2 ">
       <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-1 shadow h-100 py-2">
+        <a href="{% url 'csc:training_enroll' %}">
+          <div class="card border-1 shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
@@ -237,9 +248,12 @@ body{
                 </div>
             </div>
         </div>
+        </a>
+        
     </div> 
     <div class="col-xl-3 col-md-6 mb-4">
-      <div class="card border-2 shadow h-100 py-2">
+      <a href="{% url 'csc:test_enroll' %}">
+        <div class="card border-2 shadow h-100 py-2">
           <div class="card-body">
               <div class="row no-gutters align-items-center">
                   <div class="col mr-2">
@@ -253,10 +267,11 @@ body{
               </div>
           </div>
       </div>
-      
+      </a>
   </div> 
   <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card border-3 shadow h-100 py-2">
+    <a href="{% url 'csc:test_certi' %}">
+      <div class="card border-3 shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
@@ -270,6 +285,8 @@ body{
             </div>
         </div>
     </div>
+    </a>
+   
 </div> 
       {% comment %} <div class="col-md-8 ">
         <div class="border p-2 bg-white">
