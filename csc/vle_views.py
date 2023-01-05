@@ -25,6 +25,7 @@ from .decorators import is_vle
 from .models import TEST_OPEN
 from .utils import *
 from .vle_forms import *
+from certificate.generator import generate
 
 import logging
 import random
@@ -885,3 +886,37 @@ def assign_foss(request):
         print(e)
     
   return JsonResponse({'foss':foss_name,'student_count':len(students)})
+
+
+@login_required
+@is_vle
+def download_certificate(request, test_attendance_id):
+    test_attendance = get_object_or_404(CSCTestAtttendance, pk=test_attendance_id)
+
+    if test_attendance.is_eligible():
+        details = get_details(test_attendance)
+        filename = 'certficate'
+        output = generate(**details)
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename={0}.pdf'.format(filename)
+        output.write(response)
+        response.close()
+        return response
+    else:
+        messages.error(request,"Not eligible for the certificate.")
+        return reverse('csc:vle_dashboard')
+
+
+def get_details(test_attendance):
+    details = {
+        'test_date': test_attendance.test.tdate,
+        'name':  test_attendance.student.user.get_full_name(),
+        'foss': test_attendance.test.foss.foss,
+        'institute': 'R. K. C. Engineering College',
+        'score': '{0}%'.format(test_attendance.mdlgrade),
+        'certficate': Certificate.objects.get(_type='ind'),
+        'background': certificate.background.path,
+        'certificate_pass': str(test_attendance.id)+id_generator(10-len(str(test_attendance.id))),
+    }
+
+    return details

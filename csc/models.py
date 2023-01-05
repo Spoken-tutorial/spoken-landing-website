@@ -286,10 +286,14 @@ class CSCTestAtttendance(models.Model):
     mdlgrade = models.DecimalField(max_digits=12, decimal_places=5, default=0.00)
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now = True)
+
+    def is_eligible(self):
+        return self.mdlgrade >= 40 and self.status >= 3
+
+
     class Meta(object):
         verbose_name = "Test Attendance"
         unique_together = (("mdlcourse_id", "mdluser_id"))
-
 
 class CSCFossMdlCourses(models.Model):
     foss = models.ForeignKey(FossCategory, on_delete=models.PROTECT, related_name='trainingfoss', null=True)
