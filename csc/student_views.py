@@ -13,6 +13,7 @@ from django.db.models import Q
 from .utils import TEST_COMPLETED_BY_STUDENT
 from django.conf import settings
 from csc.utils import PASS_GRADE
+from django.views.decorators.csrf import  csrf_exempt
 
 TEST_WAITING_PERIOD = 10
 def student_tests(request):
@@ -168,7 +169,25 @@ def student_tests(request):
     # context['in_progress_foss_data'] = in_progress_foss_data
     return render(request,'csc/student_tests.html',context)
 
+@csrf_exempt
+def request_retest(request):
+  context ={}
+  
+  if request.method == 'POST':
+    print("*&&&&&&&&*&*&*&*&*&*&***&*&*S")
+
+    attendanceid = request.POST.get('attendanceid')
+    
+    ta= CSCTestAtttendance.objects.get(pk=attendanceid)
+    ta.status=4
+    ta.save()
+    msg="Retuen request sent"
+    return JsonResponse({'msg' : msg}) 
+
+
 def download_certificate(request):
     data = {}
     print(f"download_certificate ************************************ ")
     return JsonResponse(data)
+
+

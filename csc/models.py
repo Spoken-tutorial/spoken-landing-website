@@ -283,6 +283,7 @@ class CSCTestAtttendance(models.Model):
     mdlgrade = models.DecimalField(max_digits=12, decimal_places=5, default=0.00)
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now = True)
+    attempts = models.PositiveSmallIntegerField(default=1)
     class Meta(object):
         verbose_name = "Test Attendance"
         unique_together = (("mdlcourse_id", "mdluser_id"))
