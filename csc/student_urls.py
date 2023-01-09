@@ -17,7 +17,7 @@ urlpatterns = [
     
     
     path('download_certificate/', download_certificate, name="download_certificate"),
-    
+    path('request_retest/',request_retest, name="request_retest"),
     
     
    
