@@ -8,17 +8,19 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import IntegrityError
 from django.db.models import OuterRef,Exists,Q, Exists, OuterRef
 from django.forms.models import model_to_dict
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render,get_object_or_404, redirect
 from django.urls import reverse,reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View,ListView,DeleteView,DetailView,UpdateView
 from django.views.generic.edit import CreateView
+from django.http import FileResponse
 
 from csc.models import *
 from mdl.models import *
 from spokenlogin.models import *
+from certificate.models import Log
 
 from .cron import add_vle,add_transaction
 from .decorators import is_vle
@@ -32,9 +34,15 @@ import random
 import requests
 import string
 import hashlib
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
+import io
 
 STUDENT_ENROLLED_FOR_TEST = 0
 ATTENDANCE_MARKED = 1
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):         
+    return ''.join(random.choice(chars) for _ in range(size))
 
 class JSONResponseMixin(object):
   """
@@ -895,28 +903,62 @@ def download_certificate(request, test_attendance_id):
 
     if test_attendance.is_eligible():
         details = get_details(test_attendance)
-        filename = 'certficate'
-        output = generate(**details)
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename={0}.pdf'.format(filename)
-        output.write(response)
-        response.close()
-        return response
+        filename = 'certficate.pdf'
+        certificate = generate(**details)
+        if not certificate[1]:
+            add_log(details['certificate_pass'], test_attendance_id)
+            return certificate[0]
+        else:
+            messages.error(request,"Problem in downloading!")
+            return HttpResponse(certificate[0]) 
     else:
-        messages.error(request,"Not eligible for the certificate.")
-        return reverse('csc:vle_dashboard')
+        messages.error(request,"Not eligible for the certificate.i")
+        return HttpResponse(certificate[0])
 
 
 def get_details(test_attendance):
+    t = test_attendance.test
+    v = t.vle
+    c = v.csc.csc_id
     details = {
-        'test_date': test_attendance.test.tdate,
-        'name':  test_attendance.student.user.get_full_name(),
+        'test_date': test_attendance.test.tdate.strftime("%Y-%m-%d"),
+        'tstudent':  test_attendance.student.user.get_full_name(),
         'foss': test_attendance.test.foss.foss,
-        'institute': 'R. K. C. Engineering College',
-        'score': '{0}%'.format(test_attendance.mdlgrade),
-        'certficate': Certificate.objects.get(_type='ind'),
-        'background': certificate.background.path,
-        'certificate_pass': str(test_attendance.id)+id_generator(10-len(str(test_attendance.id))),
+        'institute': c,
+        'score': '{0}'.format(round(test_attendance.mdlgrade, 2)),
+        'certificate_pass': get_pass(test_attendance.id, t.id),
     }
 
     return details
+
+def has_log_entry(key):
+    return Log.objects.filter(key=key).exists()
+
+def add_log(key, ta):
+    if not has_log_entry(key):
+       log = Log()
+       log.key = key
+       log.test_attendance_id = ta
+       log.save()
+
+
+def verify(request, key=None):
+    context = {}
+    ci = RequestContext(request)
+    detail = None
+    if key is not None:
+        details = get_verification_details(key)
+    elif request.method == 'POST':
+        key = request.POST.get('key').strip()
+        details = get_verification_details(key)
+    return render_to_response('verify.html', {'details': details}, ci)
+
+def get_verification_details(key):
+    log = get_object_or_404(Log, key=key)
+    ta = log.test_attendance
+    details = get_details(ta)
+    return details
+
+def get_pass(ta_id, t_id):
+    serial_key = (hashlib.sha1(bytes('{0}{1}'.format(ta_id, t_id), 'utf-8'))).hexdigest()
+    return serial_key[0:10]

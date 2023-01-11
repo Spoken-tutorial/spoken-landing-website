@@ -15,7 +15,5 @@ class Certificate(models.Model):
     text_template = models.FileField(upload_to='templates')
 
 class Log(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    certificate = models.ForeignKey(Certificate, on_delete=models.CASCADE)
     key = models.CharField(max_length=25)
     test_attendance = models.ForeignKey(CSCTestAtttendance, on_delete=models.CASCADE)
