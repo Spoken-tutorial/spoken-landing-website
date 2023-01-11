@@ -6,7 +6,8 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import IntegrityError
-from django.db.models import OuterRef,Exists,Q, Exists, OuterRef
+from django.db.models import OuterRef,Exists,Q, Exists, Subquery
+from django.db.models.functions import Concat
 from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render,get_object_or_404, redirect
@@ -126,7 +127,6 @@ def courses(request):
     for course in courses:
       fosses = [x['foss__foss'] for x in CategoryCourses.objects.filter(certificate_category_id=course.id).values('foss__foss')]
       d[course] = fosses
-    print(f"\n\n{d}\n\n")
     context['courses'] = d
     
   return render(request,'csc/courses.html',context)
@@ -180,7 +180,6 @@ def student_list(request):
   l = list(distinct_foss)
   l.sort(key=lambda x: x.foss.title())
   context['distinct_foss'] = l
-  print(s.query)
   # all_students = Student.objects.filter(vle_id=vle.id)
   if name!=None:
     context['search_name'] = name
@@ -307,7 +306,6 @@ class TestCreateView(CreateView):
   def form_valid(self, form):
     vle = VLE.objects.filter(user=self.request.user).first()
     form.instance.vle = vle 
-    print(form)
 
     messages.success(self.request,"Test added successfully.")
     return super().form_valid(form)
@@ -594,7 +592,6 @@ def test(request):
       test_data.vle = vle
       test_data.save()
       form.save_m2m() 
-      # messages.success(request,"Test added successfully.")
       messages.add_message(request,messages.SUCCESS,f'Test added successfully.')
   context['form'] = form
   
@@ -604,8 +601,7 @@ def test_assign(request):
   context = {}
   vle = VLE.objects.get(user=request.user)
   students = [x['id'] for x in Student.objects.filter(vle_id=vle.id).values('id')]
-  valid_foss_for_tests = [x['csc_foss'] for x in Student_Foss.objects.filter(student_id__in=students).values('csc_foss').distinct()]
-  tests = Test.objects.filter(vle=vle,status=TEST_OPEN,foss_id__in=valid_foss_for_tests).order_by('-tdate','foss__foss')
+  tests = Test.objects.filter(vle=vle,status=TEST_OPEN).order_by('-tdate','foss__foss')
   context['tests'] = tests
   test = request.POST.get('test')
   if test and test!='0':
@@ -623,7 +619,8 @@ def test_assign(request):
   if request.method == 'POST' and request.POST.get('action_type') == 'add_students':
     assigned_students = request.POST.getlist('students')
     try:
-      fossMdlCourse = CSCFossMdlCourses.objects.filter(foss=foss)[0] #ToDo Change
+      # fossMdlCourse = CSCFossMdlCourses.objects.filter(foss=foss)[0] #ToDo Change
+      fossMdlCourse = CSCFossMdlCourses.objects.filter(testfoss=foss)[0] 
       mdlcourse_id = fossMdlCourse.mdlcourse_id
       mdlquiz_id = fossMdlCourse.mdlquiz_id
       for email in assigned_students:
@@ -642,8 +639,15 @@ def test_assign(request):
           print(e)
         try:
           ta = CSCTestAtttendance.objects.create(test=test,student=student,mdluser_id=mdluser.id,mdlcourse_id=mdlcourse_id,status=0,mdlquiz_id=mdlquiz_id)
+          print("************* 4F")
         except IntegrityError as e:
           print(e)
+          print("************* 5F")
+          print('test: ',test.id)
+          ta= CSCTestAtttendance.objects.get(test=test,student=student,mdluser_id=mdluser.id,mdlcourse_id=mdlcourse_id,status=4,mdlquiz_id=mdlquiz_id)
+          ta.status=0
+          ta.attempts=ta.attempts+1
+          ta.save()
       if request.POST.get('action_type') == 'add_students':
         nta = CSCTestAtttendance.objects.filter(test=test,status=TEST_OPEN).exclude(student__user__email__in=assigned_students)
         for item in nta:
@@ -669,6 +673,7 @@ def test_students(request, pk):
   context = {}
   tests = CSCTestAtttendance.objects.filter(test=pk)
   context['tests'] = tests
+  context['test'] = Test.objects.get(id=pk)
   return render(request,'csc/test_students.html', context)
 
 def update_test(request,pk):
@@ -799,7 +804,6 @@ def create_invigilator(request):
     try:
       # Invigilator.objects.create(user=user,vle=vle,phone=phone)
       i=Invigilator.objects.create(user=user,phone=phone)
-      print(f"invi ************************************ {i}")
       i.vle.add(vle)
       invi_group = Group.objects.get(name='INVIGILATOR')
       invi_group.user_set.add(user)
@@ -962,3 +966,34 @@ def get_verification_details(key):
 def get_pass(ta_id, t_id):
     serial_key = (hashlib.sha1(bytes('{0}{1}'.format(ta_id, t_id), 'utf-8'))).hexdigest()
     return serial_key[0:10]
+
+
+def training_enroll(request):
+  context = {}
+  vle = VLE.objects.get(user=request.user)
+  students = [x.id for x in Student.objects.filter(vle_id=vle.id) ]
+  sf = Student_Foss.objects.filter(student_id__in=students).values('student_id','student__user__email','csc_foss__foss','foss_start_date').annotate(fullname=Concat(F('student__user__first_name'),Value(' '),F('student__user__last_name')))
+    
+  
+  
+  
+  context['sf']=sf
+  return render(request,'csc/training_enroll.html',context)
+
+def test_enroll(request):
+  context = {}
+  vle = VLE.objects.get(user=request.user)
+  students = [x.id for x in Student.objects.filter(vle_id=vle.id) ]
+  ta = CSCTestAtttendance.objects.filter(student_id__in=students).values('student_id','student__user__email','test__foss__foss','test__tdate','test__ttime','status','mdlgrade').annotate(fullname=Concat(F('student__user__first_name'),Value(' '),F('student__user__last_name')))
+  context['ta']=ta
+  return render(request,'csc/test_enroll.html',context)
+  
+  
+def test_certi(request):
+  context = {}
+  vle = VLE.objects.get(user=request.user)
+  students = [x.id for x in Student.objects.filter(vle_id=vle.id) ]
+  ta = CSCTestAtttendance.objects.filter(student_id__in=students,mdlgrade__gte=PASS_GRADE).values('student_id','student__user__email','test__foss__foss','test__tdate','test__ttime','status','mdlgrade').annotate(fullname=Concat(F('student__user__first_name'),Value(' '),F('student__user__last_name')))
+  context['ta']=ta
+  return render(request,'csc/test_certi.html',context)
+  

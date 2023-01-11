@@ -1,4 +1,4 @@
-from django.db.models import OuterRef,Exists, Count
+from django.db.models import OuterRef,Exists, Count, F, Value, Q
 from genericpath import exists
 from tokenize import group
 import datetime
@@ -28,7 +28,7 @@ TEST_OPEN=0
 TEST_ATTENDANCE_MARKED=1
 TEST_ONGOING=2
 TEST_COMPLETED_BY_STUDENT=3
-TEST_CLOSED_BY_VLE=4
+RETEST=4
 PASS_GRADE=40.00
 
 # from reportlab.pdfgen import canvas
@@ -137,8 +137,16 @@ def get_tenure_end_date(tdate):
     
 def get_valid_students_for_test(vle,test):
     foss = test.foss
-    other_tests = Test.objects.filter(foss=foss).exclude(id=test.id)
-    students = Student.objects.filter(vle_id=vle.id,student_foss__csc_foss_id=foss.id,student_foss__foss_start_date__lte=datetime.date.today()-timedelta(days=10)).annotate(assigned=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test))).annotate(ineligible=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test__in=other_tests))).annotate(test_taken=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test,status__gte=TEST_COMPLETED_BY_STUDENT)))
+    # other_tests = Test.objects.filter(foss=foss).exclude(id=test.id)
+    # students = Student.objects.filter(vle_id=vle.id,student_foss__csc_foss_id=foss.id,student_foss__foss_start_date__lte=datetime.date.today()-timedelta(days=10)).annotate(assigned=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test))).annotate(ineligible=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test__in=other_tests))).annotate(test_taken=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test,status=TEST_COMPLETED_BY_STUDENT))).annotate(retest=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test,status=RETEST)))
+
+    cscFossMdlCourses=CSCFossMdlCourses.objects.filter(Q(testfoss=foss)|Q(foss=foss))
+    fosses = []
+    for item in cscFossMdlCourses:
+        fosses.append(item.testfoss)
+        fosses.append(item.foss)
+    other_tests = Test.objects.filter(foss__in=fosses).exclude(id=test.id)
+    students = Student.objects.filter(vle_id=vle.id,student_foss__csc_foss_id__in=fosses,student_foss__foss_start_date__lte=datetime.date.today()-timedelta(days=10)).annotate(assigned=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test))).annotate(ineligible=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test__in=other_tests))).annotate(test_taken=Exists(CSCTestAtttendance.objects.filter(student_id=OuterRef('id'),test=test,status=TEST_COMPLETED_BY_STUDENT))).distinct()
     
     return students
 
@@ -222,8 +230,9 @@ def get_valid_animation_fosses():
 
 def get_test_valid_fosses(vle):
     students = Student.objects.filter(vle_id=vle.id)
-    fosses = Student_Foss.objects.filter(student__in=students).values('csc_foss').distinct()
-    return FossCategory.objects.filter(id__in=fosses).order_by('foss')
+    fosses = [x['csc_foss'] for x in Student_Foss.objects.filter(student__in=students).values('csc_foss').distinct()]
+    valid_fosses = CSCFossMdlCourses.objects.filter(Q(testfoss__in=fosses)|Q(foss__in=fosses)).order_by('testfoss')
+    return valid_fosses
 
 def get_invig(vle):
     invigilators = Invigilator.objects.filter(vle=vle).order_by('user__first_name')

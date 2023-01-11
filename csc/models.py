@@ -212,16 +212,13 @@ class Invigilator(models.Model):
         
 class Test(models.Model):
     foss = models.ForeignKey(FossCategory,on_delete=models.CASCADE)
-    # mdlfoss = models.ForeignKey(FossCategory,on_delete=models.CASCADE)
     tdate = models.DateField()
     ttime = models.TimeField()
     invigilator = models.ManyToManyField(Invigilator,blank=True,null=True)
-    publish = models.BooleanField(default=True)
     vle = models.ForeignKey(VLE,on_delete=models.CASCADE,null=True,blank=True)
     note_student = models.TextField(blank=True,null=True)
     note_invigilator = models.TextField(blank=True,null=True)
     status = models.PositiveIntegerField(default=TEST_OPEN)#
-    # test_name = models.CharField(max_length=252,blank=True,null=True)
     participant_count = models.IntegerField(null=True,blank=True)
     slug = models.SlugField(max_length=40)
     created = models.DateTimeField(auto_now_add=True)
@@ -286,6 +283,8 @@ class CSCTestAtttendance(models.Model):
     mdlgrade = models.DecimalField(max_digits=12, decimal_places=5, default=0.00)
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now = True)
+    attempts = models.PositiveSmallIntegerField(default=1)
+
 
     def is_eligible(self):
         return self.mdlgrade >= 40 and self.status >= 3
@@ -315,5 +314,10 @@ class CSCFossMdlCourses(models.Model):
 	testfoss = models.ForeignKey(FossCategory, on_delete=models.PROTECT, related_name='testfoss', null=True)
 
 	def __str__(self):
+<<<<<<< HEAD
 		return self.foss.foss
     
+=======
+		return f"{self.foss.foss}  ({self.testfoss.foss})" if self.foss != self.testfoss else self.foss.foss
+    
+>>>>>>> 1c3310efc43a97817537dc699d0d0ca4b1284721

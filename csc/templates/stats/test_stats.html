@@ -1,0 +1,132 @@
+
+{% extends "stats/stats_base.html" %}
+{% load static %}
+{% load cmsdata %}
+{% block custom_style %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+<style>
+    #test_stats{
+        border-left: 5px solid orange;
+        color: #013A6B;
+        font-weight: bold;
+    }
+</style>
+<link rel="stylesheet" href="{% static 'spoken/css/jquery.datetimepicker.css' %}" type="text/css" media="screen" charset="utf-8" />
+{% endblock custom_style %}
+{% block content  %}
+<div>
+  <div class="border border-2 p-2 white-bg">
+    <h6 class="mt-2"> Search Test</h6>
+    <hr>
+    <form>
+      <div class="row">
+        <div class="col-3">
+          <div class="form-group">
+            <label for="id_vle__csc__state" class="col-sm-4 control-label"><b>State</b></label>
+            <div class="col-sm-8">
+                {% render_field form.vle__csc__state class+="form-control vle__csc__state" tabindex="1" %}
+            </div>
+          </div>
+        </div>
+          
+        <div class="col-3">
+          <div class="form-group">
+            <label for="id_vle__csc__city" class="col-sm-4 control-label"><b>City</b></label>
+            <div class="col-sm-8">
+                {% render_field form.vle__csc__city class+="form-control vle__csc__city" tabindex="1" %}
+            </div>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="form-group">
+            <label for="id_vle__user__email" class="col-sm-4 control-label"><b>VLE Email</b></label>
+            <div class="col-sm-8">
+                {% render_field form.vle__user__email class+="form-control vle__user__email" tabindex="1" %}
+                {{ form.vle__user__email.errors }}
+            </div>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="form-group">
+            <label for="id_name" class="col-sm-4 control-label"><b>VLE Name</b></label>
+            <div class="col-sm-8">
+                {% render_field form.name class+="form-control name" tabindex="1" %}
+                {{ form.name.errors }}
+            </div>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="form-group">
+            <label for="id_foss" class="col-sm-4 control-label"><b>FOSS</b></label>
+            <div class="col-sm-8">
+              
+                {% render_field form.foss class+="form-control foss " tabindex="1" %}
+                {{ form.foss.errors }}
+            </div>
+        </div>
+        </div>
+        <div class="col-3">
+          <div class="form-group">
+            <label for="id_tdate" class="col-sm-4 control-label"><b>Date Ranges</b></label>
+            <div class="col-sm-8">
+                {% render_field form.tdate class+="form-control tdate date" tabindex="1" %}
+                {{ form.tdate.errors }}
+            </div>
+        </div>
+        </div>
+      </div>
+      
+      <input class="btn btn-success my-2" type="submit" value="Filter" />
+    </form>
+  </div>
+  
+
+</div>
+    <table class="paleblue table table-striped table-hover table-bordered" id="tb_test_stats">
+        <thead>
+          {% get_sortable_header header ordering request.GET %}
+        </thead>
+        <tbody>
+            {% for test in collection %}
+              <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>{{test.vle.csc.state}}</td>
+                <td>{{test.vle.csc.city}}</td>
+                <td>{{test.vle.user.get_full_name | title}}</td>
+                <td>{{test.foss}}</td>
+                <td>{{test.tdate}} | {{test.ttime}}</td>
+                
+              </tr>
+            {% empty %}
+            <tr><td >No test data found for the selected criteria.</td><tr>
+            {% endfor %}
+          
+          
+        </tbody>
+    </table>
+
+{% endblock content  %}
+{% block js_script %}
+<script type="text/javascript" src="{% static '/jquery.js'%}"></script>	
+  <script src="{% static '/spoken/js/jquery.datetimepicker.js' %}"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+        $('#id_tdate_0').datetimepicker({
+          lang:'en',
+          timepicker:false,
+          format:'Y-m-d',
+          formatDate:'Y/m/d',
+          maxDate:'+1970/06/31', // tommorow date with in 6 month
+      });
+      $('#id_tdate_1').datetimepicker({
+        lang:'en',
+        timepicker:false,
+        format:'Y-m-d',
+        formatDate:'Y/m/d',
+        maxDate:'+1970/06/31', // tommorow date with in 6 month
+    });
+    });
+    
+</script>
+{% endblock js_script %}

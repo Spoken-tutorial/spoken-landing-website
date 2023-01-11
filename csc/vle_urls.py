@@ -19,6 +19,9 @@ urlpatterns = [
     path('test/', test, name="test"),
     path('test_assign/', test_assign, name="test_assign"),
     path('test_list/', test_list, name="test_list"),
+    path('training_enroll/', training_enroll, name="training_enroll"),
+    path('test_enroll/', test_enroll, name="test_enroll"),
+    path('test_certi/', test_certi, name="test_certi"),
     # path('add_test/', TestCreateView.as_view(), name="add_test"),
     path('mark_attendance/<int:id>', mark_attendance, name="mark_attendance"),
     path('certificate/<int:test_attendance_id>/', download_certificate , name="download_certificate"),
@@ -52,7 +55,8 @@ urlpatterns = [
    
   #  ajax
     path('ajax_mark_attendance/', ajax_mark_attendance, name="ajax_mark_attendance"),
-    path('check_vle_email/', check_vle_email, name="check_vle_email")
+    path('check_vle_email/', check_vle_email, name="check_vle_email"),
+    
 
     
     

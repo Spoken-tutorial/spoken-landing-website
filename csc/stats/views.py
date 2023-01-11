@@ -12,8 +12,11 @@ from cms.models import State, District
 from csc.decorators import is_csc_team as dec_is_csc_team
 from csc.utils import is_csc_team_role,TEST_OPEN,TEST_ONGOING,PASS_GRADE,TEST_ATTENDANCE_MARKED
 from .utility import *
+from csc.filters import TestFilter
 
 from datetime import datetime
+
+from cms.sortable import *
 
 
 @login_required
@@ -268,3 +271,40 @@ def test_report(request):
     # context['fosses'] = foss
     # print(context['fosses']['Blender'])
     return render(request, 'stats/test_report.html', context)
+
+
+def test_stats(request):
+    context = {}
+    collectionSet = Test.objects.all().order_by('-tdate')
+    context['test_list']=collectionSet
+    header = {
+        1: SortableHeader('#', False),
+        2: SortableHeader('vle__csc__state', True, 'State'),
+        3: SortableHeader('vle__csc__city', True, 'City'),
+        4: SortableHeader('vle__user__first_name', True, 'VLE'),
+        5: SortableHeader('foss__foss', True, 'FOSS'),
+        6: SortableHeader('tdate', True, 'Date')
+    }
+    raw_get_data = request.GET.get('o', None)
+    collection = get_sorted_list(request, collectionSet, header, raw_get_data)
+    ordering = get_field_index(raw_get_data)
+    collection = TestFilter(request.GET, queryset=collection)
+    
+    context['form'] = collection.form
+    page = request.GET.get('page')
+    collection = get_page(collection.qs, page)
+    
+    context['collection'] = collection
+    context['header'] = header
+    context['ordering'] = ordering
+    
+    
+    return render(request, 'stats/test_stats.html', context)
+
+@csrf_exempt
+def ajax_get_cities(request):
+    data = {}
+    state = request.GET.get('state')
+    cities = [x['city'] for x in CSC.objects.filter(state=state).values('city').distinct().order_by('city')]
+    data['cities'] = cities
+    return JsonResponse(data)

@@ -29,9 +29,7 @@ def get_csc_mdlcourseid(eventfossid):
 @register.filter
 def check_attendance(studentid, testfossid):
   try:
-    print(testfossid)
     attendance = CSCTestAtttendance.objects.filter(test__foss_id=testfossid, student_id=studentid).first()
-    print(attendance,"######################")
     return attendance
   except Exception as e:
     print(e)
@@ -56,12 +54,48 @@ def check_attendance(studentid, testfossid):
 @register.filter
 def check_passgrade_exists(studentid, testfossid):
   try:
-    pass_entry = CSCTestAtttendance.objects.filter(test__foss__id=testfossid, student_id=studentid, status__gte=TEST_COMPLETED_BY_STUDENT, mdlgrade__gte=PASS_GRADE).first()
-    print(f"pass_entry for foss - {testfossid} - {pass_entry}")
-    return pass_entry   
+    grade_entry = CSCTestAtttendance.objects.filter(test__foss_id=testfossid, 
+      student_id=studentid, status__gte=TEST_COMPLETED_BY_STUDENT).first()
+    
+    if grade_entry.mdlgrade >= PASS_GRADE:
+      result = "Pass"
+    elif grade_entry.mdlgrade < PASS_GRADE:
+      result =  "Fail"
+    
+
+    print(f"pass_entry for foss - {testfossid} - {grade_entry}")
+    return grade_entry
   except:
-    return None  
+    return None
+
+
+@register.filter
+def is_retest_allowed(studentid, testfossid):
+  try:
+    fail_entry = CSCTestAtttendance.objects.filter(test__foss__id=testfossid, student_id=studentid, mdlgrade__lt=40.00, attempts__lte=10).first()
+    if fail_entry:
+      return True
+    else:
+      return False
+  except:
+    print("&&&&&&&&&&&in except")
+    return False
+  
+
+
  
 @register.filter(name='format_url')
 def format_url(value):
     return value.foss.replace(' ', '+')
+  
+  
+@register.filter(name='get_test_status')
+def get_test_status(value):
+  d = {
+    0: 'Attendance not marked',
+    1: 'Attendance marked',
+    2: 'Test Ongoing',
+    3: 'Test Completed',
+    4: 'Request for re-test'
+  } 
+  return d.get(value,'-')
