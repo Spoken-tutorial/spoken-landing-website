@@ -59,7 +59,7 @@
 
 
 			{% if request.user|has_group:"INVIGILATOR" %}
-			<a class="dropdown-item" href="{% url 'csc:invi_dashboard' %}">INVIGILATOR Dashboard</a>
+			<a class="dropdown-item" href="{{ request.scheme }}://{{request.get_host}}{% url 'csc:invi_dashboard'%}">INVIGILATOR Dashboard</a>
 			{% endif %}
 
 

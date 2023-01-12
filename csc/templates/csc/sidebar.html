@@ -90,7 +90,7 @@
         </h6>
         
         <li class="nav-item">
-            <a class="dropdown-item" href="{% url 'csc:invi_dashboard' %}"><i class="fas fa-user-tag sb-icon"></i>Invigilator Dashboard</a>
+            <a class="dropdown-item" href="{{ request.scheme }}://{{request.get_host}}/csc/invigilator_dashboard/"><i class="fas fa-user-tag sb-icon"></i>Invigilator Dashboard</a>
             <a class="nav-link scroll_link " href="{% url 'home' %}"><i class="fas fa-home sb-icon" ></i>Home<span class="sr-only">(current)</span></a>
         </li>
 
