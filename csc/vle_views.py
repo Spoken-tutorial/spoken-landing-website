@@ -630,15 +630,15 @@ def test_assign(request):
           print(e)
         try:
           ta = CSCTestAtttendance.objects.create(test=test,student=student,mdluser_id=mdluser.id,mdlcourse_id=mdlcourse_id,status=0,mdlquiz_id=mdlquiz_id)
-          print("************* 4F")
         except IntegrityError as e:
           print(e)
-          print("************* 5F")
-          print('test: ',test.id)
-          ta= CSCTestAtttendance.objects.get(test=test,student=student,mdluser_id=mdluser.id,mdlcourse_id=mdlcourse_id,status=4,mdlquiz_id=mdlquiz_id)
-          ta.status=0
-          ta.attempts=ta.attempts+1
-          ta.save()
+          try:
+            ta= CSCTestAtttendance.objects.get(test=test,student=student,mdluser_id=mdluser.id,mdlcourse_id=mdlcourse_id,status=4,mdlquiz_id=mdlquiz_id)
+            ta.status=0
+            ta.attempts=ta.attempts+1
+            ta.save()
+          except CSCTestAtttendance.DoesNotExist as e:
+            pass
       if request.POST.get('action_type') == 'add_students':
         nta = CSCTestAtttendance.objects.filter(test=test,status=TEST_OPEN).exclude(student__user__email__in=assigned_students)
         for item in nta:
@@ -646,6 +646,7 @@ def test_assign(request):
       else:
         print(f"\n\n action type is NOT add_students **************************** ")
       messages.add_message(request,messages.SUCCESS,f'Test assigned to the students.')
+      
     except Exception as e:
       print(e)
       messages.error(request,"No test in moodle for the selected foss.Please contact support.")
