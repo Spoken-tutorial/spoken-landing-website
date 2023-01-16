@@ -35,6 +35,21 @@
                   <td>{{forloop.counter}}</td>
                   <td><a class="text-dark" href="{% url 'csc:student_profile' id=test.student_id %}">{{test.student.user.first_name | title}} {{test.student.user.last_name | title}}</a></td>
                   <td>{{test.student.user.email}}</td>
+                  {% comment %} <td>{{test.student.dob | timesince}}</td> {% endcomment %}
+                  {% if  test.status == 0%}
+                  <td>Open</td>
+                  {% elif  test.status == 1%}
+                  <td>Attendance Marked</td>
+                  {% elif  test.status == 2%}
+                  <td>Ongoing</td>
+                  {% elif  test.status == 3%}
+                  <td>Completed by Student
+                  <a class="nav-link" href="{% url 'csc:download_certificate' test.id %}"> <i class="fas fa-certificate"></i>Certificate</a>
+		  </td>
+                  {% elif  test.status == 4%}
+                  <td>Closed by VLE</td>
+                  {% endif %}
+                  <td>{{test.mdlgrade}}</td>
                   <td>{{test.status | get_test_status}}</td>
                   
                   <td>{% if test.status >= 3 %}{{test.mdlgrade }}{% endif %}</td>

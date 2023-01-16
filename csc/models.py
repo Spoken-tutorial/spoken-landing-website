@@ -284,10 +284,15 @@ class CSCTestAtttendance(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now = True)
     attempts = models.PositiveSmallIntegerField(default=1)
+
+
+    def is_eligible(self):
+        return self.mdlgrade >= 40 and self.status >= 3
+
+
     class Meta(object):
         verbose_name = "Test Attendance"
         unique_together = (("mdlcourse_id", "mdluser_id"))
-
 
 class CSCFossMdlCourses(models.Model):
     foss = models.ForeignKey(FossCategory, on_delete=models.PROTECT, related_name='trainingfoss', null=True)
@@ -309,5 +314,10 @@ class CSCFossMdlCourses(models.Model):
 	testfoss = models.ForeignKey(FossCategory, on_delete=models.PROTECT, related_name='testfoss', null=True)
 
 	def __str__(self):
+<<<<<<< HEAD
+		return self.foss.foss
+    
+=======
 		return f"{self.foss.foss}  ({self.testfoss.foss})" if self.foss != self.testfoss else self.foss.foss
     
+>>>>>>> 1c3310efc43a97817537dc699d0d0ca4b1284721

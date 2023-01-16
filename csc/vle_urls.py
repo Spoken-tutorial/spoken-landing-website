@@ -24,6 +24,7 @@ urlpatterns = [
     path('test_certi/', test_certi, name="test_certi"),
     # path('add_test/', TestCreateView.as_view(), name="add_test"),
     path('mark_attendance/<int:id>', mark_attendance, name="mark_attendance"),
+    path('certificate/<int:test_attendance_id>/', download_certificate , name="download_certificate"),
     # path('detail_test/<int:pk>', TestDetailView.as_view(), name="detail_test"),
     path('detail_test/<slug:slug>', TestDetailView.as_view(), name="detail_test"),
     # path('update_test/<int:pk>', TestUpdateView.as_view(), name="update_test"),
