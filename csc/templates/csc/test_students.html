@@ -44,7 +44,9 @@
                   <td>Ongoing</td>
                   {% elif  test.status == 3%}
                   <td>Completed by Student
-                  <a class="nav-link" href="{% url 'csc:download_certificate' test.id %}"> <i class="fas fa-certificate"></i>Certificate</a>
+                      {% if test.is_eligible %}
+                         <a class="nav-link" href="{% url 'csc:download_certificate' test.id %}"> <i class="fas fa-certificate"></i>Certificate</a>
+		      {% endif %}
 		  </td>
                   {% elif  test.status == 4%}
                   <td>Closed by VLE</td>

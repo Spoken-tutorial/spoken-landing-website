@@ -10,6 +10,7 @@ from django.conf import settings
 from django.http import HttpResponse
 import os
 import subprocess
+from django.conf import settings
 
 from string import Template
 
@@ -20,6 +21,7 @@ def generate(**kwargs):
     foss = kwargs['foss']
     score = kwargs['score']
     institute = kwargs['institute']
+    certificate_path = os.path.join(settings.BASE_DIR, 'certificates')
     certificate_path = "/beta_st/beta_spoken-tutorial_in/spoken-landing-website/certificates/"   
     file_name = '{0}'.format(certificate_pass)
     _type = 'P'

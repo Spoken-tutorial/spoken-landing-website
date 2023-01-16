@@ -648,6 +648,7 @@ def test_assign(request):
           ta.status=0
           ta.attempts=ta.attempts+1
           ta.save()
+
       if request.POST.get('action_type') == 'add_students':
         nta = CSCTestAtttendance.objects.filter(test=test,status=TEST_OPEN).exclude(student__user__email__in=assigned_students)
         for item in nta:
@@ -655,6 +656,7 @@ def test_assign(request):
       else:
         print(f"\n\n action type is NOT add_students **************************** ")
       messages.add_message(request,messages.SUCCESS,f'Test assigned to the students.')
+      
     except Exception as e:
       print(e)
       messages.error(request,"No test in moodle for the selected foss.Please contact support.")
@@ -905,19 +907,15 @@ def assign_foss(request):
 def download_certificate(request, test_attendance_id):
     test_attendance = get_object_or_404(CSCTestAtttendance, pk=test_attendance_id)
 
-    if test_attendance.is_eligible():
-        details = get_details(test_attendance)
-        filename = 'certficate.pdf'
-        certificate = generate(**details)
-        if not certificate[1]:
-            add_log(details['certificate_pass'], test_attendance_id)
-            return certificate[0]
-        else:
-            messages.error(request,"Problem in downloading!")
-            return HttpResponse(certificate[0]) 
+    details = get_details(test_attendance)
+    filename = 'certficate.pdf'
+    certificate = generate(**details)
+    if not certificate[1]:
+        add_log(details['certificate_pass'], test_attendance_id)
+        return certificate[0]
     else:
-        messages.error(request,"Not eligible for the certificate.i")
-        return HttpResponse(certificate[0])
+        messages.error(request,"Problem in downloading!")
+        return HttpResponse(certificate[0]) 
 
 
 def get_details(test_attendance):

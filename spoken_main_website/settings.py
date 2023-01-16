@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     'mdl',
     # 'rest_framework_swagger',
     'django_filters',
-
+    'certificate',
 ]
 
 MIDDLEWARE = [
