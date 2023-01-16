@@ -54,7 +54,7 @@
                 
                 <hr>
                 <div>
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" id="tb_students">
                         <thead>
                           <tr>
                             <th scope="col">#</th>
@@ -64,21 +64,24 @@
                         </thead>
                         <tbody>
                             {% for student in students %}
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="{{student.user.email}}" id="flexCheckDefault" name="students" 
-                                        {% if student.assigned %}checked{% endif %} 
-                                        {% if student.ineligible %}disabled{% endif %} 
-                                        {% if student.test_taken %}disabled{% endif %}
-                                        
-                                        >
-                                        <label class="form-check-label" for="flexCheckDefault">{% if student.retest %}(Retest Request){% endif %}</label>
-                                      </div>
-                                </td>
-                                <td>{{student.user.get_full_name|title}}</td>
-                                <td>{{student.user.email}}</td>
-                            </tr>
+                                {% if not student.ineligible %}
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="{{student.user.email}}" id="flexCheckDefault" name="students" 
+                                            {% if student.assigned %}checked{% endif %} 
+                                            {% if student.ineligible %}disabled{% endif %} 
+                                            {% if student.test_taken %}disabled{% endif %}
+                                            
+                                            >
+                                            <label class="form-check-label" for="flexCheckDefault">{% if student.retest %}(Retest Request){% endif %}</label>
+                                          </div>
+                                    </td>
+                                    <td>{{student.user.get_full_name|title}}</td>
+                                    <td>{{student.user.email}}</td>
+                                </tr>
+                                {% endif %}
+                            
                             {% endfor %}
                         </tbody>
                       </table>
@@ -117,6 +120,9 @@
 
 <script>
     $(document).ready(function () {
+        $('#tb_students').DataTable({
+            "pageLength": 150
+        }); 
         
 });
 
