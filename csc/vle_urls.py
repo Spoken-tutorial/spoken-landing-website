@@ -4,6 +4,7 @@ from .views import *
 from django.urls import path
 from django.conf.urls import url
 from .vle_views import *
+from certificate.views import *
 from .ajax import ajax_mark_attendance
 app_name = 'csc'
 urlpatterns = [
@@ -56,6 +57,7 @@ urlpatterns = [
   #  ajax
     path('ajax_mark_attendance/', ajax_mark_attendance, name="ajax_mark_attendance"),
     path('check_vle_email/', check_vle_email, name="check_vle_email"),
+    path('verify-test-certificate/', verify_test_certificate, name="verify_test_certificate"),
     
 
     
