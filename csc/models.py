@@ -314,4 +314,6 @@ class CSCFossMdlCourses(models.Model):
 	testfoss = models.ForeignKey(FossCategory, on_delete=models.PROTECT, related_name='testfoss', null=True)
 
 	def __str__(self):
-	    return f"{self.foss.foss}  ({self.testfoss.foss})" if self.foss != self.testfoss else self.foss.foss
+
+		return f"{self.foss.foss}  ({self.testfoss.foss})" if self.foss != self.testfoss else self.foss.foss
+    

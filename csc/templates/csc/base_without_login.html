@@ -65,40 +65,26 @@
 
 <body style="padding-top: 2%;">	
 	<header class="navbar navbar-light sticky-top bg-light flex-md-nowrap p-0 shadow" >
-		<!-- <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Company name</a> -->
-		<button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation" onclick="lockScroll();">
-		  <span class="navbar-toggler-icon" style="border:1px solid #013A6B;"> </span>
-		</button>		
-	  </header>
-  <div class="container-fluid" >
-	<button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon" style="background-color: #013A6B;"> </span>
-	  </button>
-	<div class="row">
-		{% if user.is_authenticated %}
-			
-			{% include "sidebar.html" %}
-			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-				{% block content  %}
-					<div style="padding-top:10%; " class="text-center">
-					Problem in accessing index.
-					</div>
-				{% endblock content %}
-			  </main>
-
-		{% else %}
-		<main class="col-md-12">
-			
-				<div style="padding-top:10%;" class="text-center">
-				Problem in accessing index.
-				</div>
 		
-		  </main>
-		{% endif %}
-	  
-  
-	  
-	</div>
+	<a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/">Applications of Spoken Tutorials</a> 
+		
+
+	</header>
+
+
+
+  <div class="container-fluid" >
+			<button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon" style="background-color: #013A6B;"> </span>
+			  </button>
+			<div class="row">
+				{% block content  %}
+							<div style="padding-top:20%; " class="text-center">
+							</div>
+						{% endblock content %}
+		  
+			  
+			</div>
   </div> 
   
 	<!--jquery-->
@@ -108,11 +94,10 @@
 	<script type="text/javascript" src="{% static '/spoken/script.js' %}"></script>
 	{% block script %}{% endblock script %}
 
-
 <!-- footer -->
-<!-- <section class="footer-wrapper">
-  <footer class="footer-links"> 
-  <div> 
+<section class="footer-wrapper">
+  <footer class="footer-links"> <!--flexbox with 5 divs-->
+  <div> <!--flex child 1-->
     <ul>
       <li><h6>Open Source</h6></li>
       <li><a href="https://fossee.in/" target="_blank">FOSSEE Project</a></li>
@@ -122,24 +107,41 @@
       <li><a href="https://cfd.fossee.in/" target="_blank"> OpenFoam(CFD)</a></li>  
     </ul>
   </div>
-  
-  <div>
+  <div> <!--flex child 2-->
+    <ul>
+      <li><h6>Training </h6></li>
+      <li><a href="https://process.spoken-tutorial.org/index.php/Software-Training" target="_blank"> Software Training</a></li>
+      <li><a href="https://process.spoken-tutorial.org/index.php/Software-Training#Contacts_For_Training" target="_blank"> Contacts for Training</a></li>
+      <li><a href="https://spoken-tutorial.org/accounts/login/?next=/software-training/" target="_blank">  Training Dashboard</a></li>
+      <li><a href="https://spoken-tutorial.org/accounts/login/?next=/creation/" target="_blank">  Creation Dashboard </a></li>
+    </ul>
+  </div>
+  <div> <!--flex child 3-->
+    <ul>
+      <li><h6> Other </h6></li>
+      <li><a href="https://mhrd.gov.in/ict-initiatives" target="_blank">MHRD Initiatives</a></li>
+      <li><a href="http://futureskills.nasscom.in/" target="_blank">NASSCOM</a></li>
+      <li><a href="https://swayam.gov.in/explorer?searchText=spoken%20tutorial" target="_blank">SWAYAM</a></li>
+      <li><a href="https://www.sakshat.ac.in/" target="_blank"> Education Mission</a></li>
+    </ul>
+  </div> 
+  <div><!--flex child 4-->
     <ul>
       <li><h6> About Us</h6></li>
       <li><a href="https://spoken-tutorial.org/about-us/" target="_blank"> About Us</a></li>
       <li><a href="https://spoken-tutorial.org/team/Creation-Team/" target="_blank"> Team</a></li>
       <li><a href="https://spoken-tutorial.org/news/article/" target="_blank"> News</a></li>
-      
+      <!-- <li><a href="">  Click here to view stats</a></li> -->
       
     </ul>
   </div>
-  <div class="logo"> 
+  <div class="logo"> <!--flex child 5-->
     <img src="{% static '/spoken/images/iitb-logo.png' %}">
     <span>Developed at IITB</span>
   </div>
 </footer>
 <p>Spoken Tutorial by IIT Bombay is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License, except where stated otherwise 
 Based on a work at https://spoken-tutorial.org. Permissions beyond the scope of this license may be available at https://spoken-tutorial.org.</p>
-</section>  -->
+</section> <!-- footer -->
 </body>
 </html>
