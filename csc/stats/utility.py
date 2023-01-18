@@ -1,7 +1,8 @@
 from django.db.models import Count,Q,F
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from csc.models import CertifiateCategories, Student,Student_Foss,FossCategory, CSC, VLE, CategoryCourses
+from csc.models import CertifiateCategories, Student,Student_Foss,FossCategory, CSC, VLE, CategoryCourses, Test
+from csc.filters import TestFilter
 
 TEST_VLE_COUNT=int(getattr(settings, "TEST_VLE_COUNT", 2))
 TEST_STUDENT_COUNT=int(getattr(settings, "TEST_STUDENT_COUNT", 1))
@@ -65,3 +66,9 @@ def get_page(resource, page=1, limit=40):
 def get_test_stats():
     f = [x.foss.id for x in CategoryCourses.objects.filter(certificate_category__code='IT07')]
     return FossCategory.objects.filter(id__in=f).annotate(tests=Count('test'))
+
+def get_test_download_data(request):
+    collection = Test.objects.all()
+    collection = TestFilter(request.GET, queryset=collection)
+    return collection.qs.order_by('-tdate')
+    

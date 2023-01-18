@@ -85,7 +85,10 @@
                                 <div class="form-check">
                                     {% if status <= 1 %}
                                         <input class="form-check-input att" type="checkbox" value="{{student.id}}" id="check_{{item.id}}" name="student_attendance" {% if status != 0 %}checked{% endif %}>
-                                        {% endif %}
+
+                                    {% else %}
+                                        <span>{{status | get_test_status}}</span>
+                                    {% endif %}
                                     
                                     {% comment %} {% if item.test_status %}
                                     <input class="form-check-input att" type="checkbox" value="{{item.id}}" id="check_{{item.id}}" checked>                               
