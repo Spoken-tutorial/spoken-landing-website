@@ -1,4 +1,4 @@
-{% load static %}
+{% load static%}
 {% load helper %}
 {% load crispy_forms_tags %}
 <!DOCTYPE html>
@@ -7,141 +7,156 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="spoken tutorial landing page">
-  	<meta name="author" content="spoken tutorial">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  	<meta name="author" content="spoken tutorial">	
+	<link rel="stylesheet" type="text/css" href="{% static '/bootstrap/css/bootstrap.min.css'%}">
 	<link rel="stylesheet" type="text/css" href="{% static '/fontawesome/css/all.min.css'%}">
-	<link rel="stylesheet" type="text/css" href="{% static '/spoken/csc_style.css' %}">
-	<title>{% block title%}CSC Academy{% endblock title%}</title>
+	<link rel="stylesheet" type="text/css" href="{% static '/spoken/style.css' %}">
+	<title>{% block title%}Spoken Tutorial{% endblock title%}</title>
 	<link rel = "icon" href ="{% static '/spoken/images/favicon.ico'%}" type = "image/x-icon"> 
-	<style>
-		  .sb-icon{
-	color: #013A6B!important;
-    margin-right: 6px;
-}
-	#dropdownMenuUser{
-		border: none;
-		background: #013A6B;
-		padding: 6px;;
-	}
-	
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
-	
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-    
-	  #sidebarMenu{
-		  padding-top: 00;
-	  }
-	  .c-btn{
-        background-color:#F19584!important;
-        border-color:#F19584;
-		color:#fff;
+  <style>
+    .c-footer {
+      position:absolute;bottom:1000;
     }
-	.remove-btn{
-		background:none;
-		border:none;
-		color:maroon;
-	}
-	.c-card-header{
-		background: #004a91 !important;
-    	color: #fff;
-	}
-	.sm-header{
-		color:#013A6B!important;
-		font-weight:bold;
-	}
-	</style>
+  </style>
 	{% block css %}{% endblock css %}
 </head>
-
-<body style="padding-top: 2%;">	
-	<header class="navbar navbar-light sticky-top bg-light flex-md-nowrap p-0 shadow" >
+<body >
+	<!--bootstrap navbar -->
+	<nav class="navbar navbar-expand-lg fixed-top navbar-light navbar-custom">
+		<a id="logo" class="navbar-brand brand-custom" href="/"><img src="{% static '/spoken/images/logo.png' %}" class="d-inline-block " alt="">  Applications of Spoken Tutorials</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	  <span class="navbar-toggler-icon"></span>
+	</button>
+	 <div class="collapse navbar-collapse" id="navbarSupportedContent">
+	  <ul class="navbar-nav ml-auto">
+		<li class="nav-item active">
+		  <a class="nav-link scroll_link " href="{% url 'home'%}#home">Home<span class="sr-only">(current)</span></a>
+		</li>
+		<li class="nav-item">
+		  <a class="nav-link scroll_link " href="{% url 'home'%}#about">About</a>
+		</li>
+		<li class="nav-item">
+		  <a class="nav-link scroll_link " href="{% url 'home'%}#applications">Applications</a>
+		</li>
+		<li class="nav-item">
+		  <a class="nav-link scroll_link " href="{% url 'home'%}#activities">Activities</a>
+		</li>
+		<li class="nav-item">
+		  <a class="nav-link scroll_link " href="{% url 'home'%}#contact">Contact</a>
+		</li>
+		<li class="nav-item">
+		  <a class="nav-link scroll_link " href="{% url 'tutorial_search'%}?search_foss=Advanced+Cpp&search_language=English" target="_blank">Tutorials</a>
+		</li>
+		{% if user.is_authenticated %}
+		<div class="dropdown">
+		  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<i class="far fa-user-circle"></i> {{user.username}}
+		  </a>
 		
-	<a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/">Applications of Spoken Tutorials</a> 
-		
+		  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+			{% if request.user|has_group:"VLE" %}
+			<a class="dropdown-item" href="{% url 'csc:vle_dashboard' %}">VLE Dashboard</a>
+			{% endif %}
 
-	</header>
+			{% if request.user|has_group:"STUDENT" %}
+			<a class="dropdown-item" href="{% url 'student:student_dashboard' %}">STUDENT Dashboard</a>
+			{% endif %}
 
 
+			{% if request.user|has_group:"INVIGILATOR" %}
+			<a class="dropdown-item" href="{% url 'csc:invi_dashboard' %}">INVIGILATOR Dashboard</a>
+			{% endif %}
 
-  <div class="container-fluid" >
-			<button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon" style="background-color: #013A6B;"> </span>
-			  </button>
-			<div class="row">
-				{% block content  %}
-							<div style="padding-top:20%; " class="text-center">
-							</div>
-						{% endblock content %}
+
+			{% if request.user|has_group:"CSC-TEAM" %}
+			<a class="dropdown-item" href="{% url 'stats_dashboard' %}">STATISTICS</a>
+			{% endif %}
+			
+			<a class="dropdown-item" href="{% url 'change' %}">Change Password</a>
+
+			<a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+		  </div>
 		  
-			  
-			</div>
-  </div> 
+		</div>
+		 <li class="nav-item active">
+		  {{user.username}}
+		</li>
+		{% else %}
+		<li class="nav-item active">
+			<a class="nav-link scroll_link btn btn-secondary" href="{% url 'login'%}" >LOGIN</a>
+		</li>
+		
+		
+		{% endif %}
+	  </ul>
+	</div>
+  </nav>
+  
+	{% block content  %}Problem in accessing index.html{% endblock content %}
+  <div>
+      <section class="footer-wrapper position-absolute bottom-0 end-0 c-footer">
+      <footer class="footer-links footer"> <!--flexbox with 5 divs-->
+      <div> <!--flex child 1-->
+        <ul>
+          <li><h6>Open Source</h6></li>
+          <li><a href="https://fossee.in/" target="_blank">FOSSEE Project</a></li>
+          <li><a href="https://www.scilab.in/" target="_blank">Scilab</a></li>
+          <li><a href="https://esim.fossee.in/" target="_blank"> eSim(Oscad)</a></li>
+          <li><a href="https://python.fossee.in/" target="_blank"> Python</a></li>
+          <li><a href="https://cfd.fossee.in/" target="_blank"> OpenFoam(CFD)</a></li>  
+        </ul>
+      </div>
+      <div> <!--flex child 2-->
+        <ul>
+          <li><h6>Training </h6></li>
+          <li><a href="https://process.spoken-tutorial.org/index.php/Software-Training" target="_blank"> Software Training</a></li>
+          <li><a href="https://process.spoken-tutorial.org/index.php/Software-Training#Contacts_For_Training" target="_blank"> Contacts for Training</a></li>
+          <li><a href="https://spoken-tutorial.org/accounts/login/?next=/software-training/" target="_blank">  Training Dashboard</a></li>
+          <li><a href="https://spoken-tutorial.org/accounts/login/?next=/creation/" target="_blank">  Creation Dashboard </a></li>
+        </ul>
+      </div>
+      <div> <!--flex child 3-->
+        <ul>
+          <li><h6> Other </h6></li>
+          <li><a href="https://mhrd.gov.in/ict-initiatives" target="_blank">MHRD Initiatives</a></li>
+          <li><a href="http://futureskills.nasscom.in/" target="_blank">NASSCOM</a></li>
+          <li><a href="https://swayam.gov.in/explorer?searchText=spoken%20tutorial" target="_blank">SWAYAM</a></li>
+          <li><a href="https://www.sakshat.ac.in/" target="_blank"> Education Mission</a></li>
+        </ul>
+      </div> 
+      <div><!--flex child 4-->
+        <ul>
+          <li><h6> About Us</h6></li>
+          <li><a href="https://spoken-tutorial.org/about-us/" target="_blank"> About Us</a></li>
+          <li><a href="https://spoken-tutorial.org/team/Creation-Team/" target="_blank"> Team</a></li>
+          <li><a href="https://spoken-tutorial.org/news/article/" target="_blank"> News</a></li>
+          
+        </ul>
+      </div>
+      <div class="logo"> <!--flex child 5-->
+        <img src="{% static '/spoken/images/iitb-logo.png' %}">
+        <span>Developed at IITB</span>
+      </div>
+    </footer>
+    <p>Spoken Tutorial by IIT Bombay is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License, except where stated otherwise 
+    Based on a work at https://spoken-tutorial.org. Permissions beyond the scope of this license may be available at https://spoken-tutorial.org.</p>
+    </section>
+
+  </div>
+  <!-- footer -->
   
 	<!--jquery-->
-	<script type="text/javascript" src="{% static '/jquery.js'%}"></script>	
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-	<script type="text/javascript" src="{% static '/spoken/scrollreveal.js' %}"></script>	
+	<script type="text/javascript" src="{% static '/jquery.js'%}"></script>
+	<!--popper-->
+	<script type="text/javascript" src="{% static '/popper.min.js'%}"></script>
+	<!--Bootstrap JS-->
+	<script type="text/javascript" src="{% static '/bootstrap/js/bootstrap.min.js'%}"></script>	
+	<!-- tab view for activities -->
+	<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
+	<!--scroll effect-->
+	<script type="text/javascript" src="{% static '/spoken/scrollreveal.js' %}"></script>
+	<!-- custom js -->
 	<script type="text/javascript" src="{% static '/spoken/script.js' %}"></script>
 	{% block script %}{% endblock script %}
-
-<!-- footer -->
-<section class="footer-wrapper">
-  <footer class="footer-links"> <!--flexbox with 5 divs-->
-  <div> <!--flex child 1-->
-    <ul>
-      <li><h6>Open Source</h6></li>
-      <li><a href="https://fossee.in/" target="_blank">FOSSEE Project</a></li>
-      <li><a href="https://www.scilab.in/" target="_blank">Scilab</a></li>
-      <li><a href="https://esim.fossee.in/" target="_blank"> eSim(Oscad)</a></li>
-      <li><a href="https://python.fossee.in/" target="_blank"> Python</a></li>
-      <li><a href="https://cfd.fossee.in/" target="_blank"> OpenFoam(CFD)</a></li>  
-    </ul>
-  </div>
-  <div> <!--flex child 2-->
-    <ul>
-      <li><h6>Training </h6></li>
-      <li><a href="https://process.spoken-tutorial.org/index.php/Software-Training" target="_blank"> Software Training</a></li>
-      <li><a href="https://process.spoken-tutorial.org/index.php/Software-Training#Contacts_For_Training" target="_blank"> Contacts for Training</a></li>
-      <li><a href="https://spoken-tutorial.org/accounts/login/?next=/software-training/" target="_blank">  Training Dashboard</a></li>
-      <li><a href="https://spoken-tutorial.org/accounts/login/?next=/creation/" target="_blank">  Creation Dashboard </a></li>
-    </ul>
-  </div>
-  <div> <!--flex child 3-->
-    <ul>
-      <li><h6> Other </h6></li>
-      <li><a href="https://mhrd.gov.in/ict-initiatives" target="_blank">MHRD Initiatives</a></li>
-      <li><a href="http://futureskills.nasscom.in/" target="_blank">NASSCOM</a></li>
-      <li><a href="https://swayam.gov.in/explorer?searchText=spoken%20tutorial" target="_blank">SWAYAM</a></li>
-      <li><a href="https://www.sakshat.ac.in/" target="_blank"> Education Mission</a></li>
-    </ul>
-  </div> 
-  <div><!--flex child 4-->
-    <ul>
-      <li><h6> About Us</h6></li>
-      <li><a href="https://spoken-tutorial.org/about-us/" target="_blank"> About Us</a></li>
-      <li><a href="https://spoken-tutorial.org/team/Creation-Team/" target="_blank"> Team</a></li>
-      <li><a href="https://spoken-tutorial.org/news/article/" target="_blank"> News</a></li>
-      <!-- <li><a href="">  Click here to view stats</a></li> -->
-      
-    </ul>
-  </div>
-  <div class="logo"> <!--flex child 5-->
-    <img src="{% static '/spoken/images/iitb-logo.png' %}">
-    <span>Developed at IITB</span>
-  </div>
-</footer>
-<p>Spoken Tutorial by IIT Bombay is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License, except where stated otherwise 
-Based on a work at https://spoken-tutorial.org. Permissions beyond the scope of this license may be available at https://spoken-tutorial.org.</p>
-</section> <!-- footer -->
 </body>
 </html>

@@ -1,13 +1,11 @@
 {% extends "base_without_login.html" %}
 {% load static %}
 
-{% block header%}
-    <h1> Test Certificate Verification </h1>
-{% endblock %}
 
 {% block content%}
-{% if serial_no %}
-<div>
+<div class="mt-5 pt-5" >
+  {% if serial_no %}
+<div >
     <p align="center">Below are the requested details : </p>
     <hr>
     <table class="table table-bordered" align="center" style="width:50%"> 
@@ -27,7 +25,7 @@
   <div align="center"><a href="{% url 'csc:verify_test_certificate' %}" ><u> Verify serial number</u></a></div>
 </div>
 {% else %}
-    <div class="modal fade" id="invalidModal" tabindex="-1" role="dialog" aria-labelledby="invalidModalLabel" aria-hidden="true">
+    <div  class="modal fade" id="invalidModal" tabindex="-1" role="dialog" aria-labelledby="invalidModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -47,17 +45,13 @@
         {% csrf_token %}
         <div class="input-group" style="width:340px;text-align:center;margin:0 auto;">
             <input class="form-control input-lg" placeholder="Enter the serial number" type="text" name=serial_no>
-              <span class="input-group-btn"><button class="btn btn-lg btn-primary" type="submit">Verify</button></span>
+            <button class="btn btn-primary ml-3" type="submit">Verify</button>
         </div>
         
 {% endif %}
     </form>
-
-        <hr>
-        <a style="color: purple;" href="">Go back to homepage</a>
-
-
-
+        <hr style="margin-bottom:350px;">
+</div>
     
 {% endblock %}
 
