@@ -1,0 +1,67 @@
+%% Certificate template
+\documentclass[landscape]{article}
+\usepackage{wallpaper}
+\usepackage{xcolor}
+\usepackage{ulem}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{chancery}
+\usepackage[T1]{fontenc}
+\usepackage{wrapfig}
+\usepackage{times}
+
+\usepackage{array}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+%% package to execute bash commands
+%% \usepackage{bashful}
+
+%% generate QR code
+\usepackage{pst-barcode}
+\usepackage{auto-pst-pdf}
+
+\geometry{tmargin=.1cm,bmargin=.1cm,
+  lmargin=1.8cm, rmargin=2cm}
+\usepackage{multicol}
+\setlength{\columnseprule}{1pt}
+\columnwidth=0.6\textwidth
+\begin{document}
+
+%% create MD5 hash of tex file and insert it in PDF
+%% \bash
+%% md5sum asd_cert.tex | cut -d " " -f 1
+%% \END
+
+\TileWallPaper{28cm}{21.5cm}{bg.png}
+
+
+\scalebox{3.5}{
+\begin{minipage}[t]{.27\textwidth}
+        \begin{center}
+\vspace{1.55cm}
+\tiny{\textcolor{black}{This certificate is awarded to}}\\
+\vspace{0.04cm}
+            \scriptsize{{\textcolor{black} {~{\textbf{ $name }}}}~}\\
+\vspace{0.04cm}
+    \tiny{\textcolor{black}{from {\textbf { $institute }}}}\\
+    \vspace{0.04cm}
+    \tiny{\textcolor{black}{for successfully completing $foss}}\\
+    \vspace{0.04cm}
+    \tiny{\textcolor{black}{Score: $grade \% }}\\
+    \vspace{0.04cm}
+\end{center}
+\end{minipage}
+}
+\vspace{5.45cm}
+
+{\color{black!40!black}
+\scalebox{0.8}{
+ \begin{tabular}{c c c c c} 
+\hspace{0.01cm} \hspace{0.55cm} &\LARGE{$date}\\
+    \hspace{0.1cm} & \small{} & \small{} & \hspace{0.1cm}\large{\color{black}\texttt{}}\\
+    \hspace{0.1cm} & \small{} & \small{} & \hspace{0.1cm}\large{\color{black}\texttt{}}\\
+    \hspace{0.1cm} & \hspace{4cm}\large{\color{black}\texttt{$cpass}} & \small{} & \hspace{0.1cm}\large{\color{black}\texttt{}}\\
+  \end{tabular}
+
+}}
+
+\end{document}
