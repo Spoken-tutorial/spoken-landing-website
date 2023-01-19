@@ -9,32 +9,41 @@ from django.db import IntegrityError
 from django.db.models import OuterRef,Exists,Q, Exists, Subquery
 from django.db.models.functions import Concat
 from django.forms.models import model_to_dict
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render,get_object_or_404, redirect
 from django.urls import reverse,reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View,ListView,DeleteView,DetailView,UpdateView
 from django.views.generic.edit import CreateView
+from django.http import FileResponse
 
 from csc.models import *
 from mdl.models import *
 from spokenlogin.models import *
+from certificate.models import Log
 
 from .cron import add_vle,add_transaction
 from .decorators import is_vle
 from .models import TEST_OPEN
 from .utils import *
 from .vle_forms import *
+from certificate.generator import generate
 
 import logging
 import random
 import requests
 import string
 import hashlib
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
+import io
 
 STUDENT_ENROLLED_FOR_TEST = 0
 ATTENDANCE_MARKED = 1
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):         
+    return ''.join(random.choice(chars) for _ in range(size))
 
 class JSONResponseMixin(object):
   """
@@ -890,6 +899,70 @@ def assign_foss(request):
         print(e)
     
   return JsonResponse({'foss':foss_name,'student_count':len(students)})
+
+
+@login_required
+@is_vle
+def download_certificate(request, test_attendance_id):
+    test_attendance = get_object_or_404(CSCTestAtttendance, pk=test_attendance_id)
+
+    details = get_details(test_attendance)
+    filename = 'certficate.pdf'
+    certificate = generate(**details)
+    if not certificate[1]:
+        add_log(details['certificate_pass'], test_attendance_id)
+        return certificate[0]
+    else:
+        messages.error(request,"Problem in downloading!")
+        return HttpResponse(certificate[0]) 
+
+
+def get_details(test_attendance):
+    t = test_attendance.test
+    v = t.vle
+    c = v.csc.csc_id
+    details = {
+        'test_date': test_attendance.test.tdate.strftime("%Y-%m-%d"),
+        'tstudent':  test_attendance.student.user.get_full_name(),
+        'foss': test_attendance.test.foss.foss,
+        'institute': c,
+        'score': '{0}'.format(round(test_attendance.mdlgrade, 2)),
+        'certificate_pass': get_pass(test_attendance.id, t.id),
+    }
+
+    return details
+
+def has_log_entry(key):
+    return Log.objects.filter(key=key).exists()
+
+def add_log(key, ta):
+    if not has_log_entry(key):
+       log = Log()
+       log.key = key
+       log.test_attendance_id = ta
+       log.save()
+
+
+def verify(request, key=None):
+    context = {}
+    ci = RequestContext(request)
+    detail = None
+    if key is not None:
+        details = get_verification_details(key)
+    elif request.method == 'POST':
+        key = request.POST.get('key').strip()
+        details = get_verification_details(key)
+    return render_to_response('verify.html', {'details': details}, ci)
+
+def get_verification_details(key):
+    log = get_object_or_404(Log, key=key)
+    ta = log.test_attendance
+    details = get_details(ta)
+    return details
+
+def get_pass(ta_id, t_id):
+    serial_key = (hashlib.sha1(bytes('{0}{1}'.format(ta_id, t_id), 'utf-8'))).hexdigest()
+    return serial_key[0:10]
 
 
 def training_enroll(request):
