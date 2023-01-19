@@ -22,7 +22,6 @@ def generate(**kwargs):
     score = kwargs['score']
     institute = kwargs['institute']
     certificate_path = os.path.join(settings.BASE_DIR, 'certificates')
-    certificate_path = "/beta_st/beta_spoken-tutorial_in/spoken-landing-website/certificates/"   
     file_name = '{0}'.format(certificate_pass)
     _type = 'P'
         
@@ -31,19 +30,19 @@ def generate(**kwargs):
     try:
         download_file_name = 'certificate.pdf'
         template = 'template'
-        template_file = open('{0}{1}'.format(certificate_path, template), 'r')
+        template_file = open('{0}/{1}'.format(certificate_path, template), 'r')
         content = Template(template_file.read())
         template_file.close()
 
         content_tex = content.safe_substitute(name=student.title(),
                 cpass=certificate_pass, institute=institute, date=test_date, grade=score, foss=foss)
-        create_tex = open('{0}{1}.tex'.format(certificate_path, file_name), 'w')
+        create_tex = open('{0}/{1}.tex'.format(certificate_path, file_name), 'w')
         create_tex.write(content_tex)
         create_tex.close()
         return_value, err = _make_certificate_certificate(certificate_path,
                 _type, file_name)
         if return_value == 0:
-            pdf = open('{0}{1}.pdf'.format(certificate_path, file_name) , 'rb')
+            pdf = open('{0}/{1}.pdf'.format(certificate_path, file_name) , 'rb')
             response = HttpResponse(content_type='application/pdf')
             response['Content-Disposition'] = 'attachment; \
                     filename=%s' % (download_file_name)
@@ -61,15 +60,7 @@ def generate(**kwargs):
 
 def _make_certificate_certificate(path, type, file_name):
     command = 'participant_cert'
-    if type == 'P':
-        command = 'participant_cert'
-    elif type == 'A':
-        command = 'paper_cert'
-    elif type == 'W':
-        command = 'workshop_cert'
-    elif type == 'T':
-        command = 'workshop_cert'
-    process = subprocess.Popen('timeout 15 make -C {0} {1} file_name={2}'.format(path, command, file_name),
+    process = subprocess.Popen('timeout {0} make -C {1} {2} file_name={3}'.format(settings.TIME_OUT, path, command, file_name),
                                stderr=subprocess.PIPE, shell=True)
     err = process.communicate()[1]
     return process.returncode, err

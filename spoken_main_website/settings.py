@@ -293,4 +293,4 @@ TEST_CSC_ID=os.getenv("TEST_CSC_ID").split(' ')
 CSC_ONLINE_TEST_URL = os.getenv("CSC_ONLINE_TEST_URL")
 MDL_URL = os.getenv("MDL_URL")
 
-
+TIME_OUT = 15
