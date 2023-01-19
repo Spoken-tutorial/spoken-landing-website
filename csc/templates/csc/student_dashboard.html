@@ -202,7 +202,7 @@ body{
               {% for key,val in courses.items %}
                 <div class="col-md-6 mb-2">
                   <div class="card" style="height:100%;">
-                    <p class="card-header inner-header">{{key.code}} : {{key.title}} ********</p>
+                    <p class="card-header inner-header">{{key.code}} : {{key.title}}</p>
                     <div class="card-body">
                       {% comment %} <h6 class="card-title">Special title treatment</h6> {% endcomment %}
                       <table class="table">
@@ -233,7 +233,7 @@ body{
                                         {% with grade_entry=student.id|check_passgrade_exists:course.testfoss_id%}
                                         
                                             {% if grade_entry.mdlgrade >= 40.00 %}
-                                              <button type="submit" class="btn btn-success" >Request VLE for Certificate &nbsp;<span class="badge">Grade: {{grade_entry.mdlgrade}} </span></button>
+                                              <button type="submit" class="btn btn-sm btn-outline-success" disabled><small>Certificate available for download</small><span class="badge"><span style="color: black">Grade: {{grade_entry.mdlgrade}}</span> </span></button>
 
 
                                             {% elif grade_entry.status == 3 and student.id|is_retest_allowed:course.testfoss_id %}
@@ -316,7 +316,7 @@ body{
                                         {% with grade_entry=student.id|check_passgrade_exists:course.testfoss_id%}
 
                                             {% if grade_entry.mdlgrade >= 40.00 %}
-                                              <button type="submit" class="btn btn-success" >Request VLE for Certificate &nbsp;<span class="badge">Grade: {{grade_entry.mdlgrade}} </span></button>
+                                              <button type="submit" class="btn btn-sm btn-outline-success" disabled><small>Certificate available for download</small><span class="badge"><span style="color: black">Grade: {{grade_entry.mdlgrade}}</span> </span></button>
                                             {% elif grade_entry.status == 3 and student.id|is_retest_allowed:course.testfoss_id %}
 
                                               <button type="button" onclick = "retest({{grade_entry.id}})" class="btn btn-warning" >Request VLE for Re-Test &nbsp;

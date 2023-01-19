@@ -47,6 +47,9 @@
 		<li class="nav-item">
 		  <a class="nav-link scroll_link " href="{% url 'tutorial_search'%}?search_foss=Advanced+Cpp&search_language=English" target="_blank">Tutorials</a>
 		</li>
+		<li class="nav-item">
+			<a class="nav-link scroll_link " href="{% url 'csc:verify_test_certificate'%}">Verify certificate</a>
+		  </li>
 		{% if user.is_authenticated %}
 		<div class="dropdown">
 		  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
