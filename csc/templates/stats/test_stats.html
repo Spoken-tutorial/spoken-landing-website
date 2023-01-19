@@ -19,7 +19,7 @@
   <div class="border border-2 p-2 white-bg">
     <h6 class="mt-2"> Search Test</h6>
     <hr>
-    <form>
+    <form id="test_filter">
       <div class="row">
         <div class="col-3">
           <div class="form-group">
@@ -80,7 +80,9 @@
       <input class="btn btn-success my-2" type="submit" value="Filter" />
     </form>
   </div>
-  
+  <div class="my-2">
+    <button form="test_filter" formaction="{% url 'download_test_stats' %}" class="btn btn-info">Download Test Stats</button>
+  </div>
 
 </div>
     <table class="paleblue table table-striped table-hover table-bordered" id="tb_test_stats">

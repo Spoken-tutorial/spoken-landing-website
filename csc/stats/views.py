@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Count,F,Q
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.generic import ListView
 from django.views.decorators.csrf import  csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -17,7 +17,7 @@ from csc.filters import TestFilter
 from datetime import datetime
 
 from cms.sortable import *
-
+import xlwt
 
 @login_required
 @dec_is_csc_team
@@ -308,3 +308,28 @@ def ajax_get_cities(request):
     cities = [x['city'] for x in CSC.objects.filter(state=state).values('city').distinct().order_by('city')]
     data['cities'] = cities
     return JsonResponse(data)
+
+def download_test_stats(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="ThePythonDjango.xls"'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet("sheet1")
+    row_num = 0
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+    columns = ['State', 'City', 'VLE', 'FOSS', 'Date', 'Time' ]
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+    font_style = xlwt.XFStyle()
+    data = get_test_download_data(request)
+    for my_row in data:
+        print(f"{type(my_row)}")
+        row_num = row_num + 1
+        ws.write(row_num, 0, my_row.vle.csc.state, font_style)
+        ws.write(row_num, 1, my_row.vle.csc.city, font_style)
+        ws.write(row_num, 2, f"{my_row.vle.user.first_name} {my_row.vle.user.last_name}", font_style)
+        ws.write(row_num, 3, my_row.foss.foss, font_style)
+        ws.write(row_num, 4, my_row.tdate.strftime("%d %B, %Y"), font_style)
+        ws.write(row_num, 5, my_row.ttime.strftime("%H : %M"), font_style)
+    wb.save(response)
+    return response
