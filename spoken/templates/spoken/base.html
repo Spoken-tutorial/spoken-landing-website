@@ -13,7 +13,13 @@
 	<link rel="stylesheet" type="text/css" href="{% static '/spoken/style.css' %}">
 	<title>{% block title%}Spoken Tutorial{% endblock title%}</title>
 	<link rel = "icon" href ="{% static '/spoken/images/favicon.ico'%}" type = "image/x-icon"> 
-	{% block css %}{% endblock css %}
+	{% block css %}
+	<style>
+		.nav-link{
+			font-size: 0.8rem!important;
+		}
+	</style>
+	{% endblock css %}
 </head>
 <body>
 	<!--bootstrap navbar -->
@@ -42,6 +48,9 @@
 		<li class="nav-item">
 		  <a class="nav-link scroll_link " href="{% url 'tutorial_search'%}?search_foss=Advanced+Cpp&search_language=English" target="_blank">Tutorials</a>
 		</li>
+		<li class="nav-item">
+			<a class="nav-link scroll_link " href="{% url 'csc:verify_test_certificate'%}">Verify certificate</a>
+		  </li>
 		{% if user.is_authenticated %}
 		<div class="dropdown">
 		  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
