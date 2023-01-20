@@ -920,7 +920,7 @@ def download_certificate(request, test_attendance_id):
 def get_details(test_attendance):
     t = test_attendance.test
     v = t.vle
-    c = v.csc.csc_id
+    c = f"CSC Academy Centre, {v.csc.state}, CSC ID - {v.csc.csc_id}"
     details = {
         'test_date': test_attendance.test.tdate.strftime("%Y-%m-%d"),
         'tstudent':  test_attendance.student.user.get_full_name(),
