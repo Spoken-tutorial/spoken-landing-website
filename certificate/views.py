@@ -20,14 +20,16 @@ def key_verification(serial):
         tdate = certificate.test.tdate
 
         detail = {}
-        detail['Participant_Name'] = name
+        detail['Participant Name'] = name
         detail['Foss'] = foss
-        detail['Test_Date'] = tdate
-        detail['grade'] = grade
-
+        detail['Test Date'] = tdate.strftime('%Y-%m-%d')
+        detail['Grade'] = "{:.2f} %".format(grade)
+        detail['CSC'] = f"CSC Academy Centre, {certificate.test.vle.csc.state} , CSC ID - {certificate.test.vle.csc.csc_id}"
+        
         context['certificate'] = certificate
         context['detail'] = detail
         context['serial_no'] = True
+        
     except Log.DoesNotExist:
         context["invalidserial"] = 1
     return context
@@ -39,6 +41,8 @@ def verify_test_certificate(request):
 	if request.method == 'POST':
 		serial_no = request.POST.get('serial_no').strip()
 		context = key_verification(serial_no)
+		context['serial_no_val'] = serial_no
+        
 		return render(request, 'verify_test_certificate.html', context)
 	return render(request, 'verify_test_certificate.html', {})
 

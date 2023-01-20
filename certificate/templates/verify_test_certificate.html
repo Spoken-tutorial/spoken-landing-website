@@ -5,24 +5,28 @@
 {% block content%}
 <div class="mt-5 pt-5" >
   {% if serial_no %}
-<div >
-    <p align="center">Below are the requested details : </p>
-    <hr>
-    <table class="table table-bordered" align="center" style="width:50%"> 
-        <caption>Participation Details
-        
-        </caption>    
-        <tbody>
-            {% for key, value in detail.items %}
-            <tr>
-                <td>{{ key }}</td>
-                <td>{{ value }}</td>
-            </tr>
-            {% endfor %}
-           
-        </tbody>
-    </table>
-  <div align="center"><a href="{% url 'csc:verify_test_certificate' %}" ><u> Verify serial number</u></a></div>
+  <!-- <div class="mt-5 d-flex justify-content-center align-items-center" > -->
+  <div class="row">
+    <div class="col-md-6 align-self-center offset-md-3">
+      <div class="card">
+        <p class="card-header "><strong>Details For Certificate Code : {{serial_no_val}}</strong> </p>
+        <div class="card-body">
+          <table class="table table-bordered" align="center" >    
+            <tbody>
+                {% for key, value in detail.items %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td>{{ value }}</td>
+                </tr>
+                {% endfor %}
+               
+            </tbody>
+          </table>
+          
+        </div>
+        <div align="center"><a href="{% url 'csc:verify_test_certificate' %}" style="color: black"><u> Verify another serial number</u></a></div>
+      </div>
+    </div>    
 </div>
 {% else %}
     <div  class="modal fade" id="invalidModal" tabindex="-1" role="dialog" aria-labelledby="invalidModalLabel" aria-hidden="true">
