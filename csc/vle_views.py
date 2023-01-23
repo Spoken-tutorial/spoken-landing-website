@@ -907,6 +907,7 @@ def download_certificate(request, test_attendance_id):
     test_attendance = get_object_or_404(CSCTestAtttendance, pk=test_attendance_id)
 
     details = get_details(test_attendance)
+    print(details)
     filename = 'certficate.pdf'
     certificate = generate(**details)
     if not certificate[1]:
@@ -921,11 +922,14 @@ def get_details(test_attendance):
     t = test_attendance.test
     v = t.vle
     c = f"CSC Academy Centre, {v.csc.state}, CSC ID - {v.csc.csc_id}"
+    invig = t.invigilator if t.invigilator else t.vle
     details = {
         'test_date': test_attendance.test.tdate.strftime("%Y-%m-%d"),
         'tstudent':  test_attendance.student.user.get_full_name(),
         'foss': test_attendance.test.foss.foss,
         'institute': c,
+        'organiser':v.user.get_full_name(),
+        'invigilator':invig.user.get_full_name(),
         'score': '{0}'.format(round(test_attendance.mdlgrade, 2)),
         'certificate_pass': get_pass(test_attendance.id, t.id),
     }

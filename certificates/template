@@ -48,6 +48,10 @@
     \vspace{0.04cm}
     \tiny{\textcolor{black}{Score: $grade \% }}\\
     \vspace{0.04cm}
+    \tiny{\textcolor{black}{Organiser: $organiser \% }}\\
+    \vspace{0.04cm}
+    \tiny{\textcolor{black}{Invigilator: $invigilator \% }}\\
+    \vspace{0.04cm}
 \end{center}
 \end{minipage}
 }
