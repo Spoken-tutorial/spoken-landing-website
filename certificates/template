@@ -20,7 +20,8 @@
 \usepackage{auto-pst-pdf}
 
 \geometry{tmargin=.1cm,bmargin=.1cm,
-  lmargin=1.8cm, rmargin=2cm}
+  lmargin=0.5cm, rmargin=2cm}
+
 \usepackage{multicol}
 \setlength{\columnseprule}{1pt}
 \columnwidth=0.6\textwidth
@@ -35,12 +36,16 @@
 
 
 \scalebox{3.5}{
-\begin{minipage}[t]{.27\textwidth}
+
+\begin{minipage}[t][1.3in][t]{0.27\textwidth}
+
+
         \begin{center}
 \vspace{1.55cm}
 \tiny{\textcolor{black}{This certificate is awarded to}}\\
 \vspace{0.04cm}
             \scriptsize{{\textcolor{black} {~{\textbf{ $name }}}}~}\\
+
 \vspace{0.04cm}
     \tiny{\textcolor{black}{from {\textbf { $institute }}}}\\
     \vspace{0.04cm}
@@ -50,29 +55,35 @@
     \vspace{0.04cm}
     
     
+    
+    
 \end{center}
 \end{minipage}
 }
-\vspace{5.1cm}
+
+
+\vspace{3.2cm}
 
 {\color{black!40!black}
 \scalebox{0.8}{
  \begin{tabular}{c c c c c} 
+
 \hspace{0.01cm} \hspace{0.55cm} &\LARGE{$date}\\
     \hspace{0.1cm} & \small{} & \small{} & \hspace{0.1cm}\large{\color{black}\texttt{}}\\
     \hspace{0.1cm} & \small{} & \small{} & \hspace{0.1cm}\large{\color{black}\texttt{}}\\
-    \hspace{0.1cm} & \hspace{4cm}\large{\color{black}\texttt{$cpass}} & \small{} & \hspace{0.2cm}\large{\color{black}\texttt{}}\\
+    \hspace{0.1cm} & \hspace{5.8cm}\Large{\color{black}\texttt{\textbf{$cpass}}} & \small{} & \hspace{0.2cm}\large{\color{black}\texttt{}}\\
   \end{tabular}
 
 }}
 
 
 
-\vspace{2.8cm}
+\vspace{2.75cm}
 \scalebox{2.5}{
 \begin{minipage}[t]{.30\textwidth}
 \begin{center}
  \ \hspace{2cm}\tiny{\textcolor{black}{Training Organiser: $organiser } | {Test Invigilator: $invigilator }} \\
+ 
 \end{center}
 \end{minipage}
 }
