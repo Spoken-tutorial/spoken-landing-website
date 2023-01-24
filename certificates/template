@@ -44,18 +44,16 @@
 \vspace{0.04cm}
     \tiny{\textcolor{black}{from {\textbf { $institute }}}}\\
     \vspace{0.04cm}
-    \tiny{\textcolor{black}{for successfully completing $foss}}\\
+    \tiny{\textcolor{black}{for successfully completing \textbf {$foss} }}\\
     \vspace{0.04cm}
     \tiny{\textcolor{black}{Score: $grade \% }}\\
     \vspace{0.04cm}
-    \tiny{\textcolor{black}{Organiser: $organiser \% }}\\
-    \vspace{0.04cm}
-    \tiny{\textcolor{black}{Invigilator: $invigilator \% }}\\
-    \vspace{0.04cm}
+    
+    
 \end{center}
 \end{minipage}
 }
-\vspace{5.45cm}
+\vspace{5.1cm}
 
 {\color{black!40!black}
 \scalebox{0.8}{
@@ -63,9 +61,23 @@
 \hspace{0.01cm} \hspace{0.55cm} &\LARGE{$date}\\
     \hspace{0.1cm} & \small{} & \small{} & \hspace{0.1cm}\large{\color{black}\texttt{}}\\
     \hspace{0.1cm} & \small{} & \small{} & \hspace{0.1cm}\large{\color{black}\texttt{}}\\
-    \hspace{0.1cm} & \hspace{4cm}\large{\color{black}\texttt{$cpass}} & \small{} & \hspace{0.1cm}\large{\color{black}\texttt{}}\\
+    \hspace{0.1cm} & \hspace{4cm}\large{\color{black}\texttt{$cpass}} & \small{} & \hspace{0.2cm}\large{\color{black}\texttt{}}\\
   \end{tabular}
 
 }}
+
+
+
+\vspace{2.8cm}
+\scalebox{2.5}{
+\begin{minipage}[t]{.30\textwidth}
+\begin{center}
+ \ \hspace{2cm}\tiny{\textcolor{black}{Training Organiser: $organiser } | {Test Invigilator: $invigilator }} \\
+\end{center}
+\end{minipage}
+}
+
+
+
 
 \end{document}

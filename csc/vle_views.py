@@ -922,7 +922,16 @@ def get_details(test_attendance):
     t = test_attendance.test
     v = t.vle
     c = f"CSC Academy Centre, {v.csc.state}, CSC ID - {v.csc.csc_id}"
-    invig = t.invigilator if t.invigilator else t.vle
+    print(dir(t),'***********')
+    try:
+      invig = Invigilator.objects.get(test=t)
+    except:
+      invig = v
+
+
+
+    # invig = t.invigilator.invigilator if t.invigilator.exists() else t.vle
+    print(invig.user.get_full_name(),'%%%%%%%%%%%%%%%%%%%%%%%%%%')
     details = {
         'test_date': test_attendance.test.tdate.strftime("%Y-%m-%d"),
         'tstudent':  test_attendance.student.user.get_full_name(),
