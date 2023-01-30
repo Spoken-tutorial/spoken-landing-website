@@ -21,6 +21,8 @@ def generate(**kwargs):
     foss = kwargs['foss']
     score = kwargs['score']
     institute = kwargs['institute']
+    organiser = kwargs['organiser']
+    invigilator = kwargs['invigilator']
     certificate_path = os.path.join(settings.BASE_DIR, 'certificates')
     file_name = '{0}'.format(certificate_pass)
     _type = 'P'
@@ -35,7 +37,7 @@ def generate(**kwargs):
         template_file.close()
 
         content_tex = content.safe_substitute(name=student.title(),
-                cpass=certificate_pass, institute=institute, date=test_date, grade=score, foss=foss)
+                cpass=certificate_pass, institute=institute, organiser=organiser, invigilator=invigilator, date=test_date, grade=score, foss=foss)
         create_tex = open('{0}/{1}.tex'.format(certificate_path, file_name), 'w')
         create_tex.write(content_tex)
         create_tex.close()
