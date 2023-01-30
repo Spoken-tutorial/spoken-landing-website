@@ -1,6 +1,6 @@
 from functools import partial
 from django.contrib.auth.models import User, Group
-
+from django.core.exceptions import ValidationError
 
 from rest_framework import serializers
 
@@ -107,17 +107,18 @@ class StudentSerializer(serializers.ModelSerializer):
 
         if has_user:
             s = UserSerializer(user_obj,data=user)
-            if s.is_valid():
-                s.save()
-            # if 'email' in user:
-            #     send_pwd_mail(user_obj)
             if "email" in user:
+                if User.objects.filter(email=user_obj.email):
+                    raise serializers.ValidationError(f"{user['email']} email already exists")
                 user_obj.username = user['email']
                 user_obj.email = user['email']
                 user_obj.save()
                 send_pwd_mail(user_obj)
                 student.mdl_mail_sent = 1
                 student.save()
+            if s.is_valid():
+                s.save()
+                
         for item in vle_ids:
             student.vle_id.add(*vle_ids)
 
