@@ -16,4 +16,5 @@ class Certificate(models.Model):
 
 class Log(models.Model):
     key = models.CharField(max_length=25)
+    full_key = models.CharField(max_length=40)
     test_attendance = models.ForeignKey(CSCTestAtttendance, on_delete=models.CASCADE)

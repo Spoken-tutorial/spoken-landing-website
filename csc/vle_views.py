@@ -911,7 +911,7 @@ def download_certificate(request, test_attendance_id):
     filename = 'certficate.pdf'
     certificate = generate(**details)
     if not certificate[1]:
-        add_log(details['certificate_pass'], test_attendance_id)
+        add_log(details['certificate_pass'], details['certificate_full_key'], test_attendance_id)
         return certificate[0]
     else:
         messages.error(request,"Problem in downloading!")
@@ -940,7 +940,8 @@ def get_details(test_attendance):
         'organiser':v.user.get_full_name(),
         'invigilator':invig.user.get_full_name(),
         'score': '{0}'.format(round(test_attendance.mdlgrade, 2)),
-        'certificate_pass': get_pass(test_attendance.id, t.id),
+        'certificate_pass': get_pass(test_attendance.id, t.id)[0:10],
+        'certificate_full_key': get_pass(test_attendance.id, t.id),
     }
 
     return details
@@ -948,10 +949,11 @@ def get_details(test_attendance):
 def has_log_entry(key):
     return Log.objects.filter(key=key).exists()
 
-def add_log(key, ta):
+def add_log(key, full_key, ta):
     if not has_log_entry(key):
        log = Log()
        log.key = key
+       log.full_key = full_key
        log.test_attendance_id = ta
        log.save()
 
@@ -975,7 +977,7 @@ def get_verification_details(key):
 
 def get_pass(ta_id, t_id):
     serial_key = (hashlib.sha1(bytes('{0}{1}'.format(ta_id, t_id), 'utf-8'))).hexdigest()
-    return serial_key[0:10]
+    return serial_key
 
 
 def training_enroll(request):
