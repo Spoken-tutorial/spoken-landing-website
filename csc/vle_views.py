@@ -928,7 +928,7 @@ def get_details(test_attendance):
     except:
       invig = v
 
-
+    verifiable_cert_key = get_pass(test_attendance.id, t.id)
 
     # invig = t.invigilator.invigilator if t.invigilator.exists() else t.vle
     print(invig.user.get_full_name(),'%%%%%%%%%%%%%%%%%%%%%%%%%%')
@@ -940,8 +940,8 @@ def get_details(test_attendance):
         'organiser':v.user.get_full_name(),
         'invigilator':invig.user.get_full_name(),
         'score': '{0}'.format(round(test_attendance.mdlgrade, 2)),
-        'certificate_pass': get_pass(test_attendance.id, t.id)[0:10],
-        'certificate_full_key': get_pass(test_attendance.id, t.id),
+        'certificate_pass': verifiable_cert_key[0:10],
+        'certificate_full_key': verifiable_cert_key,
     }
 
     return details

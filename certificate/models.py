@@ -15,6 +15,6 @@ class Certificate(models.Model):
     text_template = models.FileField(upload_to='templates')
 
 class Log(models.Model):
-    key = models.CharField(max_length=25)
-    full_key = models.CharField(max_length=40)
+    key = models.CharField(max_length=25, unique=True)
+    full_key = models.CharField(max_length=40, unique=True, null=True)
     test_attendance = models.ForeignKey(CSCTestAtttendance, on_delete=models.CASCADE)
