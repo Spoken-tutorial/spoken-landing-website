@@ -92,6 +92,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
+                'spoken_main_website.context_processor.settings_val',
             ],
         },
     },
@@ -294,3 +295,4 @@ CSC_ONLINE_TEST_URL = os.getenv("CSC_ONLINE_TEST_URL")
 MDL_URL = os.getenv("MDL_URL")
 
 TIME_OUT = 15
+GOOGLE_TAG=os.getenv("GOOGLE_TAG")

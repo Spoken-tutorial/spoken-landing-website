@@ -8,6 +8,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="spoken tutorial landing page">
   	<meta name="author" content="spoken tutorial">	
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id={{google_tag}}"></script>
+	<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', '{{google_tag}}');
+	</script>
 	<link rel="stylesheet" type="text/css" href="{% static '/bootstrap/css/bootstrap.min.css'%}">
 	<link rel="stylesheet" type="text/css" href="{% static '/fontawesome/css/all.min.css'%}">
 	<link rel="stylesheet" type="text/css" href="{% static '/spoken/style.css' %}">
