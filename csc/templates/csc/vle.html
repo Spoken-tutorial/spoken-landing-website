@@ -82,6 +82,17 @@ a{
 
 
 <div>
+  {% if  is_valid_vle %}
+  <div class="alert alert-{{alert_tag}}" role="alert">
+    <p>Your subscription will expire on {{tenure_end_date}} (Days remaining : {{valid_days}})</p>
+  </div>
+  {% else %}
+  <div class="alert alert-{{alert_tag}}" role="alert">
+    <p>Your subscription expired on {{tenure_end_date}}.You have restricted access to the interface.</p>
+  </div>
+  {% endif %}
+  
+  
   <div class="card mb-3">
     <div class="card-header">
       <div><i class="fas fa-user-circle mr-2">  </i>  <span>{{ user.first_name | title }} {{ user.last_name | title }}</span></div>

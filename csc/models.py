@@ -4,15 +4,17 @@ from email.policy import default
 from django.db import models
 from django.contrib.auth.models import User
 from django.forms import ChoiceField
+from django.core.exceptions import ValidationError
 from spokenlogin.models import *
 from model_utils import Choices
 from cms.models import State, District, City
 from django.forms import widgets
 from datetime import date
 from django.template.defaultfilters import slugify
+from django.conf import settings
 # from csc.utils import TEST_OPEN
 
-
+VLE_TENURE_DAYS = int(getattr(settings, 'VLE_TENURE_DAYS'))
 TEST_OPEN = 0
 REJECTED = 0
 APPROVED = 1
@@ -98,13 +100,11 @@ class CSC(models.Model):
     def __str__(self):
         
         return f"{self.city},{self.district}"
-    
 
 class VLE(models.Model):
     csc = models.ForeignKey(CSC,on_delete=models.CASCADE) # edge case : 1 vle moves to another city, enrolls for csc with same email?? 
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     phone = models.CharField(max_length=100)
-    status = models.BooleanField(default=True) # If the vle is inactivated for some reason
 
     class Meta:
         unique_together = ('csc','user')
@@ -160,7 +160,7 @@ class Student(models.Model):
     district = models.ForeignKey(District,on_delete=models.CASCADE,blank=True,null=True) 
     pincode = models.CharField(max_length=6,blank=True,null=True) 
     address = models.CharField(max_length=255,blank=True,null=True)
-    date_of_registration = models.DateField(default=date.today())
+    date_of_registration = models.DateField(null=True,blank=True)
     occupation = models.CharField(max_length=255,blank=True,null=True)
     category = models.CharField(max_length=255,blank=True,null=True)
     mdl_mail_sent = models.BooleanField(default=False)
