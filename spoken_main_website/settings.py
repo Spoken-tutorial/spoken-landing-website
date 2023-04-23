@@ -93,6 +93,7 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
                 'spoken_main_website.context_processor.settings_val',
+                'csc.context_processor.is_vle_valid',
             ],
         },
     },
@@ -296,3 +297,5 @@ MDL_URL = os.getenv("MDL_URL")
 
 TIME_OUT = 15
 GOOGLE_TAG=os.getenv("GOOGLE_TAG")
+VLE_TENURE_DAYS=os.getenv("VLE_TENURE_DAYS",100)
+ALERT_DAYS=os.getenv("ALERT_DAYS",15)

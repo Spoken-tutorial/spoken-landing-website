@@ -48,7 +48,15 @@
     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 col-lg-offset-3 col-md-offset-3 col-sm-offset-3">
         <span class='ajax-refresh ajax-refresh-add-foss'><i class="fa fa-2 fa-refresh fa-spin"></i></span>
         <input type="button" class="add_foss_lang btn btn-primary" value="Add selected FOSS"  tabindex="4" />
+        {% if is_valid_vle %}
         <input type="submit" class="btn btn-primary create_zip" value="Create ZIP file" tabindex="5" />
+        {% else %}
+        <div class="alert alert-danger" role="alert">
+            {{renewal_info}}
+            <p>Please renew subscription to download cdcontent.</p>
+            </div>
+        {% endif %}
+        
     </div>
     </div>
     </fieldset>

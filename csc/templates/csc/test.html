@@ -26,7 +26,15 @@
                     <form method="POST">
                         {% csrf_token %}
                         {{form | crispy}}
-                        <button type="submit" class="btn c-btn">Create Test</button>
+                        {% if is_valid_vle %}
+                            <button type="submit" class="btn c-btn">Create Test</button>
+                        {% else %}
+                        <div class="alert alert-danger" role="alert">
+                            {{renewal_info}}
+                            <p>Please renew subscription to create new test.</p>
+                          </div>
+                        {% endif %}
+                        
                     </form>
                     <hr>
                     <p><small>** Tests can be raised only for the FOSS which is assigned to your students! </small></p>
