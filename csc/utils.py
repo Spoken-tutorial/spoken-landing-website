@@ -242,3 +242,14 @@ def get_test_valid_fosses(vle):
 def get_invig(vle):
     invigilators = Invigilator.objects.filter(vle=vle).order_by('user__first_name')
     return invigilators
+
+def calculate_tenure_end(vle,start_date):
+    prev_transactions = Transaction.objects.filter(vle=vle).order_by('-transcdate')
+    if prev_transactions:
+        prev_transaction = prev_transactions[0]
+        prev_end_date = prev_transaction.tenure_end_date
+        if start_date < prev_end_date:
+            tenure_end_date = prev_end_date + datetime.timedelta(days=VLE_TENURE_DAYS)
+            return tenure_end_date
+    tenure_end_date = start_date + datetime.timedelta(days=VLE_TENURE_DAYS)
+    return tenure_end_date

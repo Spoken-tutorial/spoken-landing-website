@@ -7,7 +7,7 @@ from rest_framework import serializers
 from csc.models import Student, Student_certificate_course,CertifiateCategories, VLE, CSC, Transaction,CategoryCourses,Student_Foss
 from csc.api.utility import send_pwd_mail,map_foss_to_student
 
-from csc.utils import getFirstName,getLastName
+from csc.utils import getFirstName,getLastName,calculate_tenure_end
 
 from django.contrib.auth.hashers import make_password
 import random
@@ -195,7 +195,11 @@ class VLECSCSerializer(serializers.ModelSerializer):
         vle = VLE.objects.create(**validated_data)
         vle_group = Group.objects.get(name='VLE') 
         vle_group.user_set.add(u)
-        t = Transaction.objects.create(vle=vle,csc=obj,transcdate=transaction_data[0]['transcdate'])
+        
+        trans_start_date = transaction_data[0]['transcdate']
+        tenure_end_date = calculate_tenure_end(vle,trans_start_date)
+        t = Transaction.objects.create(vle=vle,csc=obj,transcdate=trans_start_date,tenure_end_date=tenure_end_date)
+        
         send_pwd_mail(u)
         return vle
     
@@ -224,7 +228,10 @@ class VLECSCSerializer(serializers.ModelSerializer):
             c.is_valid(raise_exception=True)
             c.save()
         if has_transaction : 
-            t = Transaction.objects.create(vle=instance,csc=instance.csc,transcdate=transaction_data['transcdate'])
+            trans_start_date = transaction_data['transcdate']
+            tenure_end_date = calculate_tenure_end(vle,trans_start_date)
+            t = Transaction.objects.create(vle=instance,csc=instance.csc,transcdate=trans_start_date,tenure_end_date=tenure_end_date)
+            
         if has_user:
             user_obj = instance.user
             if "email" in user_data:

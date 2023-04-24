@@ -50,7 +50,17 @@
                           <div class="card-text d-flex my-3">
                             <p class="me-5"><button class="btn btn-sm " id="btn_select_all" style="background-color: #90B77D">Select all </button></p>
                             <p class="me-5"><button class="btn btn-sm " id="btn_deselect_all"  style="background-color: #F29393">Deselect all </button></p>
-                            <p class="me-5"><button class="btn btn-sm btn-success" id="btn_mark_attendance1" type="submit" form="mark_atten">Mark attendance</button></p>
+                            <p class="me-5">
+                                {% if is_valid_vle %}
+                                    <button class="btn btn-sm btn-success" id="btn_mark_attendance1" type="submit" form="mark_atten">Mark attendance</button>
+                                {% else %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{renewal_info}}
+                                    <p>Please renew subscription to mark attendance.</p>
+                                  </div>
+                                {% endif %}
+                                
+                            </p>
                             
                             <!-- <p>Total Students selected : <span id="students_selected"></span></p> -->
                           </div>
